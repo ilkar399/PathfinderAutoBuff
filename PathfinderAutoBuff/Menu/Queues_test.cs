@@ -64,6 +64,7 @@ namespace PathfinderAutoBuff.Menu
         private AbilityDataUI selectedAbility;
         private ActivatableDataUI selectedActivatable;
         private bool styleInit = false;
+        private List<ActionItemView> actionItemsViews = new List<ActionItemView>();
         private GUIStyle buttonFixed120, labelfixed120, buttonDefault, buttonWrapped, buttonSelector, labelDefault, textField200, buttonSelectorLeft;
 
 
@@ -203,11 +204,20 @@ namespace PathfinderAutoBuff.Menu
             //Queue Edit/Info Mode
             if (queuesController.queueController != null)
             {
-                //Edit/View queue
-                for (int i = 0; i < queuesController.queueController.CurrentQueue().CommandList.Count; i++)
+                if (!queuesController.queueController.actionsInit)
                 {
-                    ActionItemView actionItemView = new ActionItemView(queuesController, queuesController.queueController.CurrentQueue().CommandList[i]);
-                    actionItemView.OnGUI();
+                    actionItemsViews.Clear();
+                    foreach (CommandQueueItem commandQueueItem in queuesController.queueController.CurrentQueue().CommandList)
+                    {
+                        ActionItemView actionItemView = new ActionItemView(queuesController, commandQueueItem);
+                        actionItemsViews.Add(actionItemView);
+                    }
+                    queuesController.queueController.actionsInit = true;
+                }
+                if (queuesController.queueController.actionsInit)
+                {
+                    for (int i = 0; i < actionItemsViews.Count; i++)
+                        actionItemsViews[i].OnGUI();
                 }
             }
             GUILayout.EndVertical();

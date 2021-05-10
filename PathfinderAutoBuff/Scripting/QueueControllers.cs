@@ -149,6 +149,7 @@ namespace PathfinderAutoBuff.Scripting
         string m_CurrentActionName;
         int m_CurrentActionIndex;
         CommandQueue m_CurrentQueue;
+        public bool actionsInit;
         public ActionController actionController;
         public Dictionary<int, string> favoriteQueues;
 
@@ -172,6 +173,7 @@ namespace PathfinderAutoBuff.Scripting
                 this.actionController = null;
             }
             favoriteQueues = new Dictionary<int, string>(FavoriteQueues);
+            this.actionsInit = false;
         }
 
         public void Clear()

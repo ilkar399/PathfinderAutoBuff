@@ -49,7 +49,8 @@ namespace PathfinderAutoBuff
             labelDefault,
             buttonFixed120,
             labelFixed120,
-            textField120;
+            textField120,
+            buttonSelector;
 
         static DefaultStyles()
         {
@@ -58,6 +59,8 @@ namespace PathfinderAutoBuff
             textField120 = new GUIStyle(GUI.skin.textField) { fixedWidth = 200f, wordWrap = true };
             labelDefault = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft };
             buttonDefault = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleCenter };
+            buttonSelector = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleCenter, wordWrap = true };
+            buttonSelector.onNormal.textColor = Color.yellow;
         }
 
         //Default styles with variable parameters
@@ -69,10 +72,7 @@ namespace PathfinderAutoBuff
         public static GUIStyle TextField200() { return textField120; }
         //Styles for certain elements
         public static GUIStyle ButtonSelector() {
-            GUIStyle result;
-            result =  new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleCenter, wordWrap = true };
-            result.onNormal.textColor = Color.yellow;
-            return result;
+            return buttonSelector;
         }
         public static GUIStyle ButtonSelectorLeft()
         {
