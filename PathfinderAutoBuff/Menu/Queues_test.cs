@@ -63,9 +63,7 @@ namespace PathfinderAutoBuff.Menu
         private string[] selectedAbilityIDs, selectedAbilityNames;
         private AbilityDataUI selectedAbility;
         private ActivatableDataUI selectedActivatable;
-        private bool styleInit = false;
         private List<ActionItemView> actionItemsViews = new List<ActionItemView>();
-        private GUIStyle buttonFixed120, labelfixed120, buttonDefault, buttonWrapped, buttonSelector, labelDefault, textField200, buttonSelectorLeft;
 
 
         public void OnGUI(UnityModManager.ModEntry modentry)
@@ -75,18 +73,6 @@ namespace PathfinderAutoBuff.Menu
             {
                 GUILayout.Label(Local["Menu_All_Label_NotInGame"].Color(RGBA.red));
                 return;
-            }
-            if (!styleInit)
-            {
-                buttonFixed120 = DefaultStyles.ButtonFixed120();
-                labelDefault = DefaultStyles.LabelDefault();
-                labelfixed120 = DefaultStyles.LabelFixed120();
-                buttonDefault = DefaultStyles.ButtonDefault();
-                buttonWrapped = DefaultStyles.ButtonWrapped();
-                buttonSelector = DefaultStyles.ButtonSelector();
-                buttonSelectorLeft = DefaultStyles.ButtonSelectorLeft();
-                textField200 = DefaultStyles.TextField200();
-                styleInit = true;
             }
             bool queueDeletionFlag = true;
             string activeScene = SceneManager.GetActiveScene().name;
@@ -99,7 +85,7 @@ namespace PathfinderAutoBuff.Menu
             using (new GUILayout.VerticalScope("box", GUILayout.ExpandHeight(true)))
             {
                 //Reload list
-                if (GUILayout.Button(Local["Menu_Queues_ReloadData"], buttonFixed120))
+                if (GUILayout.Button(Local["Menu_Queues_ReloadData"], DefaultStyles.ButtonFixed120()))
                 {
                     ReloadData();
                     return;
@@ -107,7 +93,7 @@ namespace PathfinderAutoBuff.Menu
                 if (queuesController.queueController == null)
                 {
                     //New queue
-                    if (GUILayout.Button(Local["Menu_Queues_NewQueue"], buttonFixed120))
+                    if (GUILayout.Button(Local["Menu_Queues_NewQueue"], DefaultStyles.ButtonFixed120()))
                     {
                         List<CommandQueueItem> commandList = new List<CommandQueueItem>();
                         CommandQueue commandQueue = new CommandQueue();
@@ -117,7 +103,7 @@ namespace PathfinderAutoBuff.Menu
                         queuesController.CurrentQueueName = "New queue";
                         queuesController.CurrentQueueIndex = -1;
                     }
-                    GUILayout.Label(Local["Menu_Queues_QueueList"], labelfixed120, GUILayout.ExpandWidth(true));
+                    GUILayout.Label(Local["Menu_Queues_QueueList"], DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(true));
                     //Queue list UI
                     using (var ScrollView = new GUILayout.ScrollViewScope(_scrollPosition))
                     {
@@ -142,7 +128,7 @@ namespace PathfinderAutoBuff.Menu
                                 uiQueueName = queuesController.CurrentQueueName;
                             }
 
-                        }, buttonSelector, GUILayout.ExpandWidth(false));
+                        }, DefaultStyles.ButtonSelector(), GUILayout.ExpandWidth(false));
                     }
                 }
             }
@@ -153,14 +139,14 @@ namespace PathfinderAutoBuff.Menu
                 using (new GUILayout.HorizontalScope())
                 {
                     GUILayout.Label(Local["Menu_Queues_QueueName"],
-                        labelDefault, UI.ExpandWidth(false));
-                    Utility.UI.TextField(ref uiQueueName, textField200);
+                        DefaultStyles.LabelDefault(), UI.ExpandWidth(false));
+                    Utility.UI.TextField(ref uiQueueName, DefaultStyles.TextField200());
                 }
                 using (new GUILayout.HorizontalScope())
                 {
                     //Execute queue
                     GUILayout.Space(5f);
-                    if (GUILayout.Button(Local["Menu_Queues_ExecuteQueue"], buttonFixed120, GUILayout.ExpandWidth(false)))
+                    if (GUILayout.Button(Local["Menu_Queues_ExecuteQueue"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
                         ScriptController.Reset();
                         ScriptController.CreateFromQueue(queuesController.queueController.CurrentQueue().CommandList,
@@ -168,7 +154,7 @@ namespace PathfinderAutoBuff.Menu
                         ScriptController.Run();
                     }
                     //Favorite queue saving
-                    if (GUILayout.Button(Local["Menu_Queues_SaveQueue"], buttonFixed120, GUILayout.ExpandWidth(false)))
+                    if (GUILayout.Button(Local["Menu_Queues_SaveQueue"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
                         bool saveResult = queuesController.queueController.CurrentQueue().SaveToFile(uiQueueName);
                         if (saveResult)
@@ -180,13 +166,13 @@ namespace PathfinderAutoBuff.Menu
                             GUILayout.Label(string.Format(Local["Menu_Queues_ErrorSaving"], uiQueueName).Color(RGBA.red));
                     }
                     //Cancel changes
-                    if (GUILayout.Button(Local["Menu_Queues_CancelChanges"], buttonFixed120, GUILayout.ExpandWidth(false)))
+                    if (GUILayout.Button(Local["Menu_Queues_CancelChanges"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
                         ReloadData();
                         return;
                     }
                     //Delete
-                    if (GUILayout.Button(Local["Menu_Queues_DeleteQueue"], buttonFixed120, GUILayout.ExpandWidth(false)))
+                    if (GUILayout.Button(Local["Menu_Queues_DeleteQueue"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
                         queueDeletionFlag = DeleteQueue(uiQueueName);
                         if (!queueDeletionFlag)
@@ -206,11 +192,11 @@ namespace PathfinderAutoBuff.Menu
             {
                 //New Spell/Ability
                 UI.Horizontal(() => {
-                    if (GUILayout.Button(Local["Menu_Queues_NewSpell"], buttonFixed120, GUILayout.ExpandWidth(false)))
+                    if (GUILayout.Button(Local["Menu_Queues_NewSpell"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
                         NewAction(queuesController,CommandQueueItem.ActionTypes.Spell);
                     }
-                    if (GUILayout.Button(Local["Menu_Queues_NewAbility"], buttonFixed120, GUILayout.ExpandWidth(false)))
+                    if (GUILayout.Button(Local["Menu_Queues_NewAbility"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
                         NewAction(queuesController,CommandQueueItem.ActionTypes.Ability);
                     }

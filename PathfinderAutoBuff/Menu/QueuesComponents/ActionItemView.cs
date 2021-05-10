@@ -48,55 +48,63 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
         //GUI
         public void OnGUI()
         {
-            //View mode
-            if (this.commandQueueItem != this.selectedQueue.actionController?.CurrentAction())
+            try
             {
-                UI.Splitter(Color.grey);
-                UI.BeginHorizontal("box");
-                //Control Block
-                UI.Vertical(() =>
+                //View mode
+                if (this.commandQueueItem != this.selectedQueue.actionController?.CurrentAction())
                 {
-                    UI.Space(25f);
-                    UI.ActionButton(Local["Menu_Queues_Up"], () => MoveUp(), DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false));
-                    UI.ActionButton(Local["Menu_Queues_Down"], () => MoveDown(), DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false));
-                    UI.ActionButton(Local["Menu_Queues_Edit"], () => Edit(), DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false));
-                    UI.ActionButton(Local["Menu_Queues_Delete"], () =>
+                    UI.Splitter(Color.grey);
+                    UI.BeginHorizontal("box");
+                    //Control Block
+                    UI.Vertical(() =>
                     {
-                        Delete();
-                        return;
-                    }, DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false));
-                });
-                UI.Vertical(() =>
-                {
-                //Ability name and status
-                AbilityNameStatusView();
-                }, GUILayout.Width((float)(Math.Max(250f, ummWidth * 0.15))), GUILayout.ExpandWidth(false));
-                UI.Vertical(() =>
-                {
-                //Caster
-                CasterView();
-                //Availability
-                AvailabilityView();
+                        UI.Space(25f);
+                        UI.ActionButton(Local["Menu_Queues_Up"], () => MoveUp(), DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false));
+                        UI.ActionButton(Local["Menu_Queues_Down"], () => MoveDown(), DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false));
+                        UI.ActionButton(Local["Menu_Queues_Edit"], () => Edit(), DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false));
+                        UI.ActionButton(Local["Menu_Queues_Delete"], () =>
+                        {
+                            Delete();
+                            return;
+                        }, DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false));
+                    });
+                    UI.Vertical(() =>
+                    {
+                    //Ability name and status
+                    AbilityNameStatusView();
+                    }, GUILayout.Width((float)(Math.Max(250f, ummWidth * 0.15))), GUILayout.ExpandWidth(false));
+                    UI.Vertical(() =>
+                    {
+                    //Caster
+                    CasterView();
+                    //Availability
+                    AvailabilityView();
 
-                }, GUILayout.Width((float)(Math.Max(250f, ummWidth * 0.2))), GUILayout.ExpandWidth(false));
-                UI.Vertical(() =>
-                {
-                //Target
-                TargetView();
+                    }, GUILayout.Width((float)(Math.Max(250f, ummWidth * 0.2))), GUILayout.ExpandWidth(false));
+                    UI.Vertical(() =>
+                    {
+                    //Target
+                    TargetView();
 
-                }, GUILayout.Width((float)(Math.Max(200, ummWidth * 0.15))), GUILayout.ExpandWidth(false));
-                UI.Vertical(() =>
+                    }, GUILayout.Width((float)(Math.Max(200, ummWidth * 0.15))), GUILayout.ExpandWidth(false));
+                    UI.Vertical(() =>
+                    {
+                    //Ability description and duration
+                    AbilityDescriptionView();
+                    }, GUILayout.ExpandWidth(true));
+                    UI.EndHorizontal();
+                }
+                else
                 {
-                //Ability description and duration
-                AbilityDescriptionView();
-                }, GUILayout.ExpandWidth(true));
-                UI.EndHorizontal();
+                    UI.Splitter(Color.blue);
+                    EditMode();
+                    UI.Splitter(Color.blue);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                UI.Splitter(Color.blue);
-                EditMode();
-                UI.Splitter(Color.blue);
+                Logger.Critical($"{ex}");
+                throw ex;
             }
         }
 
@@ -471,7 +479,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 GUILayout.Label(abilityName.RemoveHtmlTags().Color(RGBA.green).Bold(), DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
             GUILayout.Label(DefaultStyles.TextHeader2(Local["Menu_Queues_Status"]), DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
             IEnumerable<string> actionStatus = commandQueueItem.GetStatus(queuesController.partySpellList);
-            GUILayout.Label(StatusStyled(actionStatus, string.Join(";\n", actionStatus).Bold()));
+            GUILayout.Label(StatusStyled(actionStatus, actionStatus != null ? string.Join(";\n", actionStatus).Bold() : "Undefined status"));
         }
 
         //Target determination and view
@@ -580,14 +588,16 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             else
             {
                 string availableCastersString = "";
+                IEnumerable<string> casterList = null;
                 if (commandQueueItem.ActionType == CommandQueueItem.ActionTypes.Spell)
                 {
-                    availableCastersString = String.Join(",\n", queuesController.partySpellList.GetAvailableCasters(blueprintAbility)?.Select(casterUnit => casterUnit.CharacterName));
+                    casterList = queuesController.partySpellList.GetAvailableCasters(blueprintAbility)?.Select(casterUnit => casterUnit.CharacterName);                   
                 }
                 if (commandQueueItem.ActionType == CommandQueueItem.ActionTypes.Ability)
                 {
-                    availableCastersString = String.Join(",\n", queuesController.partyAbilityList.GetAvailableCasters(blueprintAbility));
+                    casterList = queuesController.partyAbilityList.GetAvailableCasters(blueprintAbility);
                 }
+                availableCastersString = casterList != null ? String.Join(",\n", casterList) : Local["Menu_Queues_NotAvailable"].Color(RGBA.red);
                 GUILayout.Label(availableCastersString, DefaultStyles.LabelDefault());
             }
         }
