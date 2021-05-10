@@ -133,6 +133,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                     currentBackground = defaultBackground;
                     selectorButtonText = "+".Green().Bold().Size((int)(30 * UIScale));
                 }
+                UI.Splitter(Color.grey);
                 UI.BeginHorizontal(currentBackground, GUILayout.ExpandHeight(true));
                 //Selector button
                 if (GUILayout.Button(selectorButtonText, buttonEmpty, GUILayout.ExpandHeight(true),GUILayout.Width(50f*UIScale)))

@@ -18,3 +18,14 @@ https://discord.com/channels/645948717400064030/791053285657542666/8303342409306
 * Moving localization to Language files
 
 ## Updated Queue UI Structure:
+
+---
+
+|Control block  |Caster      |Target |Status |SpellName  |Description| 
+| ---           |:---:       | ---   | ---   | :---:     | ---       | 
+|Up             |Available to|       |       |Duration   |           |
+|Down           |            |       |       |           |           |
+|Edit           |            |       |       |           |           |
+|Delete         |            |       |       |           |           |
+
+---

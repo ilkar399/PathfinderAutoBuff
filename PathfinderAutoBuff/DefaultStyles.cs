@@ -44,13 +44,29 @@ namespace PathfinderAutoBuff
         public static float LeftBoxWidth = 300f;
         public static float RightBoxWidth = 600f;
 
+        private static readonly GUIStyle
+            buttonDefault,
+            labelDefault,
+            buttonFixed120,
+            labelFixed120,
+            textField120;
+
+        static DefaultStyles()
+        {
+            buttonFixed120 = new GUIStyle(GUI.skin.button) { fixedWidth = 120f, wordWrap = true, alignment = TextAnchor.MiddleCenter };
+            labelFixed120 = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fixedHeight = 25f, fixedWidth = 120f };
+            textField120 = new GUIStyle(GUI.skin.textField) { fixedWidth = 200f, wordWrap = true };
+            labelDefault = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft };
+            buttonDefault = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleCenter };
+        }
+
         //Default styles with variable parameters
-        public static GUIStyle ButtonDefault() { return  new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleCenter };  }
-        public static GUIStyle LabelDefault() { return new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft }; }
+        public static GUIStyle ButtonDefault() { return buttonDefault; }
+        public static GUIStyle LabelDefault() { return labelDefault; }
         //Default styles with fixed parameters
-        public static GUIStyle ButtonFixed120() { return new GUIStyle(GUI.skin.button) { fixedWidth = 120f, wordWrap = true, alignment = TextAnchor.MiddleCenter }; }
-        public static GUIStyle LabelFixed120() { return new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fixedHeight = 25f, fixedWidth = 120f }; }
-        public static GUIStyle TextField200() { return new GUIStyle(GUI.skin.textField) { fixedWidth = 200f, wordWrap = true }; }
+        public static GUIStyle ButtonFixed120() { return buttonFixed120; }
+        public static GUIStyle LabelFixed120() { return labelFixed120; }
+        public static GUIStyle TextField200() { return textField120; }
         //Styles for certain elements
         public static GUIStyle ButtonSelector() {
             GUIStyle result;

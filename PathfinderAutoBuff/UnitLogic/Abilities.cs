@@ -172,6 +172,15 @@ namespace PathfinderAutoBuff.UnitLogic
             return casterAbility.Data.ResourceCost;
         }
 
+        //Get casters that have an abliity available
+        public List<string> GetAvailableCasters(BlueprintAbility blueprintAbility)
+        {
+            if (this.m_Abilities.ContainsKey(blueprintAbility.AssetGuidThreadSafe))
+                return new List<string>(m_Abilities[blueprintAbility.AssetGuidThreadSafe].Casters);
+            else
+                return null;
+        }
+
         /*
         * Ability filter function for Queues UI
         */

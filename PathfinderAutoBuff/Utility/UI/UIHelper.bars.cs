@@ -33,5 +33,21 @@ namespace PathfinderAutoBuff.Utility
                 return (float)Math.Round(GUILayout.HorizontalSlider(value, leftValue, rightValue, options), digits);
             }
         }
+
+        public static void Splitter(Color color, float thickness = 2f)
+        {
+            Rect position = GUILayoutUtility.GetRect(
+                GUIContent.none,
+                splitterStyle,
+                GUILayout.Height(thickness)
+                );
+            if (Event.current.type == EventType.Repaint)
+            {
+                Color restoreColor = GUI.color;
+                GUI.color = color;
+                splitterStyle.Draw(position, false, false, false, false);
+                GUI.color = restoreColor;
+            }
+        }
     }
 }

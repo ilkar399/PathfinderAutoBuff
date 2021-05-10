@@ -41,6 +41,18 @@ namespace PathfinderAutoBuff.Utility
                 value++;
         }
 
+        public static void ActionButton(String title, Action action, params GUILayoutOption[] options)
+        {
+            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
+            if (GL.Button(title, options)) { action(); }
+        }
+
+        public static void ActionButton(String title, Action action, GUIStyle style, params GUILayoutOption[] options)
+        {
+            if (options.Length == 0) { options = new GUILayoutOption[] { GL.Width(300f) }; }
+            if (GL.Button(title, style, options)) { action(); }
+        }
+
         public static void Hyperlink(string url, Color normalColor, Color hoverColor, GUIStyle style)
         {
             Hyperlink(url, url, normalColor, hoverColor, style);

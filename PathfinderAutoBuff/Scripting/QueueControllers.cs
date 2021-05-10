@@ -114,14 +114,12 @@ namespace PathfinderAutoBuff.Scripting
             catch (Exception e)
             {
 #if (DEBUG)
-                Logger.Log(e.StackTrace);
+                Logger.Debug(e.StackTrace);
                 throw e;
 #endif
             }
             this.m_Queues = queuesList.ToArray();
-#if (DEBUG)
-            Logger.Log("Queues: " + String.Join("; ", m_Queues));
-#endif
+            Logger.Debug("Queues: " + String.Join("; ", m_Queues));
             if ((this.partySpellList == null) || (this.partyAbilityList == null) || (this.partyActivatableList == null))
             {
                 this.partySpellList = new PartySpellList();
@@ -236,7 +234,6 @@ namespace PathfinderAutoBuff.Scripting
         {
             return m_CurrentQueue;
         }
-
     }
 
     class ActionController

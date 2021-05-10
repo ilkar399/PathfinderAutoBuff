@@ -55,5 +55,18 @@ namespace PathfinderAutoBuff.Utility
         public static void BeginVertical(GUIStyle style, params GUILayoutOption[] options) { GL.BeginHorizontal(style, options); }
         public static void EndVertical() { GL.BeginHorizontal(); }
 
+        public static void Vertical(Action content, GUIStyle style, params GUILayoutOption[] options)
+        {
+            GUILayout.BeginVertical(style, options);
+            content();
+            GUILayout.EndVertical();
+        }
+
+        public static void Vertical(Action content, params GUILayoutOption[] options)
+        {
+            GUILayout.BeginVertical(options);
+            content();
+            GUILayout.EndVertical();
+        }
     }
 }

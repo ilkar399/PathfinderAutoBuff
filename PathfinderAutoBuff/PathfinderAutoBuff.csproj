@@ -259,6 +259,8 @@
     <Compile Include="Menu\QueuesComponents\AbilityFilter.cs" />
     <Compile Include="Menu\QueuesComponents\AbilityFilteredList.cs" />
     <Compile Include="Menu\QueuesComponents\AbilityList.cs" />
+    <Compile Include="Menu\QueuesComponents\ActionItemEdit.cs" />
+    <Compile Include="Menu\QueuesComponents\ActionItemView.cs" />
     <Compile Include="Menu\Queues_test.cs" />
     <Compile Include="Menu\Recording.cs" />
     <Compile Include="Menu\Tests.cs" />
@@ -289,6 +291,7 @@
     <Compile Include="Utility\StatusWrapper.cs" />
     <Compile Include="Utility\UI\UIHelper.bars.cs" />
     <Compile Include="Utility\UI\UIHelper.controls.cs" />
+    <Compile Include="Utility\UI\UIHelper.init.cs" />
     <Compile Include="Utility\UI\UIHelper.pointers.cs" />
     <Compile Include="Utility\UI\UIHelper.toggles.cs" />
     <Compile Include="Utility\UI\UIHelper.wrappers.cs" />
