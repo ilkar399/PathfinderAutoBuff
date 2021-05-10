@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathfinderAutoBuff", "PathfinderAutoBuff\PathfinderAutoBuff.csproj", "{EB9DB3C0-0509-4228-9963-5ECF726ED25B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		KingmakerDebug|Any CPU = KingmakerDebug|Any CPU
+		KingmakerDebugInstall|Any CPU = KingmakerDebugInstall|Any CPU
+		KingmakerRelease|Any CPU = KingmakerRelease|Any CPU
+		WoTRDebug|Any CPU = WoTRDebug|Any CPU
+		WoTRDebugInstall|Any CPU = WoTRDebugInstall|Any CPU
+		WoTRRelease|Any CPU = WoTRRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.KingmakerDebug|Any CPU.ActiveCfg = KingmakerDebug|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.KingmakerDebug|Any CPU.Build.0 = KingmakerDebug|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.KingmakerDebugInstall|Any CPU.ActiveCfg = KingmakeDebugInstall|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.KingmakerDebugInstall|Any CPU.Build.0 = KingmakeDebugInstall|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.KingmakerRelease|Any CPU.ActiveCfg = KingmakerRelease|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.KingmakerRelease|Any CPU.Build.0 = KingmakerRelease|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.WoTRDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.WoTRDebug|Any CPU.Build.0 = Debug|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.WoTRDebugInstall|Any CPU.ActiveCfg = WoTRDebugInstall|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.WoTRDebugInstall|Any CPU.Build.0 = WoTRDebugInstall|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.WoTRRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.WoTRRelease|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {18972FAC-EF68-4C35-974D-7E5D54B5E356}
+	EndGlobalSection
+EndGlobal

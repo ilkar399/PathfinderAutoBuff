@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathfinderAutoBuff", "PathfinderAutoBuff\PathfinderAutoBuff.csproj", "{EB9DB3C0-0509-4228-9963-5ECF726ED25B}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ModMaker", "..\KingmakerModMaker\ModMaker\ModMaker.shproj", "{7D3F9428-C134-47FE-9D04-305B4D330401}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\KingmakerModMaker\ModMaker\ModMaker.projitems*{7d3f9428-c134-47fe-9d04-305b4d330401}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		KingmakerDebug|Any CPU = KingmakerDebug|Any CPU
+		KingmakerRelease|Any CPU = KingmakerRelease|Any CPU
+		WoTRDebug|Any CPU = WoTRDebug|Any CPU
+		WoTRRelease|Any CPU = WoTRRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.KingmakerDebug|Any CPU.ActiveCfg = KingmakerDebug|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.KingmakerDebug|Any CPU.Build.0 = KingmakerDebug|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.KingmakerRelease|Any CPU.ActiveCfg = KingmakerRelease|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.KingmakerRelease|Any CPU.Build.0 = KingmakerRelease|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.WoTRDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.WoTRDebug|Any CPU.Build.0 = Debug|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.WoTRRelease|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB9DB3C0-0509-4228-9963-5ECF726ED25B}.WoTRRelease|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {18972FAC-EF68-4C35-974D-7E5D54B5E356}
+	EndGlobalSection
+EndGlobal

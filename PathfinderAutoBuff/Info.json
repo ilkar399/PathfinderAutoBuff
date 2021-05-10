@@ -1,0 +1,9 @@
+{
+  "Id": "PathfinderAutoBuff",
+  "DisplayName": "Pathfinder AutoBuff",
+  "Author": "Ilkar",
+  "Version": "0.0.1",
+  "ManagerVersion": "0.22.0",
+  "Requirements": [],
+  "EntryMethod": "PathfinderAutoBuff.Main.Load"
+}
