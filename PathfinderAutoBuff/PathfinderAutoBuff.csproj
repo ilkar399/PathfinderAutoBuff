@@ -269,7 +269,6 @@
     <Compile Include="Menu\QueuesComponents\AbilityFilter.cs" />
     <Compile Include="Menu\QueuesComponents\AbilityFilteredList.cs" />
     <Compile Include="Menu\QueuesComponents\AbilityList.cs" />
-    <Compile Include="Menu\QueuesComponents\ActionItemEdit.cs" />
     <Compile Include="Menu\QueuesComponents\ActionItemView.cs" />
     <Compile Include="Menu\Queues_test.cs" />
     <Compile Include="Menu\Recording.cs" />

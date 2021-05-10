@@ -9,6 +9,7 @@ using UnityModManagerNet;
 using PathfinderAutoBuff.Utility;
 using PathfinderAutoBuff.Controllers;
 using static PathfinderAutoBuff.Utility.Extensions.RichTextExtensions;
+using static PathfinderAutoBuff.Utility.Extensions.CommonExtensions;
 using static PathfinderAutoBuff.Main;
 using PathfinderAutoBuff.Scripting;
 using PathfinderAutoBuff.UnitLogic;
@@ -33,8 +34,8 @@ namespace PathfinderAutoBuff.Menu
         private string queueName = "Recorded queue";
         private bool groupActions = true;
         private bool replaceNames = false;
-        private GUIStyle buttonFixed120, labelDefault;
-        private bool styleInit = false;
+        private string saveMessage = null;
+        private bool saveResult = false;
 
         public void OnGUI(UnityModManager.ModEntry modentry)
         {
@@ -44,19 +45,13 @@ namespace PathfinderAutoBuff.Menu
                 GUILayout.Label(Local["Menu_All_Label_NotInGame"].Color(RGBA.red));
                 return;
             }
-            if (!styleInit)
-            {
-                buttonFixed120 = DefaultStyles.ButtonFixed120();
-                labelDefault = DefaultStyles.LabelDefault();
-                styleInit = true;
-            }
             string activeScene = SceneManager.GetActiveScene().name;
             //Overall layout
             GUILayout.BeginVertical();
             GUILayout.Label(Local["Menu_Recording_Note0"]);
             using (new GUILayout.HorizontalScope())
             {
-                if (GUILayout.Button(Local["Menu_Recording_Start"], buttonFixed120))
+                if (GUILayout.Button(Local["Menu_Recording_Start"], DefaultStyles.ButtonFixed120()))
                 { 
                     if (Main.recordQueue == null)
                     {
@@ -69,7 +64,7 @@ namespace PathfinderAutoBuff.Menu
                         Main.recordQueue.Enable();
                     }
                 }
-                if (GUILayout.Button(Local["Menu_Recording_Stop"], buttonFixed120))
+                if (GUILayout.Button(Local["Menu_Recording_Stop"], DefaultStyles.ButtonFixed120()))
                 {
                     if (Main.recordQueue != null)
                     {
@@ -98,7 +93,7 @@ namespace PathfinderAutoBuff.Menu
                         GUILayout.Label(recordedAction.Caster.CharacterName.Color(RGBA.white), GUILayout.Width(150f * uiScale));
                         string targetString = recordedAction.Target != null ? recordedAction.Target.CharacterName : recordedAction.Caster.CharacterName;
                         GUILayout.Label(targetString.Color(RGBA.white), GUILayout.Width(150f * uiScale));
-                        GUILayout.Label(recordedAction.Ability.Name.Color(RGBA.white), GUILayout.Width(150f * uiScale));
+                        GUILayout.Label(recordedAction.Ability.Name.Color(RGBA.white).RemoveHtmlTags(), GUILayout.Width(150f * uiScale));
 #if (DEBUG)
                         GUILayout.Label(recordedAction.Ability.name.Color(RGBA.white), GUILayout.Width(150f * uiScale));
                         GUILayout.Label(recordedAction.Ability.AssetGuid.Color(RGBA.white), GUILayout.Width(150f * uiScale));
@@ -107,7 +102,7 @@ namespace PathfinderAutoBuff.Menu
                         var test = recordedAction.RecordedActionType;
                     }
                 }
-                GUILayout.Space(10f);
+                UI.Space(10f);
                 //Saving the resulting block
                 //Queue Name
                 using (new GUILayout.HorizontalScope())
@@ -117,27 +112,26 @@ namespace PathfinderAutoBuff.Menu
                     Utility.UI.TextField(ref queueName, new GUIStyle(GUI.skin.box) { fixedWidth = 200f, wordWrap = true });
                 }
                 //Group actions toggle
-                Utility.UI.ToggleButton(ref groupActions, Local["Menu_Recording_GroupActions"], labelDefault, GUILayout.ExpandWidth(false));
+                Utility.UI.ToggleButton(ref groupActions, Local["Menu_Recording_GroupActions"], DefaultStyles.LabelDefault(), GUILayout.ExpandWidth(false));
                 //Replace names with positions toggle
-                Utility.UI.ToggleButton(ref replaceNames, Local["Menu_Recording_UsePositions"], labelDefault, GUILayout.ExpandWidth(false));
+                Utility.UI.ToggleButton(ref replaceNames, Local["Menu_Recording_UsePositions"], DefaultStyles.LabelDefault(), GUILayout.ExpandWidth(false));
+                if (saveMessage != null)
+                {
+                    if (saveResult)
+                        GUILayout.Label(saveMessage.Color(RGBA.green));
+                    else
+                        GUILayout.Label(saveMessage.Color(RGBA.red));
+                }
                 using (new GUILayout.HorizontalScope())
                 {
-                    string saveMessage = null;
-                    bool saveResult = false;
-                    if (GUILayout.Button(Local["Menu_Recording_Save"], buttonFixed120))
+                    if (GUILayout.Button(Local["Menu_Recording_Save"], DefaultStyles.ButtonFixed120()))
                     {
                         (saveResult, saveMessage) = Main.recordQueue.SaveRecordQueue(queueName, groupActions, replaceNames);
 
                     }
-                    if (saveMessage != null)
+                    if (GUILayout.Button(Local["Menu_Recording_Cancel"], DefaultStyles.ButtonFixed120()))
                     {
-                        if (saveResult)
-                            GUILayout.Label(saveMessage.Color(RGBA.green));
-                        else
-                            GUILayout.Label(saveMessage.Color(RGBA.red));
-                    }
-                    if (GUILayout.Button(Local["Menu_Recording_Cancel"], buttonFixed120))
-                    {
+                        saveMessage = null;
                         Main.recordQueue.Clear();
                     }
                 }
