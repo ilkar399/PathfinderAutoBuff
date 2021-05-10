@@ -21,11 +21,12 @@ https://discord.com/channels/645948717400064030/791053285657542666/8303342409306
 
 ---
 
-|Control block  |Caster      |Target |Status |SpellName  |Description| 
-| ---           |:---:       | ---   | ---   | :---:     | ---       | 
-|Up             |Available to|       |       |Duration   |           |
-|Down           |            |       |       |           |           |
-|Edit           |            |       |       |           |           |
-|Delete         |            |       |       |           |           |
+|Control block +|Caster +    |Target  |SpellName  |Description | 
+| ---           |:---:       | ---    | :---:     | ---        | 
+|Up             |Available to|        | Status    | Duration   |
+|Down           |            |        |           |            |
+|Edit           |            |        |           |            |
+|Delete         |            |        |           |            |
+
 
 ---
