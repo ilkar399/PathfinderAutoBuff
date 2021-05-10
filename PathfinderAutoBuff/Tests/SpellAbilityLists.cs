@@ -54,13 +54,15 @@ namespace PathfinderAutoBuff.Tests
         //TODO List of Abilities forming tests
         public static void AbilityLists()
         {
-            TestHelpers.TestLog("AbilityLists", "Test not implemented");
+            PartyAbilityList partyAbility = new PartyAbilityList();
+            TestHelpers.TestLog("AbilityLists", $"Party Abilities: {partyAbility.m_Abilities.Count}");
         }
 
         //TODO List of Activatables forming tests
         public static void ActivatableLists()
         {
-            TestHelpers.TestLog("AbilityLists", "Test not implemented");
+            PartyActivatableList partyActivatableList = new PartyActivatableList();
+            TestHelpers.TestLog("AbilityLists", $"Party Activatables: {partyActivatableList.m_Activatables.Count}");
         }
     }
 }

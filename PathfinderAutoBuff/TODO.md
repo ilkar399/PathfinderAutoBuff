@@ -4,7 +4,6 @@ https://discord.com/channels/645948717400064030/791053285657542666/8303342409306
 
 ## TODO
 * Spell/Ability selector refactoring:
-  * Implement UI filters
   * Replace the old ui with the refactored one
 * Add "Use ability"
   * Add tests
@@ -17,3 +16,5 @@ https://discord.com/channels/645948717400064030/791053285657542666/8303342409306
 * Change FindApplyBuffActionAll to be more robust
 * Readme
 * Moving localization to Language files
+
+## Updated Queue UI Structure:

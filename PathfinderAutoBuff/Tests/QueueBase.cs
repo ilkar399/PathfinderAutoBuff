@@ -29,7 +29,9 @@ namespace PathfinderAutoBuff.Tests
      *  Bless, Shield of Faith, Death Ward
      * TestHunter (with pet)
      * TestAlchemist
+     *  Greater mutagen - Con
      * TestBard
+     *  Haste, lesser extend wand
      * Any:
      *  Barskin (2+ usages)
      * TODO:
@@ -54,11 +56,13 @@ namespace PathfinderAutoBuff.Tests
                 new CommandQueueItem("", "5b77d7cc65b8ab74688e74a37fc2f553", false, new List<string>{ "TestBard"}, null, petDict),
             };
         private static readonly List<CommandQueueItem> testQueueItems2 = new List<CommandQueueItem> {
-                //Ability test
+                //Ability mod test
                 new CommandQueueItem("", "c60969e7f264e6d4b84a1499fdcf9039", false, new List<string>{ "TestCleric"}, null, null,null,new List<string>{ "605e64c0b4586a34494fc3471525a2e5"}),
-                //Activatable test
+                //Activatable mod test
                 //NOTE: Abilities are actually activated after the parsing test
-                new CommandQueueItem("", "5b77d7cc65b8ab74688e74a37fc2f553", false, new List<string>{ "TestBard"}, null, null,new List<string>{ "a1799c1abdf619147b4774bb433f76ad" })
+                new CommandQueueItem("TestBard", "486eaff58293f6441a5c2759c4872f98", false, new List<string>{ "TestBard"}, null, null,new List<string>{ "605e64c0b4586a34494fc3471525a2e5" }),
+                //Ability test
+                new CommandQueueItem("TestAlchemist", "c1e46599fcade78418ef1ada71c1f487", true,null, null, null,null,null,CommandQueueItem.ActionTypes.Ability)
             };
 
         //Testing queue parsing
