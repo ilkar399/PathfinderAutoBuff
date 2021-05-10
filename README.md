@@ -4,7 +4,7 @@ This is a mod project for Pathfinder: Kingmaker and Pathfinder Wrath of the Righ
 It's an alternative to (insert BuffBot link). It provides a way to create (or record)
  a queue of actions (either the buff spells or ability usage) and execute it later.
 
-## Install
+## Installation
 1. Download and install [Unity Mod Manager](https://www.nexusmods.com/site/mods/21)
 2. Download the [mod](https://www.nexusmods.com/pathfinderkingmaker/mods/195)
 3. Extract the archive and put the mod folder into 'Mods' folder of the Game
@@ -12,9 +12,11 @@ It's an alternative to (insert BuffBot link). It provides a way to create (or re
 
 
 ## Features
+*Notes: This mod might not work in combat because of the way action queueing is done.
+Also, it might conflict with mods patching UnitCommand.OnEnded* 
 
 ## Project compilation notes
-Github page:
+[Github page (private repository atm)](https://github.com/ilkar399/PathfinderAutoBuff)
 
 There're 6 build configurations:
 * **Debug** - WoTR debug configuration
@@ -49,4 +51,4 @@ Repos
 
 
 ## Credits to 
-Spacehamster, Hambeard, Holic92, Hsinyu Chan and Narria/Cabarius
+Spacehamster, Hambeard, Holic92, Hsinyu Chan, Vek17 and Narria

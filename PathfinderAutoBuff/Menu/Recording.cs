@@ -94,11 +94,11 @@ namespace PathfinderAutoBuff.Menu
                         string targetString = recordedAction.Target != null ? recordedAction.Target.CharacterName : recordedAction.Caster.CharacterName;
                         GUILayout.Label(targetString.Color(RGBA.white), GUILayout.Width(150f * uiScale));
                         GUILayout.Label(recordedAction.Ability.Name.Color(RGBA.white).RemoveHtmlTags(), GUILayout.Width(150f * uiScale));
+                        GUILayout.Label($"{recordedAction.RecordedActionType}".Color(RGBA.white), GUILayout.Width(150f * uiScale));
 #if (DEBUG)
                         GUILayout.Label(recordedAction.Ability.name.Color(RGBA.white), GUILayout.Width(150f * uiScale));
                         GUILayout.Label(recordedAction.Ability.AssetGuid.Color(RGBA.white), GUILayout.Width(150f * uiScale));
 #endif
-                        GUILayout.Label($"{recordedAction.RecordedActionType}".Color(RGBA.white), GUILayout.Width(150f * uiScale));
                         var test = recordedAction.RecordedActionType;
                     }
                 }
@@ -108,8 +108,8 @@ namespace PathfinderAutoBuff.Menu
                 using (new GUILayout.HorizontalScope())
                 {
                     GUILayout.Label(Local["Menu_Queues_QueueName"],
-                        new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fixedHeight = 25f, fixedWidth = 120f });
-                    Utility.UI.TextField(ref queueName, new GUIStyle(GUI.skin.box) { fixedWidth = 200f, wordWrap = true });
+                        DefaultStyles.LabelDefault(),GUILayout.ExpandWidth(false));
+                    Utility.UI.TextField(ref queueName, DefaultStyles.TextField200());
                 }
                 //Group actions toggle
                 Utility.UI.ToggleButton(ref groupActions, Local["Menu_Recording_GroupActions"], DefaultStyles.LabelDefault(), GUILayout.ExpandWidth(false));

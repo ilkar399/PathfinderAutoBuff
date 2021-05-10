@@ -194,23 +194,29 @@
       <ItemGroup>
         <Reference Include="0Harmony">
           <HintPath>..\..\..\source\KingmakerLib\UnityModManager\0Harmony.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="Assembly-CSharp">
           <HintPath>..\..\..\source\KingmakerLib\Assembly-CSharp.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\KingmakerLib\Assembly-CSharp-firstpass.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="DOTween">
           <HintPath>..\..\KingmakerLib\DOTween.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="DOTween46">
           <HintPath>..\..\KingmakerLib\DOTween46.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\..\source\KingmakerLib\Newtonsoft.Json.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
@@ -222,35 +228,44 @@
         <Reference Include="System.Xml" />
         <Reference Include="UnityEngine">
           <HintPath>..\..\..\source\KingmakerLib\UnityEngine.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.AudioModule">
           <HintPath>..\..\KingmakerLib\UnityEngine.AudioModule.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\KingmakerLib\UnityEngine.CoreModule.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.IMGUIModule">
           <HintPath>..\..\..\source\KingmakerLib\UnityEngine.IMGUIModule.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.TextCoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\KingmakerLib\UnityEngine.TextCoreModule.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\..\source\KingmakerLib\UnityEngine.TextRenderingModule.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\KingmakerLib\UnityEngine.UI.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\KingmakerLib\UnityEngine.UIModule.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityModManager">
           <HintPath>..\..\..\source\KingmakerLib\UnityModManager\UnityModManager.dll</HintPath>
+          <Private>False</Private>
         </Reference>
       </ItemGroup>
     </When>
@@ -322,16 +337,10 @@
     <Compile Include="Menu\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.md" />
-    <None Include="TODO.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Repository.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Doc\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
