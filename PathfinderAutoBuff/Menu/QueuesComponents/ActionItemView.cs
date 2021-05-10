@@ -217,7 +217,8 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 //Cancel action changes
                 if (GUILayout.Button(Local["Menu_Queues_Cancel"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                 {
-
+                    if (this.commandQueueItem.AbilityId == null)
+                        this.selectedQueue.CurrentQueue().CommandList.Remove(this.commandQueueItem);
                     this.selectedQueue.Refresh();
                 }
             }

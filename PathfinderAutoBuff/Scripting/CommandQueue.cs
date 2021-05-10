@@ -67,6 +67,7 @@ namespace PathfinderAutoBuff.Scripting
         //Constructors
         public CommandQueueItem()
         {
+            this.AbilityId = null;
         }
 
         public CommandQueueItem(string CasterName, string AbilityId,
