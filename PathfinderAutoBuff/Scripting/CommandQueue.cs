@@ -309,7 +309,6 @@ namespace PathfinderAutoBuff.Scripting
         }
 
         //Check how Queue item applies to the current party. 
-        //TODO: Mods
         public IEnumerable<string> GetStatus(PartySpellList partySpellList)
         {
             List<string> Result = new List<string>();
@@ -435,7 +434,7 @@ namespace PathfinderAutoBuff.Scripting
         }
 
         //Import queue from file
-        //TODO: errors
+        //TODO: Errors
         public bool LoadFromFile(string fileName)
         {
             string filePath = (Path.Combine(ModPath, "scripts"));

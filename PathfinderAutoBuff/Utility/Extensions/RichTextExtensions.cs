@@ -7,7 +7,6 @@ namespace PathfinderAutoBuff.Utility.Extensions
 * https://github.com/hsinyuhcan/KingmakerModMaker
 * And Cabarius ToyBox
 * https://github.com/cabarius/ToyBox/
-* TODO: Include in licenses
 * https://docs.unity3d.com/Manual/StyledText.html
 */
 

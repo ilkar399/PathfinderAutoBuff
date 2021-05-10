@@ -13,7 +13,6 @@ namespace PathfinderAutoBuff
 * https://github.com/hsinyuhcan/KingmakerModMaker
 * And Cabarius ToyBox
 * https://github.com/cabarius/ToyBox/
-* TODO: Include in licenses
 */
 {
     public class Logger

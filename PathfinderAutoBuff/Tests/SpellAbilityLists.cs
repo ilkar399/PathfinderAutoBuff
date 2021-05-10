@@ -16,6 +16,7 @@ using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 
+#if (DEBUG)
 namespace PathfinderAutoBuff.Tests
 {
     static class SpellAbilityLists
@@ -51,14 +52,14 @@ namespace PathfinderAutoBuff.Tests
             TestHelpers.TestLog("SpellLists",testPartySpellList.m_AllSpells.Count.ToString());
         }
 
-        //TODO List of Abilities forming tests
+        //List of Abilities forming tests
         public static void AbilityLists()
         {
             PartyAbilityList partyAbility = new PartyAbilityList();
             TestHelpers.TestLog("AbilityLists", $"Party Abilities: {partyAbility.m_Abilities.Count}");
         }
 
-        //TODO List of Activatables forming tests
+        //List of Activatables forming tests
         public static void ActivatableLists()
         {
             PartyActivatableList partyActivatableList = new PartyActivatableList();
@@ -66,3 +67,4 @@ namespace PathfinderAutoBuff.Tests
         }
     }
 }
+#endif

@@ -158,8 +158,7 @@ namespace PathfinderAutoBuff.UnitLogic
             }
         }
 
-        //Destructor
-        //TODO
+        //TODO Destructor
 
         //Number of Ability usages for caster. If not limited - returns 999
         public static int GetAvailableUsages(UnitEntityData caster, BlueprintAbility blueprintAbility)

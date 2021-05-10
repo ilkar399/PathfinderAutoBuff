@@ -246,7 +246,6 @@ namespace PathfinderAutoBuff.Scripting
             //Creating commands and putting them in the queue
             CommandQueue commandQueue = new CommandQueue();
             commandQueue.CommandList = new List<CommandQueueItem>();
-            //TODO: Abilities. Currently skipping if it's an Ability type
             foreach (PreparedAction preparedAction in preparedActions)
             {
                 //If the ability is self-casted

@@ -271,7 +271,6 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             {
                 if (selectedActionController.actionType == CommandQueueItem.ActionTypes.Spell)
                 {
-                    //TODO
                     using (new GUILayout.HorizontalScope())
                     {
                         if (GUILayout.Button("All casters", DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
@@ -433,7 +432,6 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             }
             else if (commandQueueItem.ActionType == CommandQueueItem.ActionTypes.Ability)
             {
-                //TODO duration, casters
                 //Ability description
                 BlueprintAbility blueprintAbility = ResourcesLibrary.TryGetBlueprint<BlueprintAbility>(commandQueueItem.AbilityId);
                 string abilityDescription = blueprintAbility.Description;
@@ -618,7 +616,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
         }
 
         //Edit
-        //TODO
+        //TODO - cleanup
         private void Edit()
         {
             if (this.selectedQueue.actionController?.CurrentAction() != this.commandQueueItem)

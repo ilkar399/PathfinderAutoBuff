@@ -258,10 +258,6 @@ namespace PathfinderAutoBuff.GUIWoTR
             //Handle toggle value change
             private void onClick(int queueID)
             {
-                if (queueID == -1)
-                {
-                    //TODO: invoke edit UI
-                }
                 if (Main.Settings.favoriteQueues[queueID] != "")
                 {
                     ScriptController.Reset();

@@ -46,23 +46,6 @@ namespace PathfinderAutoBuff.Menu
         private Dictionary<int, bool> targetSelection;
         private List<string> partyNamesOrdered;
         private float uiScale = 1f;
-        private float leftBoxWidth = 300f;
-        private float rightBoxWidth = 600f;
-        private string[] styledActionNames;
-        private string[] castersUIArray;
-        private int currentCasterIndex = -1;
-        private int currentTargetTypeIndex = -1;
-        private string[] targetTypeArray = { "Caster", "Character name", "Formation Position" };
-        private int abilityFilterIndex = 0;
-        private string[] abilityFilterArray = { "Selected caster", "Available to all Party" };
-        private int abilityLevelIndex = 0;
-        private string[] abilityLevelArray = { "#1", "#2", "#3", "#4", "#5", "#6", "#7", "#8", "#9" };
-        private int selectedSpellIndex = -1;
-        private string[] selectedSpellIDs, selectedSpellNames;
-        private int selectedAbilityIndex = -1;
-        private string[] selectedAbilityIDs, selectedAbilityNames;
-        private AbilityDataUI selectedAbility;
-        private ActivatableDataUI selectedActivatable;
         private List<ActionItemView> actionItemsViews = new List<ActionItemView>();
 
 
@@ -236,18 +219,6 @@ namespace PathfinderAutoBuff.Menu
 
         }
 
-        private void ResetActionEdit()
-        {
-            actionEditStage = -1;
-            currentTargetTypeIndex = -1;
-            currentCasterIndex = -1;
-            selectedSpellIndex = -1;
-            selectedAbility = null;
-            selectedActivatable = null;
-            castersUIArray = null;
-            partyNamesOrdered = Target.GetPartyNamesOrder();
-        }
-
         private void ReloadData()
         {
             queuesController.ReloadQueues();
@@ -257,14 +228,6 @@ namespace PathfinderAutoBuff.Menu
             currentActionIndex = -1;
             targetSelection = null;
             partyNamesOrdered = null;
-            styledActionNames = null;
-            castersUIArray = null;
-            currentTargetTypeIndex = -1;
-            abilityFilterIndex = 0;
-            abilityLevelIndex = 0;
-            selectedSpellIndex = -1;
-            selectedSpellIDs = null;
-            selectedSpellNames = null;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace PathfinderAutoBuff.Scripting
     /*
      * Unit command handlers and action queue=>command converters.
      * Based on Holic's KingmakerAI
-     * TODO - add link
+     * https://github.com/Holic75/KingmakerAi
      */
     //Deactivate Ability command extension
     public class UnitDeactivateAbility: UnitCommand
@@ -244,7 +244,6 @@ namespace PathfinderAutoBuff.Scripting
     }
 
     //Parse the command queue and create a Script Executor to execute
-    //TODO: Ignore Mods, Don't Refresh
     public class QueueParser
     {
         public Dictionary<UnitEntityData, List<CommandProvider>> commandProviders = new Dictionary<UnitEntityData, List<CommandProvider>>();
@@ -549,8 +548,7 @@ namespace PathfinderAutoBuff.Scripting
             if (script_executors.Count < 1)
             {
                 ScriptController.executingQueueName = "";
-                //TODO
-                //UIController.ResetToggles;
+                //TODO UIController.ResetToggles;
             }
             script_execution_mutex.ReleaseMutex();
         }

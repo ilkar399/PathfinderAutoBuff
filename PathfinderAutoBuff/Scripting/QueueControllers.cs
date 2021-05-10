@@ -166,7 +166,6 @@ namespace PathfinderAutoBuff.Scripting
             this.m_ActionNames = GetActionNames();
             this.m_CurrentActionIndex = -1;
             this.m_CurrentActionName = "";
-            EditMode = false;
             if (this.actionController != null)
             {
                 this.actionController.Clear();
@@ -221,17 +220,6 @@ namespace PathfinderAutoBuff.Scripting
             return ResultList.ToArray();
         }
 
-        //Queue Edit Mode
-        public bool EditMode
-        {
-            get => this.m_EditMode;
-            set
-            {
-                this.m_EditMode = value;
-                //TODO: Reset stuff
-            }
-        }
-
         public CommandQueue CurrentQueue()
         {
             return m_CurrentQueue;
@@ -262,7 +250,6 @@ namespace PathfinderAutoBuff.Scripting
             abilityIDs = new List<string>();
             abilityMods = new List<string>();
             activatableMods = new List<string>();
-            this.EditMode = false;
         }
 
         //Constructor for new action
@@ -272,7 +259,6 @@ namespace PathfinderAutoBuff.Scripting
             abilityIDs = new List<string>();
             abilityMods = new List<string>();
             activatableMods = new List<string>();
-            this.EditMode = true;
         }
 
 
@@ -280,17 +266,6 @@ namespace PathfinderAutoBuff.Scripting
         public void Refresh()
         {
 
-        }
-
-        //Action Edit Mode
-        public bool EditMode
-        {
-            get => this.m_EditMode;
-            set
-            {
-                this.m_EditMode = value;
-                //TODO: Reset stuff
-            }
         }
 
         public CommandQueueItem CurrentAction()
@@ -306,7 +281,6 @@ namespace PathfinderAutoBuff.Scripting
         //Cleanup
         public void Clear()
         {
-            EditMode = false;
             this.casterName = null;
             this.abilityIDs = new List<string>();
             this.petIndex = null;

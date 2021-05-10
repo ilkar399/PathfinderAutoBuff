@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static PathfinderAutoBuff.Main;
 
+#if (DEBUG)
 namespace PathfinderAutoBuff.Tests
 {
     class TestHelpers
@@ -21,3 +22,4 @@ namespace PathfinderAutoBuff.Tests
         }
     }
 }
+#endif

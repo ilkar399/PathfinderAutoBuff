@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using PathfinderAutoBuff.UnitLogic;
 using PathfinderAutoBuff.Menu.QueuesComponents;
 
+#if (DEBUG)
 namespace PathfinderAutoBuff.Tests
 {
     /*
@@ -78,3 +79,4 @@ namespace PathfinderAutoBuff.Tests
 
     }
 }
+#endif

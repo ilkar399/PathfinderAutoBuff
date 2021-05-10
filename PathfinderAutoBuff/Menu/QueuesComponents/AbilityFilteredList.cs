@@ -22,8 +22,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
         /*
          * The parent component that combines Filters and Lists
          * Made static since it's heavily reusable within the same interface page. 
-         * TODO:
-         * Think about the component reset/cleanups
+         * TODO: Think about the component reset/cleanups
          */
 
     {
@@ -165,8 +164,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             EnabledFilters = new HashSet<AbilityFilter>();
         }
 
-        //Reset GUI
-        //TODO
+        //TODO Reset GUI
         public static void Reset()
         {
 
