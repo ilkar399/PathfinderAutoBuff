@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using TMPro;
+using Owlcat.Runtime.UI.Controls.Button;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -43,7 +44,7 @@ namespace PathfinderAutoBuff.GUIWoTR
             //Getting base object
             UICommon uiCommon = Game.Instance.UI.Common;
             GameObject hudLayout = uiCommon?.transform.Find("HUDLayout")?.gameObject;
-            GameObject togglePanel = uiCommon?.transform.Find("EscMenuWindow/Window/ButtonBlock")?.gameObject;
+            GameObject togglePanel = uiCommon?.transform.Find("EscMenuView/Window/ButtonBlock")?.gameObject;
             if (!hudLayout || !togglePanel)
                 return null;
             //Initialize windows
@@ -61,7 +62,7 @@ namespace PathfinderAutoBuff.GUIWoTR
             body.name = "AutoBuffBody";
             //Panel background
             Image imgBackground = body.AddComponent<Image>();
-            Image imgSource = uiCommon.transform.Find("ServiceWindow/SpellBook/ContainerNoBook/Background")?.gameObject.GetComponent<Image>();
+            Image imgSource = uiCommon.transform.Find("ServiceWindowConfig/SpellBookView/Background")?.gameObject.GetComponent<Image>();
             if (imgSource && imgBackground)
             {
                 imgBackground.sprite = imgSource.sprite;
@@ -85,7 +86,7 @@ namespace PathfinderAutoBuff.GUIWoTR
             verticalLayoutGroup.childForceExpandHeight = false;
 
             //UI Button objects creating/pointing
-            void SetQueueButtons(Button button, string name)
+            void SetQueueButtons(OwlcatButton button, string name)
             {
                 button.name = name;
                 button.transform.SetParent(verticalLayoutGroup.transform, false);
@@ -97,19 +98,19 @@ namespace PathfinderAutoBuff.GUIWoTR
                 rect.rotation = Quaternion.identity;
             }
             // toggleFormation_00
-            Button toggleAB_00 = body.transform.Find("Btn_Save").gameObject.GetComponent<Button>();
+            OwlcatButton toggleAB_00 = body.transform.Find("SaveButton").gameObject.GetComponent<OwlcatButton>();
             SetQueueButtons(toggleAB_00, "ToggleAB_00");
             // toggleFormation_01
-            Button toggleAB_01 = body.transform.Find("Btn_Load").gameObject.GetComponent<Button>();
+            OwlcatButton toggleAB_01 = body.transform.Find("LoadButton").gameObject.GetComponent<OwlcatButton>();
             SetQueueButtons(toggleAB_01, "ToggleAB_01");
             // toggleFormation_02
-            Button toggleAB_02 = body.transform.Find("Btn_Options").gameObject.GetComponent<Button>();
+            OwlcatButton toggleAB_02 = body.transform.Find("OptionsButton").gameObject.GetComponent<OwlcatButton>();
             SetQueueButtons(toggleAB_02, "ToggleAB_02");
             // toggleFormation_03
-            Button toggleAB_03 = body.transform.Find("Btn_MainMenu").gameObject.GetComponent<Button>();
+            OwlcatButton toggleAB_03 = body.transform.Find("MainMenuButton").gameObject.GetComponent<OwlcatButton>();
             SetQueueButtons(toggleAB_03, "ToggleAB_03");
             // toggleFormation_04
-            Button toggleAB_04 = body.transform.Find("Btn_Quit").gameObject.GetComponent<Button>();
+            OwlcatButton toggleAB_04 = body.transform.Find("QuitButton").gameObject.GetComponent<OwlcatButton>();
             SetQueueButtons(toggleAB_04, "ToggleAB_04");
             /*// Settings
             GameObject toggleABSettingsObject = Instantiate(toggleAB_02.gameObject, body.transform, false);
@@ -142,19 +143,19 @@ namespace PathfinderAutoBuff.GUIWoTR
             _toggleLayout = _body.GetComponent<HorizontalLayoutGroupWorkaround>();
             queueButtons = new List<ButtonWrapper>();
             queueButtons.Add(new ButtonWrapper(
-                _body.Find("ToggleAB_00").gameObject.GetComponent<Button>(),
+                _body.Find("ToggleAB_00").gameObject.GetComponent<OwlcatButton>(),
                 "#1", 1));
             queueButtons.Add(new ButtonWrapper(
-                _body.Find("ToggleAB_01").gameObject.GetComponent<Button>(),
+                _body.Find("ToggleAB_01").gameObject.GetComponent<OwlcatButton>(),
                 "#2", 2));
             queueButtons.Add(new ButtonWrapper(
-                _body.Find("ToggleAB_02").gameObject.GetComponent<Button>(),
+                _body.Find("ToggleAB_02").gameObject.GetComponent<OwlcatButton>(),
                 "#3", 3));
             queueButtons.Add(new ButtonWrapper(
-                _body.Find("ToggleAB_03").gameObject.GetComponent<Button>(),
+                _body.Find("ToggleAB_03").gameObject.GetComponent<OwlcatButton>(),
                 "#4", 4));
             queueButtons.Add(new ButtonWrapper(
-                _body.Find("ToggleAB_04").gameObject.GetComponent<Button>(),
+                _body.Find("ToggleAB_04").gameObject.GetComponent<OwlcatButton>(),
                 "#5", 5));
             /*
             ABSettings = new ButtonWrapper(
@@ -250,7 +251,7 @@ namespace PathfinderAutoBuff.GUIWoTR
         {
             private readonly Color _enableColor = Color.white;
             private readonly Color _disableColor = new Color(0.7f, 0.8f, 1f);
-            private readonly Button _button;
+            private readonly OwlcatButton _button;
             private readonly TextMeshProUGUI _textMesh;
             private readonly Image _image;
 
@@ -292,12 +293,12 @@ namespace PathfinderAutoBuff.GUIWoTR
                 this._button.gameObject.SetActive(false);
             }
 
-            public ButtonWrapper(Button button, string text, int queueID)
+            public ButtonWrapper(OwlcatButton button, string text, int queueID)
             {
                 _button = button;
                 Logger.Log(queueID);
-                _button.onClick = new Button.ButtonClickedEvent();
-                _button.onClick.AddListener(() => {
+                _button.m_OnLeftClick = new Button.ButtonClickedEvent();
+                _button.m_OnLeftClick.AddListener(() => {
                     onClick(queueID);
                 });
                 _textMesh = _button.GetComponentInChildren<TextMeshProUGUI>();              
@@ -305,7 +306,7 @@ namespace PathfinderAutoBuff.GUIWoTR
                 _textMesh.fontSizeMax = 72;
                 _textMesh.fontSizeMin = 18;
                 _textMesh.text = text;
-                _textMesh.color = _button.interactable ? _enableColor : _disableColor;
+                _textMesh.color = _button.isActiveAndEnabled ? _enableColor : _disableColor;
                 _image = _button.GetComponentInChildren<Image>();
                 GameObject styleSource = Game.Instance.UI.Common?.transform.Find("HUDLayout/CombatLog_New/TooglePanel/ToogleAll")?.gameObject;
                 _image.sprite = styleSource.GetComponentInChildren<Image>().sprite;

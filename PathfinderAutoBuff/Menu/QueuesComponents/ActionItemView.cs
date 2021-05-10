@@ -16,6 +16,9 @@ using static PathfinderAutoBuff.Main;
 using static PathfinderAutoBuff.Utility.IOHelpers;
 using static PathfinderAutoBuff.Utility.Extensions.RichTextExtensions;
 using static PathfinderAutoBuff.Utility.Extensions.CommonExtensions;
+#if (KINGMAKER)
+using static KingmakerAutoBuff.Extensions.WoTRExtensions;
+#endif
 
 namespace PathfinderAutoBuff.Menu.QueuesComponents
 {
@@ -465,8 +468,8 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             if (abilityName == "")
                 GUILayout.Label(Local["Menu_Queues_NotAvailable"].Color(RGBA.red).Bold(), DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
             else
-                GUILayout.Label(abilityName.RemoveHtmlTags().Color(RGBA.green).Bold(), DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
-            GUILayout.Label(DefaultStyles.TextHeader2(Local["Menu_Queues_Status"]), DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
+                GUILayout.Label(abilityName.RemoveHtmlTags().Color(RGBA.green).Bold(), DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
+            GUILayout.Label(DefaultStyles.TextHeader2(Local["Menu_Queues_Status"]), DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
             IEnumerable<string> actionStatus = commandQueueItem.GetStatus(queuesController.partySpellList);
             GUILayout.Label(StatusStyled(actionStatus, string.Join(";\n", actionStatus).Bold()));
         }
@@ -481,7 +484,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                     GUILayout.Label("Self".Color(RGBA.green), DefaultStyles.LabelDefault(), GUILayout.ExpandWidth(false));
                     break;
                 case CommandQueueItem.TargetTypes.Positions:
-                    GUILayout.Label("(Formation positions:)".Italic(), DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label("(Formation positions:)".Italic(), DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
                     if (commandQueueItem.Positions != null)
                         foreach (int position in commandQueueItem.Positions)
                         {
@@ -499,7 +502,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                         }
                     break;
                 case CommandQueueItem.TargetTypes.CharacterNames:
-                    GUILayout.Label("(Character names):".Italic(), DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label("(Character names):".Italic(), DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
                     if (commandQueueItem.CharacterNames != null)
                     {
                         foreach (string characterName in commandQueueItem.CharacterNames)
@@ -508,12 +511,12 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                             if (targets.Count > 0)
                             {
                                 GUILayout.Label($"{characterName.Color(RGBA.green)}",
-                                    DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
+                                    DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
                             }
                             else
                             {
                                 GUILayout.Label($"{characterName.Color(RGBA.red)}"
-                                    , DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
+                                    , DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
                             }
                         }
                     }
@@ -527,12 +530,12 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                                 if (target != null)
                                 {
                                     GUILayout.Label($"{characterName} pet ({target.CharacterName})".Color(RGBA.green),
-                                        DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
+                                        DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
                                 }
                                 else
                                 {
                                     GUILayout.Label($"#{characterName} pet (" + "N/A".Color(RGBA.red) + ")"
-                                        , DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
+                                        , DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
                                 }
                             }
                         }
@@ -550,9 +553,9 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             if (commandQueueItem.CasterName == "")
             {
                 if (caster != null)
-                    GUILayout.Label($"Highest Duration ({caster.CharacterName})".Color(RGBA.green), DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"Highest Duration ({caster.CharacterName})".Color(RGBA.green), DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
                 else
-                    GUILayout.Label("Highest Duration (N /A)".Color(RGBA.red), DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label("Highest Duration (N /A)".Color(RGBA.red), DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
             }
             else
             {
@@ -567,12 +570,12 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
         //Spell availability to casters view
         private void AvailabilityView()
         {
-            GUILayout.Label(DefaultStyles.TextHeader2(Local["Menu_Queues_Availableto"]), DefaultStyles.LabelFixed120());
+            GUILayout.Label(DefaultStyles.TextHeader2(Local["Menu_Queues_Availableto"]), DefaultStyles.LabelFixed200());
             UnitEntityData caster = commandQueueItem.GetCaster(queuesController.partySpellList);
             BlueprintAbility blueprintAbility = ResourcesLibrary.TryGetBlueprint<BlueprintAbility>(commandQueueItem.AbilityId);
             if (blueprintAbility == null)
             {
-                GUILayout.Label(Local["Menu_Queues_NotAvailable"].Color(RGBA.red), DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
+                GUILayout.Label(Local["Menu_Queues_NotAvailable"].Color(RGBA.red), DefaultStyles.LabelFixed200(), GUILayout.ExpandWidth(false));
             }
             else
             {
