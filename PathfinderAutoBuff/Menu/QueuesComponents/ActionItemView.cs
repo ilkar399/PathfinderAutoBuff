@@ -45,10 +45,10 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
         //GUI
         public void OnGUI()
         {
-            UI.Splitter(Color.grey);
             //View mode
             if (this.commandQueueItem != this.selectedQueue.actionController?.CurrentAction())
             {
+                UI.Splitter(Color.grey);
                 UI.BeginHorizontal("box");
                 //Control Block
                 UI.Vertical(() =>
@@ -91,13 +91,15 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             }
             else
             {
+                UI.Splitter(Color.blue);
                 EditMode();
+                UI.Splitter(Color.blue);
             }
         }
 
         private void EditMode()
         {
-            GUILayout.BeginVertical();
+            GUILayout.BeginVertical(GUILayout.MinHeight(150f));
             ActionController selectedActionController = this.selectedQueue.actionController;
             if (selectedActionController.actionType == CommandQueueItem.ActionTypes.Spell)
             {
@@ -241,7 +243,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                         }
                     }
                 }
-                Utility.UI.SelectionGrid(ref currentCasterIndex, castersUIArray, 3, () =>
+                Utility.UI.SelectionGrid(ref currentCasterIndex, castersUIArray, 4, () =>
                 {
                     if (currentCasterIndex == 0 && selectedActionController.actionType == CommandQueueItem.ActionTypes.Spell)
                     {
@@ -291,16 +293,19 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 //Target toggle selector
                 if (currentTargetTypeIndex > 0 && targetSelection.Count == partyNamesOrdered.Count)
                 {
+                    UI.HorizontalScope();
                     for (int partyOrder = 0; partyOrder < partyNamesOrdered.Count; partyOrder++)
                     {
                         bool nameToggle = targetSelection[partyOrder];
                         Utility.UI.ToggleButton(
                         ref nameToggle, partyNamesOrdered[partyOrder],
-                        DefaultStyles.ButtonFixed120());
+                        DefaultStyles.ButtonFixed120(),GUILayout.ExpandHeight(true));
                         targetSelection[partyOrder] = nameToggle;
 
                     }
+                    UI.EndHorizontal();
                 }
+                UI.HorizontalScope();
                 if (GUILayout.Button(Local["Menu_Queues_ApplyTargetSelection"], DefaultStyles.ButtonFixed120()))
                 {
                     switch (currentTargetTypeIndex)
@@ -375,6 +380,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                     selectedActionController.petIndex = null;
                     selectedActionController.targetSelf = false;
                 }
+                UI.EndHorizontal();
             }
             //Pre-cast ability
             if (actionEditStage == 3 && selectedActionController.actionType == CommandQueueItem.ActionTypes.Spell)

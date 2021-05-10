@@ -68,5 +68,19 @@ namespace PathfinderAutoBuff.Utility
             content();
             GUILayout.EndVertical();
         }
+
+        public static void Horizontal(Action content, GUIStyle style, params GUILayoutOption[] options)
+        {
+            GUILayout.BeginHorizontal(style, options);
+            content();
+            GUILayout.EndHorizontal();
+        }
+
+        public static void Horizontal(Action content, params GUILayoutOption[] options)
+        {
+            GUILayout.BeginHorizontal(options);
+            content();
+            GUILayout.EndHorizontal();
+        }
     }
 }

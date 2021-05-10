@@ -64,7 +64,11 @@ namespace PathfinderAutoBuff.Scripting
             Activatable
         }
 
-        //Constructor
+        //Constructors
+        public CommandQueueItem()
+        {
+        }
+
         public CommandQueueItem(string CasterName, string AbilityId,
             bool isSelf = false, List<string> CharacterNames = null, List<int> Positions = null, Dictionary<string, List<int>> PetIndex = null,
             List<string> AbilityMods = null, List<string> ActivatableMods = null, ActionTypes actionType = ActionTypes.Spell)

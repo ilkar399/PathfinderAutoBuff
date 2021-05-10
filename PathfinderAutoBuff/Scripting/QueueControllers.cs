@@ -268,6 +268,7 @@ namespace PathfinderAutoBuff.Scripting
         //Constructor for new action
         public ActionController()
         {
+            this.m_CurrentAction = new CommandQueueItem();
             abilityIDs = new List<string>();
             abilityMods = new List<string>();
             activatableMods = new List<string>();

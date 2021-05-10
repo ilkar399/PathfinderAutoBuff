@@ -204,6 +204,18 @@ namespace PathfinderAutoBuff.Menu
             //Queue Edit/Info Mode
             if (queuesController.queueController != null)
             {
+                //New Spell/Ability
+                UI.Horizontal(() => {
+                    if (GUILayout.Button(Local["Menu_Queues_NewSpell"], buttonFixed120, GUILayout.ExpandWidth(false)))
+                    {
+                        NewAction(queuesController,CommandQueueItem.ActionTypes.Spell);
+                    }
+                    if (GUILayout.Button(Local["Menu_Queues_NewAbility"], buttonFixed120, GUILayout.ExpandWidth(false)))
+                    {
+                        NewAction(queuesController,CommandQueueItem.ActionTypes.Ability);
+                    }
+                },"box");
+                //Action list init/view/edit
                 if (!queuesController.queueController.actionsInit)
                 {
                     actionItemsViews.Clear();
@@ -223,26 +235,19 @@ namespace PathfinderAutoBuff.Menu
             GUILayout.EndVertical();
         }
 
-        //Get returned styled status string from the text status
-        private string StatusStyled(IEnumerable<string> textStatus, string capition)
+        //
+        private void NewAction(QueuesController queuesController, CommandQueueItem.ActionTypes actionType)
         {
-            if (textStatus.Count() > 0)
-            {
-                if (textStatus.Contains(Local["Menu_Queues_StatusNoErrors"]))
-                    return capition.Color(RGBA.green);
-                if (textStatus.Contains(Local["Menu_Queues_StatusNoCasterName"])
-                    || textStatus.Contains(Local["Menu_Queues_StatusNoCasterSpell"])
-                    || textStatus.Contains(Local["Menu_Queues_StatusFatal"])
-                    || textStatus.Contains(Local["Menu_Queues_StatusNoTargets"]))
-                    return ("(!!)" + capition).Color(RGBA.red);
-                if (textStatus.Contains(Local["Menu_Queues_StatusNotMemorized"])
-                    || textStatus.Contains(Local["Menu_Queues_StatusNotAllTargets"])
-                    || textStatus.Contains(Local["Menu_Queues_StatusNoAbilityResources"]))
-                    return ("(!)" + capition).Color(RGBA.yellow);
-                return capition.Color(RGBA.red);
-            }
-            else
-                return capition.Color(RGBA.green);
+            queuesController.queueController.actionController = null;
+            queuesController.queueController.actionController = new ActionController();
+            if (targetSelection == null)
+                targetSelection = new Dictionary<int, bool>();
+            Target.GetTargetSelectionDict(ref targetSelection);
+            queuesController.queueController.actionController.actionType = actionType;
+            CommandQueueItem commandQueueItemNew = queuesController.queueController.actionController.CurrentAction();
+            queuesController.queueController.CurrentQueue().CommandList.Insert(0, commandQueueItemNew);
+            queuesController.queueController.actionsInit = false;
+
         }
 
         private void ResetActionEdit()
