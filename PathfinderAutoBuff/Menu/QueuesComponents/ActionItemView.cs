@@ -222,6 +222,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                     this.selectedQueue.Refresh();
                 }
             }
+            UI.Space(10f);
             //Caster
             if (actionEditStage == 0)
             {
@@ -240,17 +241,17 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 {
                     GUILayout.Label(Local["Menu_Queues_CurrentCaster"], DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
                     if (selectedActionController.casterName == null)
-                        GUILayout.Label(Local["Menu_Queues_None"], DefaultStyles.LabelFixed120());
+                        GUILayout.Label(Local["Menu_Queues_None"].Bold(), DefaultStyles.LabelFixed120());
                     else
                     {
                         if (selectedActionController.casterName == "")
                         {
-                            GUILayout.Label(Local["Menu_Queues_HighestCasterLevel"], DefaultStyles.LabelFixed120());
+                            GUILayout.Label(Local["Menu_Queues_HighestCasterLevel"].Bold(), DefaultStyles.LabelFixed120());
                             currentCasterIndex = 0;
                         }
                         else
                         {
-                            GUILayout.Label(selectedActionController.casterName, DefaultStyles.LabelFixed120());
+                            GUILayout.Label(selectedActionController.casterName.Bold(), DefaultStyles.LabelFixed120());
                             currentCasterIndex = Array.IndexOf(castersUIArray, selectedActionController.casterName);
                         }
                     }

@@ -65,19 +65,22 @@ namespace PathfinderAutoBuff.Utility
         {
             if (target == null)
             {
-                Logger.Debug("target");
                 return false;
             }
+            /*
             AbilityEffectStickyTouch stickyTouch = blueprintAbility.StickyTouch;
             if (stickyTouch != null)
             {
                 blueprintAbility = stickyTouch.TouchDeliveryAbility;
             }
+            */
+            blueprintAbility = blueprintAbility.StickyTouch?.TouchDeliveryAbility == null 
+                ? blueprintAbility
+                : blueprintAbility.StickyTouch?.TouchDeliveryAbility;
             AbilityEffectRunAction component = blueprintAbility.GetComponent<AbilityEffectRunAction>();
             ActionList actionList = (component != null) ? component.Actions : null;
             if (actionList == null)
             {
-                Logger.Debug("actionList");
                 return false;
             }
             ContextActionApplyBuff contextActionApplyBuff = FindApplyBuffActionAll(actionList);
@@ -86,7 +89,6 @@ namespace PathfinderAutoBuff.Utility
             BlueprintBuff blueprintBuff2 = (contextActionApplyBuffFalse != null) ? contextActionApplyBuffFalse.Buff : null;
             if (blueprintBuff1 == null && blueprintBuff2 == null)
             {
-                Logger.Debug("blueprintBuff");
                 return false;
             }
             TimeSpan settingsDuration = TimeSpan.FromSeconds(RefreshTime);
@@ -112,10 +114,11 @@ namespace PathfinderAutoBuff.Utility
         {
             return
                 Ability.GetComponents<AbilityExecuteActionOnCast>()
-                    .SelectMany(a => a.FlattenAllActions())
+                    .SelectMany(a => a.FlattenAllActions(ignoreEnemy))
                 .Concat(
                 Ability.GetComponents<AbilityEffectRunAction>()
-                    .SelectMany(a => a.FlattenAllActions()))
+                    .SelectMany(a => a.FlattenAllActions(ignoreEnemy))
+                    )
                 .ToArray();
         }
 
@@ -132,6 +135,7 @@ namespace PathfinderAutoBuff.Utility
         public static GameAction[] FlattenAllActions(GameAction[] Actions, bool ignoreEnemy = false)
         {
             List<GameAction> NewActions = new List<GameAction>();
+            NewActions.AddRange(Actions.OfType<ContextActionsOnPet>().SelectMany(a => a.Actions.Actions));
             NewActions.AddRange(Actions.OfType<ContextActionConditionalSaved>().SelectMany(a => a.Failed.Actions));
             NewActions.AddRange(Actions.OfType<ContextActionConditionalSaved>().SelectMany(a => a.Succeed.Actions));
             if (ignoreEnemy)

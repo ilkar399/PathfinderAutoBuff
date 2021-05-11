@@ -11,14 +11,8 @@ using PathfinderAutoBuff.Controllers;
 using PathfinderAutoBuff.Utility.Extensions;
 using static PathfinderAutoBuff.Main;
 using PathfinderAutoBuff.Scripting;
-using PathfinderAutoBuff.UnitLogic;
-using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using PathfinderAutoBuff.Tests;
-using Kingmaker;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.UnitLogic.Abilities;
-using Kingmaker.UnitLogic.Abilities.Blueprints;
+
 
 
 namespace PathfinderAutoBuff.Menu
@@ -106,7 +100,10 @@ namespace PathfinderAutoBuff.Menu
             {
                 QueueUI.AbilityFilterComponentTest("TestBard", "TestBard", "TestBard");
             }
+            if (GUILayout.Button("Flatten Actions Test", DefaultStyles.ButtonDefault(), GUILayout.ExpandWidth(false)))
+            {
 
+            }
         }
     }
 }

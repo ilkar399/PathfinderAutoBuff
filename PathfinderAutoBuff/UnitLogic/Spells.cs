@@ -264,9 +264,26 @@ namespace PathfinderAutoBuff.UnitLogic
             ActionList actionList = (component1 != null) ? component1.Actions : null;
             if (actionList == null)
                 return null;
+            ContextDurationValue contextDurationValue = null;
+            ContextActionApplyBuff contextActionApplyBuff = (Utility.LogicHelpers.FlattenAllActions(blueprintAbility, true).
+                Where(action => (action as ContextActionApplyBuff) != null).
+                FirstOrDefault() as ContextActionApplyBuff);
+            ContextActionEnchantWornItem contextActionEnchantWornItem = (Utility.LogicHelpers.FlattenAllActions(blueprintAbility, true).
+                Where(action => (action as ContextActionEnchantWornItem) != null).
+                FirstOrDefault() as ContextActionEnchantWornItem);
+            if (contextActionApplyBuff != null)
+                contextDurationValue = contextActionApplyBuff.DurationValue;
+            if (contextActionEnchantWornItem != null)
+                contextDurationValue = contextActionEnchantWornItem.DurationValue;
+            if (contextDurationValue == null)
+                return null;
+            /*
             ContextActionApplyBuff contextActionApplyBuff = Utility.LogicHelpers.FindApplyBuffActionAll(actionList);
             if (contextActionApplyBuff == null)
                 return null;
+            ContextDurationValue contextDurationValue = contextActionApplyBuff.DurationValue;
+
+            */
             UnitDescriptor caster = unitDescriptor;
             AbilityData spell1;
             if (spell.Blueprint.HasVariants || referencedAbility != null)
@@ -278,7 +295,6 @@ namespace PathfinderAutoBuff.UnitLogic
                 spell1 = spell;
             }
             MechanicsContext mechanicsContext = new AbilityExecutionContext(spell1, spell1.CalculateParams(), unitDescriptor.Unit, null);
-            ContextDurationValue contextDurationValue = contextActionApplyBuff.DurationValue;
             bool isExtendible = contextDurationValue.IsExtendable;
             bool canTargetSelf = blueprintAbility.CanTargetSelf;
             bool canTargetFriends = blueprintAbility.CanTargetFriends;

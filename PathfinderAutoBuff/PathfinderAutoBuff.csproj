@@ -285,7 +285,6 @@
     <Compile Include="Menu\QueuesComponents\AbilityFilteredList.cs" />
     <Compile Include="Menu\QueuesComponents\AbilityList.cs" />
     <Compile Include="Menu\QueuesComponents\ActionItemView.cs" />
-    <Compile Include="Menu\Queues_test.cs" />
     <Compile Include="Menu\Recording.cs" />
     <Compile Include="Menu\Tests.cs" />
     <Compile Include="Scripting\CommandQueue.cs" />
@@ -297,6 +296,7 @@
     <Compile Include="Tests\QueueUI.cs" />
     <Compile Include="Tests\SpellAbilityLists.cs" />
     <Compile Include="Tests\TestHelpers.cs" />
+    <Compile Include="Tests\UtilitiesTests.cs" />
     <Compile Include="UnitLogic\Abilities.cs" />
     <Compile Include="UnitLogic\Activatables.cs" />
     <Compile Include="UnitLogic\DataDescription.cs" />
@@ -337,10 +337,14 @@
     <Compile Include="Menu\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Doc\CHANGELOG.md" />
+    <None Include="Doc\README.md" />
+    <None Include="Doc\TODO.md" />
     <None Include="Repository.json" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Doc\" />
+    <Content Include="Doc\LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
