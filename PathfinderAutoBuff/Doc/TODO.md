@@ -3,7 +3,7 @@ Mouse Wheel fix for UMM:
 https://discord.com/channels/645948717400064030/791053285657542666/830334240930660373
 
 ## TODO
-* Strange issues with not having enough spell slots interrupting queue execution
+* Check available to (test save, hunter, deathward)
 * Code cleanup
 * GUI position adjustments in settings
 * Move scripting patches to HarmonyPatches

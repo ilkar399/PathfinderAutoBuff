@@ -372,10 +372,11 @@ namespace PathfinderAutoBuff.Scripting
                 return false;
             }
 #if (DEBUG)
-            Logger.Debug("Command result: " + command.Result.ToString());
+            Logger.Debug($"Command " + command.Result.ToString());
 #endif
             if (command.Result != UnitCommand.ResultType.Success && !(command is UnitMoveTo || command is UnitInteractWithUnit))
             {
+//                touchDeliveryAbility = null;
                 return false;
             }
             //Checking if the command has a stickytouch component and saving the ability id
@@ -388,6 +389,11 @@ namespace PathfinderAutoBuff.Scripting
 #endif
                 if (abilityEffectStickyTouch != null)
                 {
+                    if (currentCommand.TargetUnit == currentCommand.Executor)
+                    {
+                        TryNextCommand();
+                        return true;
+                    }
                     touchDeliveryAbility = abilityEffectStickyTouch.TouchDeliveryAbility;
                     return false;
                 }
