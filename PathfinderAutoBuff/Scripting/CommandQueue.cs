@@ -346,10 +346,10 @@ namespace PathfinderAutoBuff.Scripting
             }
             if (caster != null)
             {
-                if (partySpellList.GetAvailableCasts(caster, blueprintAbility) < 1 && this.ActionType == ActionTypes.Spell)
+                if (partySpellList.GetAvailableCasts(caster, blueprintAbility) == 0 && this.ActionType == ActionTypes.Spell)
                     Result.Add("Not enough spells memorized on the caster");
                 
-                 if (PartyAbilityList.GetAvailableUsages(caster, blueprintAbility) < 1 && this.ActionType == ActionTypes.Ability)
+                 if (PartyAbilityList.GetAvailableUsages(caster, blueprintAbility) == 0 && this.ActionType == ActionTypes.Ability)
                    Result.Add("Not enough ability resources left on the caster");
             }
             //Target checks

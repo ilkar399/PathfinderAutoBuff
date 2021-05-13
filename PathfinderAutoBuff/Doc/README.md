@@ -31,7 +31,10 @@ Also, it might conflict with mods patching UnitCommand.OnEnded*
 and better understand the queue creation principles.
 * It might not be very apparent, but you have to select caster, ability and targets
 before you'll be able to finish creating new action. Don't forget to apply target
-selection! 
+selection!
+* Spell/Abilities are not refreshed automatically for the mod UI, use "Refresh data"
+ button
+* The in-game UI should show itself if there's any queue selected as Favorite in the mod settings
 
 ## Project compilation notes
 [Github page (private repository atm)](https://github.com/ilkar399/PathfinderAutoBuff)
@@ -69,4 +72,5 @@ Repos
 
 
 ## Credits to 
-Spacehamster, Hambeard, Holic92, Hsinyu Chan, Vek17 and Narria
+This mod is somewhat based on KingmakerAI by Holiic92 and contains some code used with his permission.
+Credits to Spacehamster, Hambeard, Hsinyu Chan, Balkoth, Vek17 and Narria for the ideas, code snippets and overall help with making this mod.

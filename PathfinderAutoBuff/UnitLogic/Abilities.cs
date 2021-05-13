@@ -64,7 +64,7 @@ namespace PathfinderAutoBuff.UnitLogic
             {
                 foreach (Ability ability in unit.Abilities)
                 {
-                    if (!ability.Hidden && !ability.Blueprint.IsCantrip && ability.Blueprint.CanTargetSelf && ability.Blueprint.CanTargetFriends)
+                    if (!ability.Hidden && (ability.Blueprint.CanTargetSelf || ability.Blueprint.CanTargetFriends))
                     {
                         if (result.ContainsKey(ability.Blueprint.AssetGuid))
                         {
