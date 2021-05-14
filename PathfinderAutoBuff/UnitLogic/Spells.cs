@@ -166,12 +166,17 @@ namespace PathfinderAutoBuff.UnitLogic
             //Spellbooks
             foreach (Spellbook spellbook in unitDescriptor.Spellbooks)
             {
-                for (int i = 0; i < 11; i++)
+                for (int i = 0; i <= spellbook.MaxSpellLevel; i++)
                 {
                     foreach (AbilityData spell in spellbook.GetSpecialSpells(i))
                     {
                         SpellDataFromAbility(ref Result, spellbook, spell, unitDescriptor, partyPosition, allSpells);
                     }
+                    foreach (AbilityData spell in spellbook.GetCustomSpells(i))
+                    {
+                        SpellDataFromAbility(ref Result, spellbook, spell, unitDescriptor, partyPosition, allSpells);
+                    }
+
                 }
                 foreach (AbilityData spell in spellbook.GetAllKnownSpells())
                 {

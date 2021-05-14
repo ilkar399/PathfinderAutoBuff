@@ -17,6 +17,7 @@ using Kingmaker.UnitLogic.Commands;
 using Kingmaker.UnitLogic.Commands.Base;
 using PathfinderAutoBuff.UnitLogic;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
+using static PathfinderAutoBuff.Utility.Extensions.LogicExtensions;
 
 namespace PathfinderAutoBuff.Scripting
 {
@@ -192,22 +193,26 @@ namespace PathfinderAutoBuff.Scripting
             var ad = this.getAbilityForUse(descriptor);
             if ((ad != null) && !useSpellbook)
                 return ad;
-            BlueprintSpellbook spellbook = this.getSpellbookForUse(descriptor);
+            Spellbook spellbook = this.getSpellbookForUse(descriptor);
             if (spellbook == null && useSpellbook)
                 return null;
             if (useSpellbook)
             {
-                return this.CreateAbilityData(descriptor, null, spellbook);
+                AbilityData fact = spellbook.PASpellAbility(ability);
+                return fact;
+                //return this.CreateAbilityData(descriptor, fact, spellbook?.Blueprint);
             }
             else
                 return this.CreateAbilityData(descriptor, ad.Fact, null);
         }
 
-        private BlueprintSpellbook getSpellbookForUse(UnitDescriptor unit)
+        private Spellbook getSpellbookForUse(UnitDescriptor unit)
         {
             //            return unit.Spellbooks.FirstOrDefault<Spellbook>((Func<Spellbook, bool>)(spellbook => spellbook.CanSpend(ability)))?.Blueprint;
-            IEnumerable<Kingmaker.UnitLogic.Spellbook> spellbooks = unit.Spellbooks.Where(spellbook => spellbook.CanSpend(ability));
-            return spellbooks.Count() > 0 ? spellbooks.MaxBy(spellbook => spellbook.CasterLevel)?.Blueprint : null;
+            IEnumerable<Kingmaker.UnitLogic.Spellbook> spellbooks = unit.Spellbooks.Where(spellbook => spellbook.PACanSpendSpell(ability));
+            Logger.Debug(ability.Name);
+            Logger.Debug(spellbooks.Count());
+            return spellbooks.Count() > 0 ? spellbooks.MaxBy(spellbook => spellbook.CasterLevel) : null;
         }
 
         private AbilityData getAbilityForUse(UnitDescriptor unit)

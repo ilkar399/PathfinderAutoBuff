@@ -305,6 +305,7 @@
     <Compile Include="Utility\Dictionary\SerializableDictionary.cs" />
     <Compile Include="Utility\Dictionary\TripleDictionary.cs" />
     <Compile Include="Utility\Extensions\CommonExtensions.cs" />
+    <Compile Include="Utility\Extensions\LogicExtensions.cs" />
     <Compile Include="Utility\Extensions\RichTextExtensions.cs" />
     <Compile Include="Utility\Extensions\UnityExtensions.cs" />
     <Compile Include="Utility\Helpers.cs" />

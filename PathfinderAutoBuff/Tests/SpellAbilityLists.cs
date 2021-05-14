@@ -39,10 +39,12 @@ namespace PathfinderAutoBuff.Tests
                             continue;
                         }
                         string durationString = PartySpellList.GetSpellDuration(longestPartySpellData).Seconds.ToString("c");
-                        TestHelpers.DetailedLog("Name: " + blueprintAbility.Name + "; Duration: " + durationString +
-                            " CastSelf " + longestPartySpellData.CanTargetSelf + "; CastAllies " + longestPartySpellData.CanTargetFriends);
                         foreach (PartySpellData partySpellData in output[blueprintAbility])
                         {
+                            if (blueprintAbility.Name != "Bless")
+                                continue;
+                            TestHelpers.DetailedLog("Name: " + blueprintAbility.Name + "; Duration: " + durationString +
+                                " CastSelf " + longestPartySpellData.CanTargetSelf + "; CastAllies " + longestPartySpellData.CanTargetFriends);
                             TestHelpers.DetailedLog(partySpellData.Caster.CharacterName + "; " + testPartySpellList.GetAvailableCasts(partySpellData) + "; " +
                                 PartySpellList.GetSpellDuration(partySpellData).Seconds.ToString("c"));
                         }
