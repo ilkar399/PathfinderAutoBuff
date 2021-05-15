@@ -199,8 +199,20 @@ namespace PathfinderAutoBuff.Scripting
             if (useSpellbook)
             {
                 AbilityData fact = spellbook.PASpellAbility(ability);
-                return fact;
-                //return this.CreateAbilityData(descriptor, fact, spellbook?.Blueprint);
+                if (variant == null)
+                    return fact;
+                else
+                {
+#if (KINGMAKER)
+                    return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
+#elif (WOTR)
+                    return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
+#endif
+                    {
+                        ConvertedFrom = fact
+                    };
+                }
+                //return this.CreateAbilityData(descriptor, null, spellbook?.Blueprint);
             }
             else
                 return this.CreateAbilityData(descriptor, ad.Fact, null);
@@ -210,6 +222,7 @@ namespace PathfinderAutoBuff.Scripting
         {
             //            return unit.Spellbooks.FirstOrDefault<Spellbook>((Func<Spellbook, bool>)(spellbook => spellbook.CanSpend(ability)))?.Blueprint;
             IEnumerable<Kingmaker.UnitLogic.Spellbook> spellbooks = unit.Spellbooks.Where(spellbook => spellbook.PACanSpendSpell(ability));
+            Logger.Debug(unit.CharacterName);
             Logger.Debug(ability.Name);
             Logger.Debug(spellbooks.Count());
             return spellbooks.Count() > 0 ? spellbooks.MaxBy(spellbook => spellbook.CasterLevel) : null;
@@ -270,7 +283,7 @@ namespace PathfinderAutoBuff.Scripting
 #if (DEBUG)
                 if (errorMessage != "")
                     Logger.Log($"#{queueIndex - 1} {errorMessage}");
-#endif                    
+#endif
                 if (commandList == null)
                     continue;
                 foreach (CommandProvider command in commandList)

@@ -39,39 +39,39 @@ namespace PathfinderAutoBuff.Utility.Extensions
 				return false;
 			}
 #endif
-			/*
-						if (spellbook.Blueprint.Spontaneous)
-						{
-							int num3 = spellbook.GetSpontaneousSlots(num);
-							if (num3 > 0)
-							{
-								return true;
-							}
-						}
-						else
-			*/
-			int num2 = spellbook.GetSpellLevel(blueprint);
-            for (int k = num2; k <= num; k++)
+            if (spellbook.Blueprint.Spontaneous)
             {
-                List<SpellSlot> list = spellbook.GetMemorizedSpellSlots(k).ToList();
-                for (int i = list.Count - 1; i >= 0; i--)
+                int num3 = spellbook.GetSpontaneousSlots(spellbook.GetSpellLevel(blueprint));
+                if (num3 > 0)
                 {
-                    SpellSlot spellSlot = list[i];
-                    if (spellSlot.Available && (spellSlot.Type != SpellSlotType.Favorite || !excludeSpecial))
+                    return true;
+                }
+            }
+            else
+            {
+                int num2 = spellbook.GetSpellLevel(blueprint);
+                for (int k = num2; k <= num; k++)
+                {
+                    List<SpellSlot> list = spellbook.GetMemorizedSpellSlots(k).ToList();
+                    for (int i = list.Count - 1; i >= 0; i--)
                     {
-                        if (spell != null)
+                        SpellSlot spellSlot = list[i];
+                        if (spellSlot.Available && (spellSlot.Type != SpellSlotType.Favorite || !excludeSpecial))
                         {
-                            if (spell.Equals(spellSlot.Spell))
+                            if (spell != null)
                             {
-                                return true;
+                                if (spell.Equals(spellSlot.Spell))
+                                {
+                                    return true;
+                                }
                             }
-                        }
-                        else
-                        {
-                            AbilityData spell2 = spellSlot.Spell;
-                            if (blueprint == ((spell2 != null) ? spell2.Blueprint : null))
+                            else
                             {
-                                return true;
+                                AbilityData spell2 = spellSlot.Spell;
+                                if (blueprint == ((spell2 != null) ? spell2.Blueprint : null))
+                                {
+                                    return true;
+                                }
                             }
                         }
                     }
@@ -83,18 +83,33 @@ namespace PathfinderAutoBuff.Utility.Extensions
 		internal static AbilityData PASpellAbility(this Spellbook spellbook, [NotNull] BlueprintAbility blueprint, bool excludeSpecial = false)
 		{
 			int maxSpellLevel = spellbook.MaxSpellLevel;
-			for (int spellLevel = maxSpellLevel; spellLevel >= 0; spellLevel--)
-			{
-                List<SpellSlot> list = spellbook.GetMemorizedSpellSlots(spellLevel).ToList();
-                for (int i = list.Count - 1; i >= 0; i--)
+            if (spellbook.Blueprint.Spontaneous)
+            {
+                for (int spellLevel = maxSpellLevel; spellLevel >= spellbook.GetSpellLevel(blueprint); spellLevel--)
                 {
-                    SpellSlot spellSlot = list[i];
-                    if (spellSlot.Available && (spellSlot.Type != SpellSlotType.Favorite || !excludeSpecial))
-                    {
-                        AbilityData spell2 = spellSlot.Spell;
-                        if (blueprint == ((spell2 != null) ? spell2.Blueprint : null))
-                        {
+                    AbilityData spell2 = spellbook.GetCustomSpells(spellLevel).Where(spell => spell.Blueprint == blueprint).FirstOrDefault();
+                    if (spell2 != null)
+                        if (spellbook.GetAvailableForCastSpellCount(spell2) > 0)
                             return spell2;
+                    AbilityData spell3 = spellbook.GetAllKnownSpells().Where(spell => spell.Blueprint == blueprint).FirstOrDefault();
+                    return spell3;
+                }
+            }
+            else
+            {
+                for (int spellLevel = maxSpellLevel; spellLevel >= 0; spellLevel--)
+                {
+                    List<SpellSlot> list = spellbook.GetMemorizedSpellSlots(spellLevel).ToList();
+                    for (int i = list.Count - 1; i >= 0; i--)
+                    {
+                        SpellSlot spellSlot = list[i];
+                        if (spellSlot.Available && (spellSlot.Type != SpellSlotType.Favorite || !excludeSpecial))
+                        {
+                            AbilityData spell2 = spellSlot.Spell;
+                            if (blueprint == ((spell2 != null) ? spell2.Blueprint : null))
+                            {
+                                return spell2;
+                            }
                         }
                     }
                 }
