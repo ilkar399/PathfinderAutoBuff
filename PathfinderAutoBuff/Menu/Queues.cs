@@ -202,6 +202,14 @@ namespace PathfinderAutoBuff.Menu
         //
         private void NewAction(QueuesController queuesController, CommandQueueItem.ActionTypes actionType)
         {
+            ActionController selectedActionController = queuesController.queueController.actionController;
+            if (selectedActionController != null)
+                if (selectedActionController.casterName == null ||
+                (selectedActionController.abilityIDs?.Count < 1) ||
+                (selectedActionController.targetSelf == false & selectedActionController.characterNames == null & selectedActionController.positions == null & selectedActionController.petIndex == null)
+                )
+                    return;
+
             queuesController.queueController.actionController = null;
             queuesController.queueController.actionController = new ActionController();
             if (targetSelection == null)
