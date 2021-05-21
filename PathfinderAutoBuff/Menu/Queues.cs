@@ -209,12 +209,8 @@ namespace PathfinderAutoBuff.Menu
                 (selectedActionController.targetSelf == false & selectedActionController.characterNames == null & selectedActionController.positions == null & selectedActionController.petIndex == null)
                 )
                     return;
-
             queuesController.queueController.actionController = null;
             queuesController.queueController.actionController = new ActionController();
-            if (targetSelection == null)
-                targetSelection = new Dictionary<int, bool>();
-            Target.GetTargetSelectionDict(ref targetSelection);
             queuesController.queueController.actionController.actionType = actionType;
             CommandQueueItem commandQueueItemNew = queuesController.queueController.actionController.CurrentAction();
             queuesController.queueController.CurrentQueue().CommandList.Insert(0, commandQueueItemNew);
