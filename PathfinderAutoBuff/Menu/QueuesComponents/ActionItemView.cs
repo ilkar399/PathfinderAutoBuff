@@ -305,9 +305,10 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                     partyNamesOrdered = Target.GetPartyNamesOrder();
                 }
                 if (targetSelection == null)
+                {
                     targetSelection = new Dictionary<int, bool>();
-                Target.GetTargetSelectionDict(ref targetSelection);
-
+                    Target.GetTargetSelectionDict(ref targetSelection);
+                }
                 GUILayout.Label(DefaultStyles.TextHeader2(Local["Menu_Queues_TargetSelectionType"]), DefaultStyles.LabelDefault());
                 Utility.UI.SelectionGrid(ref currentTargetTypeIndex, targetTypeArray, 3, DefaultStyles.ButtonSelector(), GUILayout.ExpandWidth(false));
                 //Target toggle selector
