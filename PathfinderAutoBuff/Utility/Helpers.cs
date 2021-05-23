@@ -83,6 +83,12 @@ namespace PathfinderAutoBuff.Utility
             {
                 return false;
             }
+            //Checking if action increases duration (Cackle/Chant)
+            if (Utility.LogicHelpers.FlattenAllActions(blueprintAbility, true).
+                Where(action => (action as ContextActionReduceBuffDuration) != null).Count() > 0)
+            {
+                return true;
+            }       
             ContextActionApplyBuff contextActionApplyBuff = FindApplyBuffActionAll(actionList);
             ContextActionApplyBuff contextActionApplyBuffFalse = FindApplyBuffActionAll(actionList,true);
             BlueprintBuff blueprintBuff1 = (contextActionApplyBuff != null) ? contextActionApplyBuff.Buff : null;
