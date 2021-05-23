@@ -1,4 +1,8 @@
-﻿## [0.1.1a - 2021-05-15]
+﻿## [0.1.2] - 2021-05-22
+## Fixed
+- Fixed the target selection UI bug
+
+## [0.1.1a] - 2021-05-15
 ### Fixed
 - Fixed spontaneous casting bug introduced in 0.1.1
 
