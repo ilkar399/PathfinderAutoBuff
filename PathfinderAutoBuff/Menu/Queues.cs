@@ -7,6 +7,7 @@ using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.PubSubSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityModManagerNet;
@@ -26,7 +27,12 @@ using static KingmakerAutoBuff.Extensions.WoTRExtensions;
 
 namespace PathfinderAutoBuff.Menu
 {
-    class Queues : IMenuSelectablePage
+    class Queues : IMenuSelectablePage,
+#if (WOTR)
+    IAreaHandler
+#elif (KINGMAKER)
+        ISceneHandler
+#endif
     /*
      * Queues Manu Page
      * Relies on QueueController
@@ -46,7 +52,12 @@ namespace PathfinderAutoBuff.Menu
 
         public void OnGUI(UnityModManager.ModEntry modentry)
         {
-            if (!Main.Enabled) return;
+            if (!Main.Enabled)
+            {
+                queuesController = null;
+                EventBus.Unsubscribe(this);
+                return;
+            }
             if (!Main.IsInGame)
             {
                 GUILayout.Label(Local["Menu_All_Label_NotInGame"].Color(RGBA.red));
@@ -55,7 +66,10 @@ namespace PathfinderAutoBuff.Menu
             bool queueDeletionFlag = true;
             string activeScene = SceneManager.GetActiveScene().name;
             if (queuesController == null)
+            {
+                EventBus.Subscribe(this);
                 queuesController = new QueuesController();
+            }
             //Overall layout
             GUILayout.BeginVertical();
             //Queues
@@ -225,6 +239,13 @@ namespace PathfinderAutoBuff.Menu
             currentQueueIndex = -1;
             targetSelection = null;
             partyNamesOrdered = null;
+        }
+
+        public void OnAreaBeginUnloading() { }
+
+        public void OnAreaDidLoad()
+        {
+            this.ReloadData();
         }
     }
 }
