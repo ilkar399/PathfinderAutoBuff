@@ -335,7 +335,7 @@ namespace PathfinderAutoBuff.UnitLogic
             Dictionary<BlueprintAbility, List<PartySpellData>> Result = new Dictionary<BlueprintAbility, List<PartySpellData>>();
             foreach (PartySpellData partySpellData in partySpellList)
             {
-                if (partySpellData.SpellLevel == spellLevel && (caster == "" || partySpellData.Caster.CharacterName == caster))
+                if (partySpellData.SpellLevel == spellLevel && (caster == "" || partySpellData.Caster?.CharacterName == caster))
                 {
                     if (!Result.ContainsKey(partySpellData.Blueprint))
                     {
@@ -500,7 +500,7 @@ namespace PathfinderAutoBuff.UnitLogic
                     PartySpellDataUI spellDataUI = new PartySpellDataUI(
                         keyValuePair.Key.AssetGuid,
                         keyValuePair.Key,
-                        keyValuePair.Value.Select(spellData1 => spellData1.Caster.CharacterName).ToList()
+                        keyValuePair.Value.Select(spellData1 => spellData1.Caster.CharacterName).Distinct().ToList()
                         );
                     result.Add(spellDataUI);
                 }

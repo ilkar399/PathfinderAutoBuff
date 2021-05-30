@@ -103,8 +103,8 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             }
             catch (Exception ex)
             {
+                Logger.Critical("Critical error whlie creating Actions UI");
                 Logger.Critical($"{ex}");
-                throw ex;
             }
         }
 
@@ -424,6 +424,11 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             {
                 //Spell description
                 UnitEntityData caster = commandQueueItem.GetCaster(queuesController.partySpellList);
+                if (caster == null)
+                {
+                    GUILayout.Label(Local["Menu_Queues_StatusNoCasterSpell"].Color(RGBA.red));
+                    return;
+                }
                 BlueprintAbility blueprintAbility = ResourcesLibrary.TryGetBlueprint<BlueprintAbility>(commandQueueItem.AbilityId);
                 string spellDescription = blueprintAbility.Description;
                 PartySpellData memorizedSpellData = queuesController.partySpellList.GetMemorizedSpellData(caster, blueprintAbility);
@@ -588,7 +593,6 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
         private void AvailabilityView()
         {
             GUILayout.Label(DefaultStyles.TextHeader2(Local["Menu_Queues_Availableto"]), DefaultStyles.LabelFixed200());
-            UnitEntityData caster = commandQueueItem.GetCaster(queuesController.partySpellList);
             BlueprintAbility blueprintAbility = ResourcesLibrary.TryGetBlueprint<BlueprintAbility>(commandQueueItem.AbilityId);
             if (blueprintAbility == null)
             {
@@ -597,7 +601,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             else
             {
                 string availableCastersString = "";
-                IEnumerable<string> casterList = null;
+                IEnumerable<string> casterList = new List<string>();
                 if (commandQueueItem.ActionType == CommandQueueItem.ActionTypes.Spell)
                 {
                     casterList = queuesController.partySpellList.GetAvailableCasters(blueprintAbility)?.Select(casterUnit => casterUnit.CharacterName);                   
@@ -606,7 +610,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 {
                     casterList = queuesController.partyAbilityList.GetAvailableCasters(blueprintAbility);
                 }
-                availableCastersString = casterList != null ? String.Join(",\n", casterList) : Local["Menu_Queues_NotAvailable"].Color(RGBA.red);
+                availableCastersString = casterList.Count() < 1 ? String.Join(",\n", casterList) : Local["Menu_Queues_NotAvailable"].Color(RGBA.red);
                 GUILayout.Label(availableCastersString, DefaultStyles.LabelDefault());
             }
         }

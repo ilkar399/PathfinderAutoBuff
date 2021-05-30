@@ -78,7 +78,15 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             //Actions list
-            AbilityList.OnGUI(ref m_SelectedAbilities, m_ActionType, ref m_CombinedAbilitiesData, m_AllowMultiSelectAbilities);
+            try
+            {
+                AbilityList.OnGUI(ref m_SelectedAbilities, m_ActionType, ref m_CombinedAbilitiesData, m_AllowMultiSelectAbilities);
+            }
+            catch (Exception ex)
+            {
+                Logger.Critical("Critical error whlie creating ability list UI");
+                Logger.Critical($"{ex}");
+            }
         }
 
         //Update ability data
