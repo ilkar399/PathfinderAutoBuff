@@ -33,7 +33,7 @@ and better understand the queue creation principles.
 before you'll be able to finish creating new action. Don't forget to apply target
 selection!
 * Spell/Abilities are not refreshed automatically for the mod UI, use "Refresh data"
- button.
+ button. Only memorized and available for casting spells are shown in the UI.
 * Metamagic/multiple spellbooks spell selection - The highest level spell from the highest 
 Caster Level spellbook is selected.
 * The in-game UI should show itself if there's any queue selected as Favorite in the mod settings.

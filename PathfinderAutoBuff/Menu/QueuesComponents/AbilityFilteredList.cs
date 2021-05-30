@@ -86,6 +86,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             {
                 Logger.Critical("Critical error whlie creating ability list UI");
                 Logger.Critical($"{ex}");
+                throw ex;
             }
         }
 
