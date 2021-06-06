@@ -221,7 +221,7 @@ namespace PathfinderAutoBuff.Scripting
         private Spellbook getSpellbookForUse(UnitDescriptor unit)
         {
             //            return unit.Spellbooks.FirstOrDefault<Spellbook>((Func<Spellbook, bool>)(spellbook => spellbook.CanSpend(ability)))?.Blueprint;
-            IEnumerable<Kingmaker.UnitLogic.Spellbook> spellbooks = unit.Spellbooks.Where(spellbook => spellbook.PACanSpendSpell(ability));
+            IEnumerable<Kingmaker.UnitLogic.Spellbook> spellbooks = unit.Spellbooks.Where(spellbook => spellbook.PACanSpendSpell(ability)).ToList();
             Logger.Debug(unit.CharacterName);
             Logger.Debug(ability.Name);
             Logger.Debug(spellbooks.Count());

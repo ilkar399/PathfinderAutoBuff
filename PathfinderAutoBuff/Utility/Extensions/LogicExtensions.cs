@@ -20,7 +20,7 @@ namespace PathfinderAutoBuff.Utility.Extensions
 		//TODO: Extension for metamagic
 		internal static bool PACanSpendSpell(this Spellbook spellbook, [NotNull] BlueprintAbility blueprint, [CanBeNull] AbilityData spell, bool excludeSpecial = false)
 		{
-			int num = (spell != null) ? spellbook.GetSpellLevel(spell) : spellbook.MaxSpellLevel;
+            int num = (spell != null) ? spellbook.GetSpellLevel(spell) : spellbook.MaxSpellLevel;
 			if (num < 0)
 			{
 				return false;
@@ -39,18 +39,20 @@ namespace PathfinderAutoBuff.Utility.Extensions
 				return false;
 			}
 #endif
+            int blueprintLevel = spellbook.GetSpellLevel(blueprint);
+            if (blueprintLevel < 0)
+                return false;
             if (spellbook.Blueprint.Spontaneous)
             {
-                int num3 = spellbook.GetSpontaneousSlots(spellbook.GetSpellLevel(blueprint));
-                if (num3 > 0)
+                int spontSlots = spellbook.GetSpontaneousSlots(blueprintLevel);
+                if (spontSlots > 0)
                 {
                     return true;
                 }
             }
             else
             {
-                int num2 = spellbook.GetSpellLevel(blueprint);
-                for (int k = num2; k <= num; k++)
+                for (int k = blueprintLevel; k <= num; k++)
                 {
                     List<SpellSlot> list = spellbook.GetMemorizedSpellSlots(k).ToList();
                     for (int i = list.Count - 1; i >= 0; i--)
