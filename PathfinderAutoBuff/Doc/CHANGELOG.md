@@ -1,4 +1,9 @@
-﻿## [0.1.3] - 2021-05-30
+﻿## [0.1.4] - 2021-06-09
+## Fixed
+- Fixed casting from Spontaneous&Mythic spellbooks
+- Relaxed restrictions on stopping queue execution if one of the spells is not castable for some reason.
+
+## [0.1.3] - 2021-05-30
 ## Fixed
 - Fixed Chant and Cackle not executing in the queue if 'refresh buffs when they have a short duration' enabled in settings.
 - Fixed some possible null exceptions in UI. Also added some exception wrappers for such cases
