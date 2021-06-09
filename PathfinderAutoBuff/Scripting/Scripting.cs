@@ -222,9 +222,6 @@ namespace PathfinderAutoBuff.Scripting
         {
             //            return unit.Spellbooks.FirstOrDefault<Spellbook>((Func<Spellbook, bool>)(spellbook => spellbook.CanSpend(ability)))?.Blueprint;
             IEnumerable<Kingmaker.UnitLogic.Spellbook> spellbooks = unit.Spellbooks.Where(spellbook => spellbook.PACanSpendSpell(ability)).ToList();
-            Logger.Debug(unit.CharacterName);
-            Logger.Debug(ability.Name);
-            Logger.Debug(spellbooks.Count());
             return spellbooks.Count() > 0 ? spellbooks.MaxBy(spellbook => spellbook.CasterLevel) : null;
         }
 
@@ -389,12 +386,30 @@ namespace PathfinderAutoBuff.Scripting
             {
                 return false;
             }
-#if (DEBUG)
-            Logger.Debug($"Command " + command.Result.ToString());
+#if (WOTR)
+            Logger.Debug($"Command {commandAbility?.Ability.Name} {command.Result.ToString()}");
+#elif (KINGMAKER)
+            Logger.Debug($"Command {commandAbility?.Spell.Name} {command.Result.ToString()}");
 #endif
             if (command.Result != UnitCommand.ResultType.Success && !(command is UnitMoveTo || command is UnitInteractWithUnit))
             {
-//                touchDeliveryAbility = null;
+                if (commandAbility != null)
+                {
+#if (WOTR)
+                    if (!commandAbility.Ability.CanTarget(commandAbility.Target))
+#elif (KINGMAKER)
+                    if (!commandAbility.Spell.CanTarget(commandAbility.Target))
+#endif
+                    {
+#if (WOTR)
+                        Logger.Log($"Unable to use {commandAbility.Ability.Name} on target");
+#elif (KINGMAKER)
+                        Logger.Log($"Unable to use {commandAbility.Spell.Name} on target");
+#endif
+                        TryNextCommand();
+                        return true;
+                    }
+                }
                 return false;
             }
             //Checking if the command has a stickytouch component and saving the ability id
