@@ -474,7 +474,11 @@ namespace PathfinderAutoBuff.UnitLogic
             }
             if (spellData != null && spellData.Keys.Count > 0)
             {
+#if (WOTR)
+                result.Add(spellData.Keys.Select(kvp => (kvp.AssetGuid.ToString())).ToArray());
+#elif (KINGMAKER)
                 result.Add(spellData.Keys.Select(kvp => (kvp.AssetGuid)).ToArray());
+#endif
                 result.Add(spellData.Keys.Select(kvp => (kvp.Name)).ToArray());
             }
             else
@@ -498,7 +502,11 @@ namespace PathfinderAutoBuff.UnitLogic
                 foreach (KeyValuePair<BlueprintAbility, List<PartySpellData>> keyValuePair in spellData )
                 {
                     PartySpellDataUI spellDataUI = new PartySpellDataUI(
+#if (WOTR)
+                        keyValuePair.Key.AssetGuid.ToString(),
+#elif (KINGMAKER)
                         keyValuePair.Key.AssetGuid,
+#endif
                         keyValuePair.Key,
                         keyValuePair.Value.Select(spellData1 => spellData1.Caster.CharacterName).Distinct().ToList()
                         );

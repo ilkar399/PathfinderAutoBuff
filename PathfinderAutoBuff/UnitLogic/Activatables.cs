@@ -63,9 +63,14 @@ namespace PathfinderAutoBuff.UnitLogic
             {
                 foreach (ActivatableAbility ability in unit.ActivatableAbilities)
                 {
-                    if (result.ContainsKey(ability.Blueprint.AssetGuid))
+#if (WOTR)
+                    string abilityId = ability.Blueprint.AssetGuid.ToString();
+#elif (KINGMAKER)
+                    string abilityId = ability.Blueprint.AssetGuid;
+#endif
+                    if (result.ContainsKey(abilityId))
                     {
-                        result[ability.Blueprint.AssetGuid].Casters.Add(unit.CharacterName);
+                        result[abilityId].Casters.Add(unit.CharacterName);
                     }
                     else
                     {
@@ -74,8 +79,8 @@ namespace PathfinderAutoBuff.UnitLogic
                         {
                             itemSource = ability.SourceItem.Name;
                         }
-                        result[ability.Blueprint.AssetGuid] = new ActivatableDataUI(
-                            ability.Blueprint.AssetGuid,
+                        result[abilityId] = new ActivatableDataUI(
+                            abilityId,
                             ability.Blueprint,
                             unit.CharacterName,
                             itemSource

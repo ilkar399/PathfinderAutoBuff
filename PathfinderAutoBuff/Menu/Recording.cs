@@ -97,7 +97,7 @@ namespace PathfinderAutoBuff.Menu
                         GUILayout.Label($"{recordedAction.RecordedActionType}".Color(RGBA.white), GUILayout.Width(150f * uiScale));
 #if (DEBUG)
                         GUILayout.Label(recordedAction.Ability.name.Color(RGBA.white), GUILayout.Width(150f * uiScale));
-                        GUILayout.Label(recordedAction.Ability.AssetGuid.Color(RGBA.white), GUILayout.Width(150f * uiScale));
+ //                       GUILayout.Label(recordedAction.Ability.AssetGuid.Color(RGBA.white), GUILayout.Width(150f * uiScale));
 #endif
                         var test = recordedAction.RecordedActionType;
                     }

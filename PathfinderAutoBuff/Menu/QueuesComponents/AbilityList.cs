@@ -90,8 +90,13 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                         BlueprintActivatableAbility blueprintAbility = ResourcesLibrary.TryGetBlueprint<BlueprintActivatableAbility>(selectedAbility);
                         if (blueprintAbility != null)
                         {
+#if (WOTR)
+                            string abilityId = blueprintAbility.AssetGuid.ToString();
+#elif (KINGMAKER)
+                            string abilityId = blueprintAbility.AssetGuid;
+#endif
                             GenericDataDescription genericDataDescription = new GenericDataDescription(
-                                blueprintAbility.AssetGuid,
+                                abilityId,
                                 blueprintAbility.Name,
                                 blueprintAbility.Description,
                                 new List<string>()
@@ -104,8 +109,13 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                         BlueprintAbility blueprintAbility = ResourcesLibrary.TryGetBlueprint<BlueprintAbility>(selectedAbility);
                         if (blueprintAbility != null)
                         {
+#if (WOTR)
+                            string abilityId = blueprintAbility.AssetGuid.ToString();
+#elif (KINGMAKER)
+                            string abilityId = blueprintAbility.AssetGuid;
+#endif
                             GenericDataDescription genericDataDescription = new GenericDataDescription(
-                                blueprintAbility.AssetGuid,
+                                abilityId,
                                 blueprintAbility.Name,
                                 blueprintAbility.Description,
                                 new List<string>()

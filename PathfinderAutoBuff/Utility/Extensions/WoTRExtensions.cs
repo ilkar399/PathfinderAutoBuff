@@ -98,8 +98,8 @@ namespace KingmakerAutoBuff.Extensions
 			return unitEntityData.Descriptor.Master;
         }
 
-		//TODO
-		public static List<UnitEntityData> PartyAndPets(this Player player)
+        //TODO
+        public static List<UnitEntityData> PartyAndPets(this Player player)
         {
 			List<UnitEntityData> result = new List<UnitEntityData>();
 			foreach (UnitEntityData unit in player.Party)

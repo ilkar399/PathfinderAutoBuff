@@ -202,13 +202,18 @@ namespace PathfinderAutoBuff.Scripting
             //Processing recording queue, grouping actions if necessary and preparing data for the new CommandQueue
             foreach (RecordedAction recordedAction in this.RecordedQueue)
             {
+#if (WOTR)
+                string abilityId = recordedAction.Ability.AssetGuid.ToString();
+#elif (KINGMAKER)
+                string abilityId = recordedAction.Ability.AssetGuid;
+#endif
                 int position = (recordedAction.Target == null) ? -1 : partyOrder.IndexOf(recordedAction.Target);
                 if (groupActions)
                 {
                     PreparedAction existingAction = preparedActions.FirstOrDefault(preparedAction =>
                     {
                         if (preparedAction.CasterName == recordedAction.Caster.CharacterName
-                         && preparedAction.AbilityId == recordedAction.Ability.AssetGuid)
+                         && preparedAction.AbilityId == abilityId)
                         {
                             return true;
                         }
@@ -220,7 +225,7 @@ namespace PathfinderAutoBuff.Scripting
                             recordedAction.Caster.CharacterName,
                             new List<int> { position },
                             new List<UnitEntityData> { recordedAction.Target },
-                            recordedAction.Ability.AssetGuid,
+                            abilityId,
                             recordedAction.RecordedActionType));
                     }
                     else
@@ -239,7 +244,7 @@ namespace PathfinderAutoBuff.Scripting
                         recordedAction.Caster.CharacterName,
                         new List<int> { position },
                         new List<UnitEntityData> { recordedAction.Target },
-                        recordedAction.Ability.AssetGuid,
+                        abilityId,
                         recordedAction.RecordedActionType));
                 }
             }
