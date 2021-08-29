@@ -44,8 +44,9 @@ namespace PathfinderAutoBuff.GUIWoTR
             //Getting base object
             UICommon uiCommon = Game.Instance.UI.Common;
             GameObject hudLayout = uiCommon?.transform.Find("HUDLayout")?.gameObject;
-            GameObject togglePanel = uiCommon?.transform.Find("EscMenuView/Window/ButtonBlock")?.gameObject;
-            if (!hudLayout || !togglePanel)
+            FadeCanvas fadeCanvas = Game.Instance.UI.FadeCanvas;
+            GameObject togglePanel = fadeCanvas?.transform.Find("EscMenuView/Window/ButtonBlock")?.gameObject;
+            if (!hudLayout || !togglePanel || !fadeCanvas || !togglePanel)
                 return null;
             //Initialize windows
             GameObject aBQueuesToolbar = new GameObject("ABQueuesToolbar", typeof(RectTransform), typeof(CanvasGroup));
