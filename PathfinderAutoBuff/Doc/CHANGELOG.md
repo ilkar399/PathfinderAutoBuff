@@ -1,4 +1,7 @@
-﻿## [0.1.4] - 2021-06-09
+﻿## [0.1.5] - 2021-09-02
+## Fixed
+- Preparing for Wrath of the Righteous Release
+## [0.1.4] - 2021-06-09
 ## Fixed
 - Fixed casting from Spontaneous&Mythic spellbooks
 - Relaxed restrictions on stopping queue execution if one of the spells is not castable for some reason.

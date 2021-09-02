@@ -26,6 +26,10 @@ There are issues with certain buffs that I'm not sure how to process yet
 *Notes: This mod might not work in combat because of the way action queueing is done.
 Also, it might conflict with mods patching UnitCommand.OnEnded* 
 
+## Known issues
+* There are some issues with Magus metamagic and similar abilities not applying before the
+ next queued spell is casted
+
 ## Usage notes
 * I'd advice to first record some simple action queue to see how the mod handles them
 and better understand the queue creation principles.
