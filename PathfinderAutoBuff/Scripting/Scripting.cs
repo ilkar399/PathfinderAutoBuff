@@ -207,7 +207,7 @@ namespace PathfinderAutoBuff.Scripting
                     return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
 #elif (WOTR)
                     //return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
-                    return new AbilityData(variant, executor.Descriptor)
+                    return new AbilityData(variant, spellbook, spellbook.GetMinSpellLevel(variant))
 #endif
                     {
                         ConvertedFrom = fact
@@ -239,12 +239,19 @@ namespace PathfinderAutoBuff.Scripting
           Kingmaker.UnitLogic.Abilities.Ability fact,
           BlueprintSpellbook spellbook)
         {
-            //AbilityData ad = new AbilityData(ability, executor, fact, spellbook);
+#if (WOTR)
             AbilityData ad = new AbilityData(ability, executor);
+#else
+            
+            AbilityData ad = new AbilityData(ability, executor, fact, spellbook);
+#endif
             if (variant == null)
                 return ad;
-            //return new AbilityData(variant, executor, fact, spellbook)
+#if (WOTR)
             return new AbilityData(variant, executor)
+#else
+            return new AbilityData(variant, executor, fact, spellbook)
+#endif
             {
                 ConvertedFrom = ad
             };
