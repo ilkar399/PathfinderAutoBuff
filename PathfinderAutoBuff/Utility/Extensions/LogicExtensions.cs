@@ -39,7 +39,11 @@ namespace PathfinderAutoBuff.Utility.Extensions
 				return false;
 			}
 #endif
+#if (WOTR)
+            int blueprintLevel = spellbook.GetMinSpellLevel(blueprint);
+#else
             int blueprintLevel = spellbook.GetSpellLevel(blueprint);
+#endif
             if (blueprintLevel < 0)
                 return false;
             if (spellbook.Blueprint.Spontaneous)
@@ -87,7 +91,11 @@ namespace PathfinderAutoBuff.Utility.Extensions
 			int maxSpellLevel = spellbook.MaxSpellLevel;
             if (spellbook.Blueprint.Spontaneous)
             {
+#if (WOTR)
+                for (int spellLevel = maxSpellLevel; spellLevel >= spellbook.GetMinSpellLevel(blueprint); spellLevel--)
+#else
                 for (int spellLevel = maxSpellLevel; spellLevel >= spellbook.GetSpellLevel(blueprint); spellLevel--)
+#endif
                 {
                     AbilityData spell2 = spellbook.GetCustomSpells(spellLevel).Where(spell => spell.Blueprint == blueprint).FirstOrDefault();
                     if (spell2 != null)

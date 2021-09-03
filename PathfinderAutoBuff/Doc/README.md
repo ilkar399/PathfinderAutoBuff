@@ -27,6 +27,8 @@ There are issues with certain buffs that I'm not sure how to process yet
 Also, it might conflict with mods patching UnitCommand.OnEnded* 
 
 ## Known issues
+* Swift action abilities (and maybe spells) don't seem to apply, returning interrupted error. 
+ Might need some time to fix
 * There are some issues with Magus metamagic and similar abilities not applying before the
  next queued spell is casted
 

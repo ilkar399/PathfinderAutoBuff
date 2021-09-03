@@ -206,7 +206,8 @@ namespace PathfinderAutoBuff.Scripting
 #if (KINGMAKER)
                     return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
 #elif (WOTR)
-                    return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
+                    //return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
+                    return new AbilityData(variant, executor.Descriptor)
 #endif
                     {
                         ConvertedFrom = fact
@@ -238,10 +239,12 @@ namespace PathfinderAutoBuff.Scripting
           Kingmaker.UnitLogic.Abilities.Ability fact,
           BlueprintSpellbook spellbook)
         {
-            AbilityData ad = new AbilityData(ability, executor, fact, spellbook);
+            //AbilityData ad = new AbilityData(ability, executor, fact, spellbook);
+            AbilityData ad = new AbilityData(ability, executor);
             if (variant == null)
                 return ad;
-            return new AbilityData(variant, executor, fact, spellbook)
+            //return new AbilityData(variant, executor, fact, spellbook)
+            return new AbilityData(variant, executor)
             {
                 ConvertedFrom = ad
             };
