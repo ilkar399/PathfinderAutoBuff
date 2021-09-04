@@ -12,7 +12,7 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <WoTRInstallPath>E:\Games\Steam\steamapps\common\Pathfinder Second Adventure Demo\</WoTRInstallPath>
+    <WoTRInstallPath>E:\Games\Steam\steamapps\common\Pathfinder Second Adventure\</WoTRInstallPath>
     <KingmakerInstallPath>E:\Games\Steam\steamapps\common\Pathfinder Kingmaker\</KingmakerInstallPath>
   </PropertyGroup>
   <!--
@@ -97,7 +97,7 @@
           <Private>False</Private>
         </Reference>
         <Reference Include="Assembly-CSharp">
-          <HintPath>..\..\WoTRLib\Assembly-CSharp.dll</HintPath>
+          <HintPath>..\..\WoTRLib\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="DOTween">

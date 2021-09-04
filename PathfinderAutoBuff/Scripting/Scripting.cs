@@ -37,7 +37,7 @@ namespace PathfinderAutoBuff.Scripting
             activatableAbility = ability;
         }
 
-        protected override ResultType OnAction()
+        public override ResultType OnAction()
         {
             if (!activatableAbility.IsTurnedOn)
             {
@@ -240,7 +240,7 @@ namespace PathfinderAutoBuff.Scripting
           BlueprintSpellbook spellbook)
         {
 #if (WOTR)
-            AbilityData ad = new AbilityData(ability, executor);
+            AbilityData ad = new AbilityData(ability, executor, fact, spellbook);
 #else
             
             AbilityData ad = new AbilityData(ability, executor, fact, spellbook);
@@ -248,7 +248,7 @@ namespace PathfinderAutoBuff.Scripting
             if (variant == null)
                 return ad;
 #if (WOTR)
-            return new AbilityData(variant, executor)
+            return new AbilityData(variant, executor, fact, spellbook)
 #else
             return new AbilityData(variant, executor, fact, spellbook)
 #endif
