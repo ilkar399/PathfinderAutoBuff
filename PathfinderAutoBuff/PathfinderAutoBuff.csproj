@@ -12,8 +12,11 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+<!--
+  Moved to environment vars
     <WoTRInstallPath>E:\Games\Steam\steamapps\common\Pathfinder Second Adventure\</WoTRInstallPath>
     <KingmakerInstallPath>E:\Games\Steam\steamapps\common\Pathfinder Kingmaker\</KingmakerInstallPath>
+-->
   </PropertyGroup>
   <!--
   Property groups defining builds for WotR
@@ -287,6 +290,11 @@
     <Compile Include="Menu\QueuesComponents\ActionItemView.cs" />
     <Compile Include="Menu\Recording.cs" />
     <Compile Include="Menu\Tests.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Scripting\CommandQueue.cs" />
     <Compile Include="Scripting\QueueControllers.cs" />
     <Compile Include="Scripting\RecordController.cs" />
@@ -341,6 +349,10 @@
     <None Include="Doc\CHANGELOG.md" />
     <None Include="Doc\README.md" />
     <None Include="Doc\TODO.md" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Repository.json" />
   </ItemGroup>
   <ItemGroup />

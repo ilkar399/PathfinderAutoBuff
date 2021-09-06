@@ -2,7 +2,7 @@
   "Id": "PathfinderAutoBuff",
   "DisplayName": "Pathfinder AutoBuff",
   "Author": "Ilkar",
-  "Version": "0.1.5",
+  "Version": "0.1.5a",
   "ManagerVersion": "0.22.0",
   "Requirements": [],
   "EntryMethod": "PathfinderAutoBuff.Main.Load"

@@ -58,7 +58,8 @@ There're 6 build configurations:
 
 Game lib references are handled through "TargetGame" property and conditional targeting.
 Lib references use relative paths while game install paths are absolute.
-Installed game paths are defined in "WoTRInstallPath" and "KingmakerInstallPath" properties.
+Installed game paths are defined in "WoTRInstallPath" and "KingmakerInstallPath"
+ user environment variables.
 
 #### Folder structure:
 ```

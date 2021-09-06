@@ -536,70 +536,77 @@ namespace PathfinderAutoBuff.Scripting
 
         static void Postfix(UnitCommand __instance, bool raiseEvent)
         {
-            //Action recording test1
-            RecordController recordQueue = Main.recordQueue;
-            bool actionRecordFlag = recordQueue.Enabled;
-            bool actionProcessedFlag = recordQueue.lastAction == __instance;
-            bool stickyTouchFlag = recordQueue.StickyTouch;
-            //Skip everything in non-debug mode
+            try
+            {
+                //Action recording test1
+                RecordController recordQueue = Main.recordQueue;
+                bool actionRecordFlag = recordQueue.Enabled;
+                bool actionProcessedFlag = recordQueue.lastAction == __instance;
+                bool stickyTouchFlag = recordQueue.StickyTouch;
+                //Skip everything in non-debug mode
 #if (!DEBUG)
             if (!actionRecordFlag && script_executors.Count == 0)
                 return;
 #endif
-            UnitUseAbility unitUseAbility = (__instance as UnitUseAbility);
-            /*
-            if (unitUseAbility != null)
-                Logger.Debug($"{__instance.Executor} - {__instance.Target} - {unitUseAbility.Ability.Blueprint.name}/{unitUseAbility.Ability.Blueprint.AssetGuid}");
-            */
-            //Action recording
-            if (Kingmaker.Game.Instance.Player.Party.Contains(__instance.Executor) &&
-                unitUseAbility != null && actionRecordFlag && !actionProcessedFlag)
-            {
-                if (stickyTouchFlag)
+                UnitUseAbility unitUseAbility = (__instance as UnitUseAbility);
+                /*
+                if (unitUseAbility != null)
+                    Logger.Debug($"{__instance.Executor} - {__instance.Target} - {unitUseAbility.Ability.Blueprint.name}/{unitUseAbility.Ability.Blueprint.AssetGuid}");
+                */
+                //Action recording
+                if (Kingmaker.Game.Instance.Player.Party.Contains(__instance.Executor) &&
+                    unitUseAbility != null && actionRecordFlag && !actionProcessedFlag)
                 {
-                    recordQueue.StickyTouch = false;
-                }
-                 else
-                {
-                    try
+                    if (stickyTouchFlag)
                     {
-                        recordQueue.AddAction(__instance);
+                        recordQueue.StickyTouch = false;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Logger.Error(ex.StackTrace);
-                    }
+                        try
+                        {
+                            recordQueue.AddAction(__instance);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex.StackTrace);
+                        }
 #if (WOTR)
-                    Logger.Debug($"{__instance.Executor} - {__instance.Target} - {unitUseAbility.Ability.Blueprint.name} {unitUseAbility.Ability.Blueprint.AssetGuid}");
+                        Logger.Debug($"{__instance.Executor} - {__instance.Target} - {unitUseAbility.Ability.Blueprint.name} {unitUseAbility.Ability.Blueprint.AssetGuid}");
 #elif (KINGMAKER)
                 Logger.Debug($"{__instance.Executor} - {__instance.Target} - {unitUseAbility.Spell.Name}");
 #endif
-                }
-                //Sticky touch handling. Might need a rework to be more robust
+                    }
+                    //Sticky touch handling. Might need a rework to be more robust
 #if (WOTR)
-                if (unitUseAbility.Ability.Blueprint.StickyTouch != null)
+                    if (unitUseAbility.Ability.Blueprint.StickyTouch != null)
 #elif (KINGMAKER)
                 if (unitUseAbility.Spell.Blueprint.StickyTouch != null)
 #endif
-                {
-                    recordQueue.StickyTouch = true;
+                    {
+                        recordQueue.StickyTouch = true;
+                    }
+                    recordQueue.lastAction = __instance;
                 }
-                recordQueue.lastAction = __instance;
-            }
-            script_execution_mutex.WaitOne();
-            foreach (var s in script_executors)
-            {
-                if (s.HandleUnitCommandDidEnd(__instance))
+                script_execution_mutex.WaitOne();
+                foreach (var s in script_executors)
                 {
-                    break;
+                    if (s.HandleUnitCommandDidEnd(__instance))
+                    {
+                        break;
+                    }
                 }
+                if (script_executors.Count < 1)
+                {
+                    ScriptController.executingQueueName = "";
+                    //TODO UIController.ResetToggles;
+                }
+                script_execution_mutex.ReleaseMutex();
             }
-            if (script_executors.Count < 1)
+            catch (Exception ex)
             {
-                ScriptController.executingQueueName = "";
-                //TODO UIController.ResetToggles;
+                Logger.Error(ex.StackTrace);
             }
-            script_execution_mutex.ReleaseMutex();
         }
     }
 }
