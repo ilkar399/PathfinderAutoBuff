@@ -72,6 +72,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             }
             //Title section
             UI.BeginHorizontal();
+
             UI.Label(DefaultStyles.TextHeader2("Select"), GUILayout.Width(50f * UIScale));
             UI.Label(DefaultStyles.TextHeader2($"{actionDescription} name"), GUILayout.Width(200f * UIScale));
 #if (DEBUG)

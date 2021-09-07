@@ -70,27 +70,27 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                     });
                     UI.Vertical(() =>
                     {
-                    //Ability name and status
-                    AbilityNameStatusView();
+                        //Ability name and status
+                        AbilityNameStatusView();
                     }, GUILayout.Width((float)(Math.Max(250f, ummWidth * 0.15))), GUILayout.ExpandWidth(false));
                     UI.Vertical(() =>
                     {
-                    //Caster
-                    CasterView();
-                    //Availability
-                    AvailabilityView();
+                        //Caster
+                        CasterView();
+                        //Availability
+                        AvailabilityView();
 
                     }, GUILayout.Width((float)(Math.Max(250f, ummWidth * 0.2))), GUILayout.ExpandWidth(false));
                     UI.Vertical(() =>
                     {
-                    //Target
-                    TargetView();
+                        //Target
+                        TargetView();
 
                     }, GUILayout.Width((float)(Math.Max(200, ummWidth * 0.15))), GUILayout.ExpandWidth(false));
                     UI.Vertical(() =>
                     {
-                    //Ability description and duration
-                    AbilityDescriptionView();
+                        //Ability description and duration
+                         AbilityDescriptionView();
                     }, GUILayout.ExpandWidth(true));
                     UI.EndHorizontal();
                 }
@@ -421,11 +421,16 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
 
         private void AbilityDescriptionView()
         {
+            BlueprintAbility blueprintAbility = ResourcesLibrary.TryGetBlueprint<BlueprintAbility>(commandQueueItem.AbilityId);
+            if (blueprintAbility == null)
+            {
+                GUILayout.Label(string.Format(Local["Menu_Queues_StatusNoAbility"], commandQueueItem.AbilityId).Color(RGBA.red));
+                return;
+            }
             if (commandQueueItem.ActionType == CommandQueueItem.ActionTypes.Spell)
             {
                 //Spell description
                 UnitEntityData caster = commandQueueItem.GetCaster(queuesController.partySpellList);
-                BlueprintAbility blueprintAbility = ResourcesLibrary.TryGetBlueprint<BlueprintAbility>(commandQueueItem.AbilityId);
                 string spellDescription = blueprintAbility.Description;
                 PartySpellData memorizedSpellData = queuesController.partySpellList.GetMemorizedSpellData(caster, blueprintAbility);
                 string spellDuration = "";
@@ -445,7 +450,6 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             else if (commandQueueItem.ActionType == CommandQueueItem.ActionTypes.Ability)
             {
                 //Ability description
-                BlueprintAbility blueprintAbility = ResourcesLibrary.TryGetBlueprint<BlueprintAbility>(commandQueueItem.AbilityId);
                 string abilityDescription = blueprintAbility.Description;
                 GUILayout.Label(DefaultStyles.TextHeader3(Local["Menu_Queues_Description"]), DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
                 GUILayout.Label(abilityDescription.RemoveHtmlTags(), DefaultStyles.LabelDefault(), GUILayout.ExpandWidth(false));

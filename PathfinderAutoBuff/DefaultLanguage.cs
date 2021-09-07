@@ -86,6 +86,7 @@ namespace PathfinderAutoBuff
             { "Menu_Queues_Delete", "Delete"},
             { "Menu_Queues_StatusNoErrors", "No errors"},
             { "Menu_Queues_StatusFatal", "Fatal error"},
+            { "Menu_Queues_StatusNoAbility", "Error getting ability data for {0}"},
             { "Menu_Queues_StatusNoCasterName", "No caster available with the name"},
             { "Menu_Queues_StatusNoCasterSpell", "No caster available with the chosen action"},
             { "Menu_Queues_StatusNoTargets", "No available targets"},
