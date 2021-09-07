@@ -1,4 +1,9 @@
-﻿## [0.1.5a] - 2021-09-04
+﻿## [0.1.5b] - 2021-09-07
+## Fixed
+- Improved error handling to reduce the chances of crashing the game/mod 
+UI completely
+
+## [0.1.5a] - 2021-09-04
 ## Fixed
 - Initial ability execution fix
 
