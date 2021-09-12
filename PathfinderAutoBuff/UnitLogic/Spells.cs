@@ -33,7 +33,10 @@ namespace PathfinderAutoBuff.UnitLogic
         public Int32 EffectiveCasterLevel = 0;
         internal AbilityData AbilityData;
         public bool IsExtendible = false;
+        /*
         public ContextDurationValue DurationValue = null;
+        */
+        public Rounds DurationValue = new Rounds(0);
         public int PartyPosition = 0;
         public int AvailableCasts = 0;
         public UnitDescriptor Caster = null;
@@ -52,7 +55,11 @@ namespace PathfinderAutoBuff.UnitLogic
             this.EffectiveCasterLevel = effectiveCasterLevel;
             this.AbilityData = abilityData;
             this.IsExtendible = isExtendible;
-            this.DurationValue = durationValue;
+            this.DurationValue = PartySpellList.CreateSpellDuration(abilityData,
+                                                                    blueprintAbility,
+                                                                    durationValue,
+                                                                    referencedAbility,
+                                                                    caster);
             this.PartyPosition = partyPosition;
             this.Caster = caster;
             this.CanTargetFriends = CanTargetFriends;
@@ -142,7 +149,7 @@ namespace PathfinderAutoBuff.UnitLogic
 #if (WOTR)
                 var unitSpells = GetUnitSpells(unit, num++, false);
 #elif (KINGMAKER)
-                var unitSpells = GetUnitSpells(unit.Descriptor, num++,false);
+                var unitSpells = GetUnitSpells(unit.Descriptor, num++, false);
 #endif
                 Result.AddRange(unitSpells);
             }
@@ -205,15 +212,15 @@ namespace PathfinderAutoBuff.UnitLogic
                 foreach (BlueprintAbility blueprintAbility1 in referenceArrayProxy.Value)
 
 #elif (KINGMAKER)
-                    BlueprintAbility[] variants;
-                    if (component != null)
-                        variants = component.Variants;
-                    else
-                        variants = null;
-                    if (variants != null)
-                    {
+            BlueprintAbility[] variants;
+            if (component != null)
+                variants = component.Variants;
+            else
+                variants = null;
+            if (variants != null)
+            {
 
-                        foreach (BlueprintAbility blueprintAbility1 in variants)
+                foreach (BlueprintAbility blueprintAbility1 in variants)
 #endif
                 {
                     PartySpellData partySpell = PartySpell(spell, blueprintAbility1, unitDescriptor, partyPosition, spell.SpellLevel);
@@ -362,7 +369,7 @@ namespace PathfinderAutoBuff.UnitLogic
                 partySpellDatas = this.m_AvailableSpells;
             else
                 if (partySpellDatas == null)
-                    partySpellDatas = this.m_AllSpells;
+                partySpellDatas = this.m_AllSpells;
             if (partySpellDatas.Count == 0)
                 return null;
             List<PartySpellData> abilities = partySpellDatas.Where(partySpellData => (partySpellData.Blueprint == blueprintAbility)).ToList();
@@ -391,7 +398,7 @@ namespace PathfinderAutoBuff.UnitLogic
         }
 
         //Get available casts for ability
-       public int GetAvailableCasts(PartySpellData partySpellData, bool combine = false)
+        public int GetAvailableCasts(PartySpellData partySpellData, bool combine = false)
         {
             int Result = 0;
             if (combine)
@@ -499,7 +506,7 @@ namespace PathfinderAutoBuff.UnitLogic
             spellData = partySpellList.PartySpellByLevel(spellLevel, false, caster);
             if (spellData?.Keys.Count > 0)
             {
-                foreach (KeyValuePair<BlueprintAbility, List<PartySpellData>> keyValuePair in spellData )
+                foreach (KeyValuePair<BlueprintAbility, List<PartySpellData>> keyValuePair in spellData)
                 {
                     PartySpellDataUI spellDataUI = new PartySpellDataUI(
 #if (WOTR)
@@ -517,44 +524,52 @@ namespace PathfinderAutoBuff.UnitLogic
         }
 
         //Return calculated spell duration in Rounds
-        public static Rounds GetSpellDuration(PartySpellData partySpellData)
+        public static Rounds CreateSpellDuration(
+            AbilityData abilityData, 
+            BlueprintAbility blueprintAbility,
+            [CanBeNull] ContextDurationValue contextDurationValue,
+            [CanBeNull] BlueprintAbility referencedAbility,
+            [CanBeNull] UnitDescriptor caster)
+//            PartySpellData partySpellData)
         {
             string enduringSpellsID = "2f206e6d292bdfb4d981e99dcf08153f";
             string enduringSpellsGreaterID = "13f9269b3b48ae94c896f0371ce5e23c";
-            if (partySpellData == null)
-                throw new Exception("Party Spell Data is absent");
-            if (partySpellData.Caster == null || partySpellData.DurationValue == null)
+            if (caster == null || contextDurationValue == null)
                 throw new Exception("Party Spell Data is lacking");
             AbilityData spell1;
-            if (partySpellData.AbilityData.Blueprint.HasVariants)
+            if (abilityData.Blueprint.HasVariants)
             {
-                spell1 = new AbilityData(partySpellData.AbilityData, partySpellData.Blueprint);
+                spell1 = new AbilityData(abilityData, blueprintAbility);
             }
             else
-                if (partySpellData.referencedAbility != null)
-                {
-                spell1 = new AbilityData(partySpellData.AbilityData, partySpellData.referencedAbility);
+                if (referencedAbility != null)
+            {
+                spell1 = new AbilityData(abilityData, referencedAbility);
             }
-                else
-                {
-                    spell1 = partySpellData.AbilityData;
-                }
+            else
+            {
+                spell1 = abilityData;
+            }
             MechanicsContext mechanicsContext = new AbilityExecutionContext(
                 spell1,
                 spell1.CalculateParams(),
                 spell1.Caster.Unit,
                 null);
-            Rounds Result = partySpellData.DurationValue.Calculate(mechanicsContext);
+            Rounds Result = contextDurationValue.Calculate(mechanicsContext);
             BlueprintFeature enduringSpells = ResourcesLibrary.TryGetBlueprint<BlueprintFeature>(enduringSpellsID);
             BlueprintFeature enduringSpellsGreater = ResourcesLibrary.TryGetBlueprint<BlueprintFeature>(enduringSpellsGreaterID);
             if (enduringSpells != null && enduringSpellsGreater != null)
-                if ((Result.Seconds >= 60.Minutes() && partySpellData.Caster.HasFact(enduringSpells)) 
-                    || (Result.Seconds >= 5.Minutes() && partySpellData.Caster.HasFact(enduringSpellsGreater)))
+                if ((Result.Seconds >= 60.Minutes() && caster.HasFact(enduringSpells))
+                    || (Result.Seconds >= 5.Minutes() && caster.HasFact(enduringSpellsGreater)))
                 {
                     Result = new Rounds(14400);
                 }
             return Result;
         }
 
+        public static Rounds GetSpellDuration(PartySpellData partySpellData)
+        {
+            return partySpellData.DurationValue;
+        }
     }
 }

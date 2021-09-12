@@ -36,8 +36,11 @@ namespace PathfinderAutoBuff.Scripting
         {
             activatableAbility = ability;
         }
-
+#if (KINGMAKER)
+        protected override ResultType OnAction()
+#else
         public override ResultType OnAction()
+#endif
         {
             if (!activatableAbility.IsTurnedOn)
             {
@@ -198,13 +201,18 @@ namespace PathfinderAutoBuff.Scripting
                 return null;
             if (useSpellbook)
             {
-                AbilityData fact = spellbook.PASpellAbility(ability);
+                AbilityData fact = spellbook.PASpellAbility(ability, false, executor);
                 if (variant == null)
-                    return fact;
+#if (KINGMAKER)
+                    return new AbilityData(ability, spellbook);
+#elif (WOTR)
+                    //return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
+                    return new AbilityData(ability, spellbook, spellbook.GetMinSpellLevel(ability))
+#endif
                 else
                 {
 #if (KINGMAKER)
-                    return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
+                    return new AbilityData(variant, executor.Descriptor, null, spellbook.Blueprint)
 #elif (WOTR)
                     //return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
                     return new AbilityData(variant, spellbook, spellbook.GetMinSpellLevel(variant))
@@ -314,7 +322,7 @@ namespace PathfinderAutoBuff.Scripting
     {
         List<CommandProvider> commandProviders = new  List<CommandProvider>();
         bool errorStatus;
-        UnitEntityData executor;
+        public UnitEntityData executor { get; private set; }
         public string errorMessage;
         public bool ErrorStatus() { return errorStatus; }
         public string ErrorMessage() { return errorMessage; }
@@ -399,7 +407,9 @@ namespace PathfinderAutoBuff.Scripting
 #if (WOTR)
             Logger.Debug($"Command {commandAbility?.Ability.Name} {command.Result.ToString()}");
 #elif (KINGMAKER)
-            Logger.Debug($"Command {commandAbility?.Spell.Name} {command.Result.ToString()}");
+            Logger.Debug($"Command {command} {command.Type} {commandAbility?.Spell.Name} {command.Result.ToString()}");
+            if (commandAbility.Spell.MetamagicData != null)
+                Logger.Debug($"{commandAbility.Spell.MetamagicData.MetamagicMask}");
 #endif
             if (command.Result != UnitCommand.ResultType.Success && !(command is UnitMoveTo || command is UnitInteractWithUnit))
             {
@@ -520,6 +530,11 @@ namespace PathfinderAutoBuff.Scripting
         static List<ScriptExecutor> script_executors = new List<ScriptExecutor>();
         private static Mutex script_execution_mutex = new Mutex();
 
+        public static bool HasExecutors()
+        {
+            return script_executors.Count > 0;
+        }
+
         static public void updateScripts(params ScriptExecutor[] new_script_executors)
         {
             script_execution_mutex.WaitOne();
@@ -574,7 +589,7 @@ namespace PathfinderAutoBuff.Scripting
 #if (WOTR)
                         Logger.Debug($"{__instance.Executor} - {__instance.Target} - {unitUseAbility.Ability.Blueprint.name} {unitUseAbility.Ability.Blueprint.AssetGuid}");
 #elif (KINGMAKER)
-                Logger.Debug($"{__instance.Executor} - {__instance.Target} - {unitUseAbility.Spell.Name}");
+                    Logger.Debug($"{__instance.Executor} - {__instance.Target} - {unitUseAbility.Spell.Name}");
 #endif
                     }
                     //Sticky touch handling. Might need a rework to be more robust
@@ -609,4 +624,28 @@ namespace PathfinderAutoBuff.Scripting
             }
         }
     }
+    /*
+    [HarmonyLib.HarmonyPatch(typeof(AbilityExecutionProcess), "Tick", HarmonyLib.MethodType.Normal)]
+    class AbilityExecutionProcess__Tick__Patch
+    {
+        static void Postfix(AbilityExecutionProcess __instance)
+        {
+            try
+            {
+                if (__instance != null)
+                {
+                    if (__instance.IsEnded &&  UnitCommand__OnEnded__Patch.HasExecutors())
+                    {
+                        UnitCommand__OnEnded__Patch.ContinueExecution(__instance.Context.Caster);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.StackTrace);
+            }
+
+        }
+    }
+    */
 }

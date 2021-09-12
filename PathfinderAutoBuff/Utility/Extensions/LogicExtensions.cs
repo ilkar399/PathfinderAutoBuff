@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic;
+using Kingmaker.EntitySystem.Entities;
 
 namespace PathfinderAutoBuff.Utility.Extensions
 {
@@ -86,7 +87,7 @@ namespace PathfinderAutoBuff.Utility.Extensions
 			return false;
 		}
 
-		internal static AbilityData PASpellAbility(this Spellbook spellbook, [NotNull] BlueprintAbility blueprint, bool excludeSpecial = false)
+		internal static AbilityData PASpellAbility(this Spellbook spellbook, [NotNull] BlueprintAbility blueprint, bool excludeSpecial = false, UnitEntityData executor = null)
 		{
 			int maxSpellLevel = spellbook.MaxSpellLevel;
             if (spellbook.Blueprint.Spontaneous)

@@ -451,8 +451,8 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             {
                 //Ability description
                 string abilityDescription = blueprintAbility.Description;
-                GUILayout.Label(DefaultStyles.TextHeader3(Local["Menu_Queues_Description"]), DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(false));
-                GUILayout.Label(abilityDescription.RemoveHtmlTags(), DefaultStyles.LabelDefault(), GUILayout.ExpandWidth(false));
+                GUILayout.Label(DefaultStyles.TextHeader2(Local["Menu_Queues_Description"]), DefaultStyles.LabelFixed120());
+                GUILayout.Label(abilityDescription.RemoveHtmlTags(), DefaultStyles.LabelDefault());
             }
             //Mods
             if (commandQueueItem.AbilityMods != null)
