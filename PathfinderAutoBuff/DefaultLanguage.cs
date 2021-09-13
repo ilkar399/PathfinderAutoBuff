@@ -84,6 +84,7 @@ namespace PathfinderAutoBuff
             { "Menu_Queues_Down", "Down"},
             { "Menu_Queues_Edit", "Edit"},
             { "Menu_Queues_Delete", "Delete"},
+            { "Menu_Queues_Copy", "Copy"},
             { "Menu_Queues_StatusNoErrors", "No errors"},
             { "Menu_Queues_StatusFatal", "Fatal error"},
             { "Menu_Queues_StatusNoAbility", "Error getting ability data for {0}"},

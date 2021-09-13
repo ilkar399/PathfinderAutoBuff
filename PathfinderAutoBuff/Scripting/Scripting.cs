@@ -207,7 +207,7 @@ namespace PathfinderAutoBuff.Scripting
                     return new AbilityData(ability, spellbook);
 #elif (WOTR)
                     //return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
-                    return new AbilityData(ability, spellbook, spellbook.GetMinSpellLevel(ability))
+                    return new AbilityData(ability, spellbook, spellbook.GetMinSpellLevel(ability));
 #endif
                 else
                 {

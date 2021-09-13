@@ -67,6 +67,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                             Delete();
                             return;
                         }, DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false));
+                        UI.ActionButton(Local["Menu_Queues_Copy"], () => Copy(), DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false));
                     });
                     UI.Vertical(() =>
                     {
@@ -677,6 +678,15 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
         private void Delete()
         {
             this.selectedQueue.CurrentQueue().CommandList.Remove(this.commandQueueItem);
+            this.selectedQueue.Refresh();
+        }
+
+        //Action copying
+        private void Copy()
+        {
+            CommandQueueItem copiedItem = new CommandQueueItem(commandQueueItem);
+            int insertIndex = this.selectedQueue.CurrentQueue().CommandList.IndexOf(commandQueueItem);
+            this.selectedQueue.CurrentQueue().CommandList.Insert(insertIndex, copiedItem);
             this.selectedQueue.Refresh();
         }
 

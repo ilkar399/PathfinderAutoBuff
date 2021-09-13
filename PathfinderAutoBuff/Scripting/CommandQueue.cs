@@ -70,6 +70,32 @@ namespace PathfinderAutoBuff.Scripting
             this.AbilityId = null;
         }
 
+
+        public CommandQueueItem(CommandQueueItem commandQueueItem)
+        {
+            this.CasterName = string.Copy(commandQueueItem.CasterName);
+            this.AbilityId = string.Copy(commandQueueItem.AbilityId);
+            this.TargetType = commandQueueItem.TargetType;
+            this.ActionType = commandQueueItem.ActionType;
+            this.CharacterNames = !(commandQueueItem.CharacterNames is null) ?  new List<string>(commandQueueItem.CharacterNames) :null;
+            this.Positions = !(commandQueueItem.Positions is null) ? new List<int>(commandQueueItem.Positions) : null;
+            this.PetIndex = !(commandQueueItem.PetIndex is null) ? new Dictionary<string, List<int>>() : null;
+            if (commandQueueItem.PetIndex is null)
+            {
+                this.PetIndex = null;
+            }
+            else
+            {
+                this.PetIndex = new Dictionary<string, List<int>>();
+                foreach (KeyValuePair<string, List<int>> entry in commandQueueItem.PetIndex)
+                {
+                    this.PetIndex.Add(entry.Key, new List<int>(entry.Value));
+                }
+            }
+            this.AbilityMods = !(commandQueueItem.AbilityMods is null) ? new List<string>(commandQueueItem.AbilityMods) : null;
+            this.ActivatableMods = !(commandQueueItem.ActivatableMods is null) ? new List<string>(commandQueueItem.ActivatableMods) : null;
+        }
+
         public CommandQueueItem(string CasterName, string AbilityId,
             bool isSelf = false, List<string> CharacterNames = null, List<int> Positions = null, Dictionary<string, List<int>> PetIndex = null,
             List<string> AbilityMods = null, List<string> ActivatableMods = null, ActionTypes actionType = ActionTypes.Spell)
