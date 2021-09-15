@@ -207,7 +207,7 @@ namespace PathfinderAutoBuff.Scripting
                     return new AbilityData(ability, spellbook);
 #elif (WOTR)
                     //return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
-                    return new AbilityData(ability, spellbook, spellbook.GetMinSpellLevel(ability));
+                    return fact;
 #endif
                 else
                 {
@@ -215,7 +215,7 @@ namespace PathfinderAutoBuff.Scripting
                     return new AbilityData(variant, executor.Descriptor, null, spellbook.Blueprint)
 #elif (WOTR)
                     //return new AbilityData(variant,executor.Descriptor, null, spellbook.Blueprint)
-                    return new AbilityData(variant, spellbook, spellbook.GetMinSpellLevel(variant))
+                    return new AbilityData(fact, variant)
 #endif
                     {
                         ConvertedFrom = fact

@@ -92,22 +92,27 @@ namespace PathfinderAutoBuff.Utility.Extensions
 			int maxSpellLevel = spellbook.MaxSpellLevel;
             if (spellbook.Blueprint.Spontaneous)
             {
+                List<AbilityData> availableSpells = new List<AbilityData>();
+
 #if (WOTR)
                 for (int spellLevel = maxSpellLevel; spellLevel >= spellbook.GetMinSpellLevel(blueprint); spellLevel--)
 #else
                 for (int spellLevel = maxSpellLevel; spellLevel >= spellbook.GetSpellLevel(blueprint); spellLevel--)
 #endif
                 {
-                    AbilityData spell2 = spellbook.GetCustomSpells(spellLevel).Where(spell => spell.Blueprint == blueprint).FirstOrDefault();
-                    if (spell2 != null)
-                        if (spellbook.GetAvailableForCastSpellCount(spell2) > 0)
-                            return spell2;
-                    AbilityData spell3 = spellbook.GetAllKnownSpells().Where(spell => spell.Blueprint == blueprint).FirstOrDefault();
-                    return spell3;
+                    List<AbilityData> customSpells = spellbook.GetCustomSpells(spellLevel).Where(spell => spell.Blueprint == blueprint).ToList();
+                    if (customSpells?.Count() > 0)
+                        foreach (AbilityData spell2 in customSpells)
+                            if (spellbook.GetAvailableForCastSpellCount(spell2) > 0)
+                                availableSpells.Add(spell2);
+                    availableSpells.AddRange(spellbook.GetAllKnownSpells().Where(spell => spell.Blueprint == blueprint).ToList());
                 }
+                AbilityData result = availableSpells.Where(spell => spell.HasMetamagic(Metamagic.Extend)).FirstOrDefault();
+                return result != null ? result : availableSpells.OrderBy(spell => spell.SpellLevel).FirstOrDefault();
             }
             else
             {
+                List<AbilityData> availableSpells = new List<AbilityData>();
                 for (int spellLevel = maxSpellLevel; spellLevel >= 0; spellLevel--)
                 {
                     List<SpellSlot> list = spellbook.GetMemorizedSpellSlots(spellLevel).ToList();
@@ -119,13 +124,15 @@ namespace PathfinderAutoBuff.Utility.Extensions
                             AbilityData spell2 = spellSlot.Spell;
                             if (blueprint == ((spell2 != null) ? spell2.Blueprint : null))
                             {
-                                return spell2;
+                                availableSpells.Add(spell2);
                             }
                         }
                     }
                 }
+                availableSpells.AddRange(spellbook.GetAllKnownSpells().Where(spell => spell.Blueprint == blueprint).ToList());
+                AbilityData result = availableSpells.Where(spell => spell.HasMetamagic(Metamagic.Extend)).FirstOrDefault();
+                return result != null ? result : availableSpells.OrderBy(spell => spell.SpellLevel).FirstOrDefault();
             }
-			return null;
 		}
 	}
 
