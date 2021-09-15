@@ -1,4 +1,14 @@
-﻿## [0.1.5b] - 2021-09-07
+﻿## [0.1.6] - 2021-09-15
+## Fixed
+- Fixed some ability context not applied on queue execution.
+- Fixed Extend metamagic not being used for spellcasting 
+(Priority for spells now is Spellbook with the highest CL-> 
+Has Extend -> Lowest spell level slot (for cases when caster has 
+the same spell on multiple spellevels)
+## Added
+- Action copy button (for the cases like Cackle/Chang)
+
+## [0.1.5b] - 2021-09-07
 ## Fixed
 - Improved error handling to reduce the chances of crashing the game/mod 
 UI completely
