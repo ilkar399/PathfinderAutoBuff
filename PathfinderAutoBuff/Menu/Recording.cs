@@ -11,7 +11,7 @@ using PathfinderAutoBuff.Controllers;
 using static PathfinderAutoBuff.Utility.Extensions.RichTextExtensions;
 using static PathfinderAutoBuff.Utility.Extensions.CommonExtensions;
 using static PathfinderAutoBuff.Main;
-using PathfinderAutoBuff.Scripting;
+using PathfinderAutoBuff.QueueOperattions;
 using PathfinderAutoBuff.UnitLogic;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using Kingmaker;

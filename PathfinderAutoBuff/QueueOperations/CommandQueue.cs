@@ -20,7 +20,7 @@ using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using static KingmakerAutoBuff.Extensions.WoTRExtensions;
 #endif
 
-namespace PathfinderAutoBuff.Scripting
+namespace PathfinderAutoBuff.QueueOperattions
 {
     [Serializable]
     public class CommandQueueItem
@@ -232,7 +232,7 @@ namespace PathfinderAutoBuff.Scripting
                 case TargetTypes.Positions:
                     foreach (int position in this.Positions)
                     {
-                        targets.Add(Target.GetTarget(position));
+                        targets.Add(Targets.GetTarget(position));
                     }
                     break;
                 case TargetTypes.CharacterNames:
@@ -240,7 +240,7 @@ namespace PathfinderAutoBuff.Scripting
                     {
                         foreach (string characterName in this.CharacterNames)
                         {
-                            targets.AddRange(Target.GetTarget(characterName));
+                            targets.AddRange(Targets.GetTarget(characterName));
                         }
                     }
                     if (this.PetIndex != null)
@@ -248,7 +248,7 @@ namespace PathfinderAutoBuff.Scripting
                         foreach (string characterName in this.PetIndex.Keys)
                         {
                             foreach (int petIndex in this.PetIndex[characterName])
-                                targets.AddIfNotNull(Target.GetTargetPet(characterName, petIndex));
+                                targets.AddIfNotNull(Targets.GetTargetPet(characterName, petIndex));
                         }
                     }
                     break;
@@ -391,7 +391,7 @@ namespace PathfinderAutoBuff.Scripting
                 case TargetTypes.Positions:
                     foreach (int position in this.Positions)
                     {
-                        UnitEntityData target = Target.GetTarget(position);
+                        UnitEntityData target = Targets.GetTarget(position);
                         if (target == null)
                             targetNotAvailableFlag = true;
                         else
@@ -403,7 +403,7 @@ namespace PathfinderAutoBuff.Scripting
                     {
                         foreach (string characterName in this.CharacterNames)
                         {
-                            List<UnitEntityData> targets1 = Target.GetTarget(characterName);
+                            List<UnitEntityData> targets1 = Targets.GetTarget(characterName);
                             if (targets1.Count < 1)
                                 targetNotAvailableFlag = true;
                             else
@@ -416,7 +416,7 @@ namespace PathfinderAutoBuff.Scripting
                         {
                             foreach (int petIndex in this.PetIndex[characterName])
                             {
-                                UnitEntityData target = Target.GetTargetPet(characterName, petIndex);
+                                UnitEntityData target = Targets.GetTargetPet(characterName, petIndex);
                                 if (target == null)
                                     targetNotAvailableFlag = true;
                                 else

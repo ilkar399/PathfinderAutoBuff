@@ -9,10 +9,10 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using static PathfinderAutoBuff.Main;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
-using PathfinderAutoBuff.Scripting;
+using PathfinderAutoBuff.QueueOperattions;
 using PathfinderAutoBuff.UnitLogic;
 
-namespace PathfinderAutoBuff.Scripting
+namespace PathfinderAutoBuff.QueueOperattions
     /*
      * Queue controller for UI. In the future might be used as a base for the menu viewmodel 
      */

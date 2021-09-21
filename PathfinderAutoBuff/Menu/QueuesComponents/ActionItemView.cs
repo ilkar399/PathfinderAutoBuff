@@ -9,7 +9,7 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityModManagerNet;
-using PathfinderAutoBuff.Scripting;
+using PathfinderAutoBuff.QueueOperattions;
 using PathfinderAutoBuff.UnitLogic;
 using PathfinderAutoBuff.Utility;
 using static PathfinderAutoBuff.Main;
@@ -304,12 +304,12 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             {
                 if (partyNamesOrdered == null)
                 {
-                    partyNamesOrdered = Target.GetPartyNamesOrder();
+                    partyNamesOrdered = Targets.GetPartyNamesOrder();
                 }
                 if (targetSelection == null)
                 {
                     targetSelection = new Dictionary<int, bool>();
-                    Target.GetTargetSelectionDict(ref targetSelection);
+                    Targets.GetTargetSelectionDict(ref targetSelection);
                 }
                 GUILayout.Label(DefaultStyles.TextHeader2(Local["Menu_Queues_TargetSelectionType"]), DefaultStyles.LabelDefault());
                 Utility.UI.SelectionGrid(ref currentTargetTypeIndex, targetTypeArray, 3, DefaultStyles.ButtonSelector(), GUILayout.ExpandWidth(false));
@@ -338,7 +338,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                             break;
                         case 1:
                             List<int> positions = targetSelection.Where(kvp => (kvp.Value)).Select(kvp => kvp.Key).ToList();
-                            List<UnitEntityData> characters = Target.GetPartyOrder();
+                            List<UnitEntityData> characters = Targets.GetPartyOrder();
                             List<string> characterNames = new List<string>();
                             Dictionary<string, List<int>> petIndex = new Dictionary<string, List<int>>();
                             for (int i = 0; i < characters.Count; i++)
@@ -395,7 +395,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 if (GUILayout.Button(Local["Menu_Queues_ClearTargetSelection"], DefaultStyles.ButtonFixed120()))
                 {
                     targetSelection = new Dictionary<int, bool>();
-                    Target.GetTargetSelectionDict(ref targetSelection);
+                    Targets.GetTargetSelectionDict(ref targetSelection);
                     currentTargetTypeIndex = -1;
                     selectedActionController.targetSelf = false;
                     selectedActionController.petIndex = null;
@@ -511,7 +511,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                     if (commandQueueItem.Positions != null)
                         foreach (int position in commandQueueItem.Positions)
                         {
-                            UnitEntityData target = Target.GetTarget(position);
+                            UnitEntityData target = Targets.GetTarget(position);
                             if (target != null)
                             {
                                 GUILayout.Label($"#{position} ({target.CharacterName.Color(RGBA.green)})",
@@ -530,7 +530,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                     {
                         foreach (string characterName in commandQueueItem.CharacterNames)
                         {
-                            List<UnitEntityData> targets = Target.GetTarget(characterName);
+                            List<UnitEntityData> targets = Targets.GetTarget(characterName);
                             if (targets.Count > 0)
                             {
                                 GUILayout.Label($"{characterName.Color(RGBA.green)}",
@@ -549,7 +549,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                         {
                             foreach (int petIndex in commandQueueItem.PetIndex[characterName])
                             {
-                                UnitEntityData target = Target.GetTargetPet(characterName, petIndex);
+                                UnitEntityData target = Targets.GetTargetPet(characterName, petIndex);
                                 if (target != null)
                                 {
                                     GUILayout.Label($"{characterName} pet ({target.CharacterName})".Color(RGBA.green),
@@ -658,7 +658,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 ResetActionEdit();
                 if (targetSelection == null)
                     targetSelection = new Dictionary<int, bool>();
-                Target.GetTargetSelectionDict(ref targetSelection, this.selectedQueue.actionController.CurrentAction());
+                Targets.GetTargetSelectionDict(ref targetSelection, this.selectedQueue.actionController.CurrentAction());
                 switch (this.selectedQueue.actionController.CurrentAction().TargetType)
                 {
                     case CommandQueueItem.TargetTypes.Self:
@@ -718,7 +718,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             currentTargetTypeIndex = -1;
             currentCasterIndex = -1;
             castersUIArray = null;
-            partyNamesOrdered = Target.GetPartyNamesOrder();
+            partyNamesOrdered = Targets.GetPartyNamesOrder();
         }
     }
 }

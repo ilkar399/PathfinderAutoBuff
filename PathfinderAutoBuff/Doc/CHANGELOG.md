@@ -6,7 +6,7 @@
 Has Extend -> Lowest spell level slot (for cases when caster has 
 the same spell on multiple spellevels)
 ## Added
-- Action copy button (for the cases like Cackle/Chang)
+- Action copy button (for the cases like Cackle/Chant)
 
 ## [0.1.5b] - 2021-09-07
 ## Fixed

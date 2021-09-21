@@ -107,7 +107,10 @@ namespace PathfinderAutoBuff.Utility.Extensions
                                 availableSpells.Add(spell2);
                     availableSpells.AddRange(spellbook.GetAllKnownSpells().Where(spell => spell.Blueprint == blueprint).ToList());
                 }
-                AbilityData result = availableSpells.Where(spell => spell.HasMetamagic(Metamagic.Extend)).FirstOrDefault();
+                AbilityData result = null;
+                List<AbilityData> results = availableSpells.Where(spell => spell.HasMetamagic(Metamagic.Extend)).ToList();
+                if (results != null)
+                    result = results.OrderBy(spell => spell.SpellLevel).FirstOrDefault();
                 return result != null ? result : availableSpells.OrderBy(spell => spell.SpellLevel).FirstOrDefault();
             }
             else

@@ -12,12 +12,12 @@ using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.EntitySystem.Entities;
 using PathfinderAutoBuff.Utility;
-using PathfinderAutoBuff.Scripting;
+using PathfinderAutoBuff.QueueOperattions;
 #if (KINGMAKER)
 using static KingmakerAutoBuff.Extensions.WoTRExtensions;
 #endif
 
-namespace PathfinderAutoBuff.Scripting
+namespace PathfinderAutoBuff.QueueOperattions
 {
     /*
      * Controller for the action recording
@@ -120,6 +120,14 @@ namespace PathfinderAutoBuff.Scripting
             Logger.Debug("Record enabled");
         }
 
+        public void Toggle()
+        {
+            if (this.Enabled)
+                Disable();
+            else
+                Enable();
+        }
+
         //TODO: Cleaning up
         public void Clear()
         {
@@ -198,7 +206,7 @@ namespace PathfinderAutoBuff.Scripting
         public (bool, string) SaveRecordQueue(string queueName, bool groupActions = true, bool usePositions = false)
         {
             List<PreparedAction> preparedActions = new List<PreparedAction>();
-            List<UnitEntityData> partyOrder = Target.GetPartyOrder();
+            List<UnitEntityData> partyOrder = Targets.GetPartyOrder();
             //Processing recording queue, grouping actions if necessary and preparing data for the new CommandQueue
             foreach (RecordedAction recordedAction in this.RecordedQueue)
             {

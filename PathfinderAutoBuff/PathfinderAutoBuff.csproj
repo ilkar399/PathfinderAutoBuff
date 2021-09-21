@@ -12,7 +12,7 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-<!--
+    <!--
   Moved to environment vars
     <WoTRInstallPath>E:\Games\Steam\steamapps\common\Pathfinder Second Adventure\</WoTRInstallPath>
     <KingmakerInstallPath>E:\Games\Steam\steamapps\common\Pathfinder Kingmaker\</KingmakerInstallPath>
@@ -188,6 +188,10 @@
           <HintPath>..\..\WoTRLib\publicized_assemblies\Owlcat.Runtime.UI_publicized.dll</HintPath>
           <Private>False</Private>
         </Reference>
+        <Reference Include="UnityEngine.AssetBundleModule">
+          <HintPath>..\..\WoTRLib\UnityEngine.AssetBundleModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </When>
     <!--
@@ -270,6 +274,10 @@
           <HintPath>..\..\..\source\KingmakerLib\UnityModManager\UnityModManager.dll</HintPath>
           <Private>False</Private>
         </Reference>
+        <Reference Include="UnityEngine.AssetBundleModule">
+          <HintPath>..\..\KingmakerLib\UnityEngine.AssetBundleModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </When>
   </Choose>
@@ -280,8 +288,9 @@
     <Compile Include="DefaultStyles.cs" />
     <Compile Include="Controllers\GUIController.cs" />
     <Compile Include="DefaultLanguage.cs" />
-    <Compile Include="HarmonyPatches\ScriptingPatches.cs" />
-    <Compile Include="HarmonyPatches\UIPatches.cs" />
+    <Compile Include="GUI\WoTR\DraggableWindow.cs" />
+    <Compile Include="GUI\WoTR\GUIManager.cs" />
+    <Compile Include="Menu\HarmonyPatches.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Menu\Queues.cs" />
     <Compile Include="Menu\QueuesComponents\AbilityFilter.cs" />
@@ -295,11 +304,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Scripting\CommandQueue.cs" />
-    <Compile Include="Scripting\QueueControllers.cs" />
-    <Compile Include="Scripting\RecordController.cs" />
-    <Compile Include="Scripting\Scripting.cs" />
-    <Compile Include="Scripting\Target.cs" />
+    <Compile Include="QueueOperations\CommandQueue.cs" />
+    <Compile Include="QueueOperations\QueueControllers.cs" />
+    <Compile Include="QueueOperations\RecordController.cs" />
+    <Compile Include="QueueOperations\CommandProvider.cs" />
+    <Compile Include="UnitLogic\Targets.cs" />
     <Compile Include="Tests\QueueBase.cs" />
     <Compile Include="Tests\QueueUI.cs" />
     <Compile Include="Tests\SpellAbilityLists.cs" />
@@ -309,6 +318,7 @@
     <Compile Include="UnitLogic\Activatables.cs" />
     <Compile Include="UnitLogic\DataDescription.cs" />
     <Compile Include="UnitLogic\Spells.cs" />
+    <Compile Include="Utility\BundleManager.cs" />
     <Compile Include="Utility\Dictionary\DoubleDictionary.cs" />
     <Compile Include="Utility\Dictionary\SerializableDictionary.cs" />
     <Compile Include="Utility\Dictionary\TripleDictionary.cs" />

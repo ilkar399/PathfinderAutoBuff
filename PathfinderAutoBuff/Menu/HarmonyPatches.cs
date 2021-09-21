@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using HarmonyLib;
 using UnityModManagerNet;
 
-namespace PathfinderAutoBuff.HarmonyPatches
+namespace PathfinderAutoBuff.Menu
 /*
 * Based on Hsinyu Chan KingmakerModMaker
 * https://github.com/hsinyuhcan/KingmakerModMaker
@@ -16,7 +16,7 @@ namespace PathfinderAutoBuff.HarmonyPatches
 * UMM UI Patches
 */
 {
-    static class UIUPatches
+    static class MenuHarmonyPatches
     {
         [HarmonyPatch(typeof(UnityModManager.UI), "Update")]
         internal static class UnityModManager_UI_Update_Patch

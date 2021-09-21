@@ -19,7 +19,7 @@ using static PathfinderAutoBuff.Utility.IOHelpers;
 using static PathfinderAutoBuff.Utility.Extensions.RichTextExtensions;
 using static PathfinderAutoBuff.Utility.Extensions.CommonExtensions;
 using PathfinderAutoBuff.Menu.QueuesComponents;
-using PathfinderAutoBuff.Scripting;
+using PathfinderAutoBuff.QueueOperattions;
 using PathfinderAutoBuff.UnitLogic;
 #if (KINGMAKER)
 using static KingmakerAutoBuff.Extensions.WoTRExtensions;

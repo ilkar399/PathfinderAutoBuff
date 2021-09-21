@@ -8,7 +8,7 @@ using System.Reflection;
 using static KingmakerAutoBuff.Extensions.WoTRExtensions;
 #endif
 
-namespace PathfinderAutoBuff.Scripting
+namespace PathfinderAutoBuff.QueueOperattions
 {
     /*
      * Target detection for scripts
@@ -16,7 +16,7 @@ namespace PathfinderAutoBuff.Scripting
      * - UnitEntityData GetTarget(string) Target CharacterName
      * - UnitEntityData GetTargetPet(string targetParetyCharBame, opt string targetPetName)
      */
-    static class Target
+    static class Targets
     {
         //Unit party order as it's used in game 
         public static List<UnitEntityData> GetPartyOrder()
@@ -111,7 +111,7 @@ namespace PathfinderAutoBuff.Scripting
                     case CommandQueueItem.TargetTypes.Positions:
                         foreach (int position in commandQueueItem.Positions)
                         {
-                            UnitEntityData target = Target.GetTarget(position);
+                            UnitEntityData target = Targets.GetTarget(position);
                             if (target != null)
                                 targets.Add(target);
                         }
@@ -121,7 +121,7 @@ namespace PathfinderAutoBuff.Scripting
                         {
                             foreach (string characterName in commandQueueItem.CharacterNames)
                             {
-                                List<UnitEntityData> targets1 = Target.GetTarget(characterName);
+                                List<UnitEntityData> targets1 = Targets.GetTarget(characterName);
                                 if (targets1.Count > 0)
                                     targets.AddRange(targets1);
                             }
@@ -132,7 +132,7 @@ namespace PathfinderAutoBuff.Scripting
                             {
                                 foreach (int petIndex in commandQueueItem.PetIndex[characterName])
                                 {
-                                    UnitEntityData target = Target.GetTargetPet(characterName, petIndex);
+                                    UnitEntityData target = Targets.GetTargetPet(characterName, petIndex);
                                     if (target != null)
                                         targets.Add(target);
                                 }

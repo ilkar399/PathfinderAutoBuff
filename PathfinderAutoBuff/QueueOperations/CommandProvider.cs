@@ -19,7 +19,7 @@ using PathfinderAutoBuff.UnitLogic;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using static PathfinderAutoBuff.Utility.Extensions.LogicExtensions;
 
-namespace PathfinderAutoBuff.Scripting
+namespace PathfinderAutoBuff.QueueOperattions
 {
     /*
      * Unit command handlers and action queue=>command converters.
