@@ -461,7 +461,6 @@ namespace PathfinderAutoBuff.QueueOperattions
         }
 
         //Import queue from file
-        //TODO: Errors
         public bool LoadFromFile(string fileName)
         {
             string filePath = (Path.Combine(ModPath, "scripts"));
@@ -469,10 +468,19 @@ namespace PathfinderAutoBuff.QueueOperattions
             List<CommandQueueItem> commandQueueItems = null;
             if (!File.Exists(filePath))
                 return false;
-            using (StreamReader file = File.OpenText(filePath))
+            try
             {
-                JsonSerializer serializer = new JsonSerializer();
-                commandQueueItems = (List<CommandQueueItem>)serializer.Deserialize(file, typeof(List<CommandQueueItem>));
+                using (StreamReader file = File.OpenText(filePath))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    commandQueueItems = (List<CommandQueueItem>)serializer.Deserialize(file, typeof(List<CommandQueueItem>));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error deserializing the queue {fileName}");
+                Logger.Log(ex.StackTrace);
+                return false;
             }
             if (commandQueueItems != null)
             {
@@ -483,7 +491,6 @@ namespace PathfinderAutoBuff.QueueOperattions
         }
 
         //Export queue into file
-        //TODO: Errors
         public bool SaveToFile(string queueName)
         {
             string savepath = "";
@@ -497,6 +504,7 @@ namespace PathfinderAutoBuff.QueueOperattions
             }
             catch (Exception e)
             {
+                Logger.Log($"Error saving the queue {queueName}");
                 Logger.Log(e.StackTrace);
                 return false;
             }
