@@ -110,6 +110,11 @@ namespace PathfinderAutoBuff.GUI
             //Add draggable windows component allowing the window to be dragged when the button is pressed down
             GameObject dragLeft = this.transform.Find("Container/Buttons/DragHandleLeft")?.gameObject;
             GameObject dragRight = this.transform.Find("Container/Buttons/DragHandleRight")?.gameObject;
+            GameObject scrollbar = this.transform.Find("Container/DropDown/Template/Scrollbar")?.gameObject;
+            if (scrollbar != null)
+            {
+                scrollbar.GetComponent<Scrollbar>().value = 1;
+            }
             dragLeft.AddComponent<DraggableWindow>();
             dragRight.AddComponent<DraggableWindow>();
             /*
