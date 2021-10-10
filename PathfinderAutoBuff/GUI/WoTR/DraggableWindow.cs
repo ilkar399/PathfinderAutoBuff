@@ -4,8 +4,12 @@ using Kingmaker.UI.Tooltip;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace PathfinderAutoBuff.GUI.WoTR
+namespace PathfinderAutoBuff.GUIWoTR
 {
+    /*
+     * Draggable window component
+     * Not universal, take kare of parent/child transform
+     */
     public class DraggableWindow : MonoBehaviour, IPointerDownHandler, IEventSystemHandler, IPointerUpHandler
     {
         private bool _moveMode;
@@ -20,7 +24,7 @@ namespace PathfinderAutoBuff.GUI.WoTR
         private void Start()
         {
             _takeDrag = new Vector2(0f, 0f);
-            _ownRectTransform = (RectTransform)transform.parent.parent;
+            _ownRectTransform = (RectTransform)transform.parent.parent.parent;
             _parentRectTransform = (RectTransform)_ownRectTransform.parent;
             _tooltip = gameObject.GetComponent<TooltipTrigger>();
         }
@@ -44,6 +48,9 @@ namespace PathfinderAutoBuff.GUI.WoTR
             _ownRectTransform.DOAnchorPos(_ownRectTransform.anchoredPosition - _takeDrag, 0.1f, false).SetUpdate(true);
             _moveMode = false;
             _mouseStartPos = default;
+            Utility.SettingsWrapper.GUIPosX = _ownRectTransform.anchoredPosition.x;
+            Utility.SettingsWrapper.GUIPosY = _ownRectTransform.anchoredPosition.y;
+            UnityModManagerNet.UnityModManager.SaveSettingsAndParams();
             if (_tooltip) _tooltip.enabled = true;
         }
 
@@ -59,7 +66,7 @@ namespace PathfinderAutoBuff.GUI.WoTR
                 return;
             }
             Vector2 vector2 = _containerStartPos + vector - _takeDrag;
-            vector2 = UIUtility.LimitPositionRectInRect(vector2, _parentRectTransform, _ownRectTransform);
+            vector2 = Utility.GUIHelpers.LimitPositionRectInRect(vector2, _parentRectTransform, _ownRectTransform);
             _ownRectTransform.anchoredPosition = vector2 + _takeDrag;
             _lastMausePos = vector;
         }

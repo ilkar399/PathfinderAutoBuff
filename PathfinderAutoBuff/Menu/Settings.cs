@@ -53,9 +53,10 @@ namespace PathfinderAutoBuff.Menu
             }
             using (new GUILayout.VerticalScope())
             {
+                //TODO Styling
+                UI.Label("Mechanics settings:");
                 IgnoreModifiiers = UI.ToggleButton(IgnoreModifiiers, Local["Menu_Settings_IgnoreModifiiers"], labelDefault, UI.AutoWidth());
                 RefreshShort = UI.ToggleButton(RefreshShort, Local["Menu_Settings_RefreshShort"], labelDefault, UI.AutoWidth());
-                UIEnabled = UI.ToggleButton(UIEnabled, Local["Menu_Settings_UIEnabled"], labelDefault, UI.AutoWidth());
                 UI.Label(string.Format(Local["Menu_Settings_RefreshLabel"], RefreshTime));
                 RefreshTime = (int)Utility.UI.RoundedHorizontalSlider(RefreshTime, 1, 30f, 90f, GUILayout.Width(200f), UI.AutoWidth());
                 /*string activeScene = SceneManager.GetActiveScene().name;
@@ -64,28 +65,46 @@ namespace PathfinderAutoBuff.Menu
                     GUILayout.Label(Local["Menu_All_Label_NotInGame"].Color(RichTextExtensions.RGBA.red));
                     return;
                 }*/
-                //Favorite queue selection
+                //GUI settings
+                UI.Label("GUI Settings:");
+                UIEnabled = UI.ToggleButton(UIEnabled, Local["Menu_Settings_UIEnabled"], labelDefault, UI.AutoWidth());
+                UIEnabled = UI.ToggleButton(GUIFavoriteOnly, "Show only Favorite queues in GUI", labelDefault, UI.AutoWidth());
                 UI.Label(Local["Menu_Settings_FavoriteQueuesLabel"]);
                 if (GUILayout.Button(Local["Menu_Settings_ReloadQueues"], GUILayout.ExpandWidth(false)))
                 {
                     ReloadQueues();
                 }
+                if (GUILayout.Button("Refresh GUI", GUILayout.ExpandWidth(false)))
+                {
+                    Main.uiController.Update();
+                }
+                if (GUILayout.Button("Reset GUI to Default", GUILayout.ExpandWidth(false)))
+                { 
+                    SettingsWrapper.ABToolbarScale = 1;
+                    SettingsWrapper.GUIPosX = 0;
+                    SettingsWrapper.GUIPosY = 0;
+                    Main.uiController.Update();
+                }
+                //Favorite queue selection
                 using (new GUILayout.HorizontalScope(GUILayout.ExpandWidth(false)))
                 {
-                    for (int favoriteQueueNumber = 0; favoriteQueueNumber < favorite_count; favoriteQueueNumber++)
+                    if (FavoriteQueues.Keys.Count > 0)
                     {
-                        int selected = m_QueueList.IndexOf(FavoriteQueues[favoriteQueueNumber + 1]);
-                        using (new GUILayout.VerticalScope(GUILayout.Width(120f)))
+                        for (int favoriteQueueNumber = 0; favoriteQueueNumber < favorite_count; favoriteQueueNumber++)
                         {
-                            Utility.UI.DropDownList(ref m_favoriteToggles[favoriteQueueNumber], ref selected, m_QueueList, () =>
-                             {
-                                 if (selected == -1)
-                                     FavoriteQueues[favoriteQueueNumber + 1] = "";
-                                 else
-                                     FavoriteQueues[favoriteQueueNumber + 1] = m_QueueList[selected];
-                                 Main.uiController.ABQueuesToolbar.UpdateButtonStatus();
-                             }
-                            , true, buttonFixed120, GUILayout.ExpandWidth(false));
+                            int selected = m_QueueList.IndexOf(FavoriteQueues[favoriteQueueNumber + 1]);
+                            using (new GUILayout.VerticalScope(GUILayout.Width(120f)))
+                            {
+                                Utility.UI.DropDownList(ref m_favoriteToggles[favoriteQueueNumber], ref selected, m_QueueList, () =>
+                                 {
+                                     if (selected == -1)
+                                         FavoriteQueues[favoriteQueueNumber + 1] = "";
+                                     else
+                                         FavoriteQueues[favoriteQueueNumber + 1] = m_QueueList[selected];
+                                     Main.uiController.ABQueuesToolbar.UpdateButtonStatus();
+                                 }
+                                , true, buttonFixed120, GUILayout.ExpandWidth(false));
+                            }
                         }
                     }
                 }

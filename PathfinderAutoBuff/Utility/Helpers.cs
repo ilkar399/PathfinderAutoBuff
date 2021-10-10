@@ -58,6 +58,37 @@ namespace PathfinderAutoBuff.Utility
     }
 
 
+    public static class GUIHelpers
+    {
+        //Modified LimitPositionRectInRect since we use different anchoring and the one used by game doesn't account for that
+        public static Vector2 LimitPositionRectInRect(Vector2 nPos, RectTransform parent, RectTransform child)
+        {
+            float width = parent.rect.width;
+            float height = parent.rect.height;
+            float width2 = child.rect.width;
+            float height2 = child.rect.height;
+            Vector2 pivot = child.pivot;
+            Vector2 anchor = child.anchorMin;
+            if (nPos.x + width * anchor.x - pivot.x * width2 <= 0f)
+            {
+                nPos.x = -width * anchor.x + pivot.x * width2;
+            }
+            else if (nPos.x + width * anchor.x + (1f - pivot.x) * width2 >= width)
+            {
+                nPos.x = width * (1f-anchor.x) - (1f - pivot.x) * width2;
+            }
+            if (nPos.y + height * anchor.y - pivot.y * height2 <= 0f)
+            {
+                nPos.y = -height * anchor.y + pivot.y * height2;
+            }
+            else if (nPos.y + height * anchor.y + (1f - pivot.y) * height2 >= height)
+            {
+                nPos.y = height * (1f - anchor.y) - (1f - pivot.y) * height2;
+            }
+            return nPos;
+        }
+    }
+
     public static class LogicHelpers
     {
         //Check if unit has low buff duration

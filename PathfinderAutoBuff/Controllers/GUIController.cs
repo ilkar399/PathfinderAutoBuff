@@ -18,39 +18,63 @@ namespace PathfinderAutoBuff.Controllers
 #if (WOTR)
         IAreaHandler
 #elif (KINGMAKER)
-        ISceneHandler
+        ISceneHandler 
 #endif
     {
+        public GUIManager AutoBuffGUI { get; private set; }
         public ABQueuesToolbar ABQueuesToolbar { get; private set; }
-        public int Priority => 800;
+        public int Priority => 400;
 
         public void Attach()
         {
+            /*
             if (!ABQueuesToolbar)
             {
                 Logger.Log("Attach");
-                ABQueuesToolbar = ABQueuesToolbar.CreateObject();
+                //               ABQueuesToolbar = ABQueuesToolbar.CreateObject();
+                if (AutoBuffGUI == null)
+                    AutoBuffGUI = GUIManager.CreateObject();
+            }
+            */
+            if (!AutoBuffGUI)
+            {
+                Logger.Log("Attach");
+                if (AutoBuffGUI == null)
+                    AutoBuffGUI = GUIManager.CreateObject();
+ //               AutoBuffGUI.RefreshView();
             }
         }
 
         public void Detach()
         {
             Logger.Log("Detach");
+            AutoBuffGUI.SafeDestroy();
+            AutoBuffGUI = null;
+            /*
             if (ABQueuesToolbar)
             {
 //                ABQueuesToolbar.Clear();
                 ABQueuesToolbar.SafeDestroy();
                 ABQueuesToolbar = null;
             }
+            */
         }
 
 #if (DEBUG)
         public void Clear()
         {
+            Transform transform;
+            while (transform = Game.Instance.UI.Common.transform.Find(GUIManager.Source))
+            {
+                transform.SafeDestroy();
+            }
+            transform = null;
+            /*
             Transform abQueuesToolbar;
             while (abQueuesToolbar = Game.Instance.UI.Common.transform.Find("Formations/ToggleGroup/"))
                 abQueuesToolbar.SafeDestroy();
             ABQueuesToolbar = null;
+            */
         }
 
 #endif
@@ -59,6 +83,7 @@ namespace PathfinderAutoBuff.Controllers
         {
             Detach();
             Attach();
+            AutoBuffGUI.RefreshView();
         }
 
         //Event handlers
@@ -70,6 +95,8 @@ namespace PathfinderAutoBuff.Controllers
                 Logger.Debug(MethodBase.GetCurrentMethod());
                 Main.uiController = this;
                 Attach();
+                if (AutoBuffGUI != null)
+                    AutoBuffGUI.RefreshView();
                 EventBus.Subscribe(this);
             }
         }
@@ -88,6 +115,7 @@ namespace PathfinderAutoBuff.Controllers
         {
             Logger.Debug(MethodBase.GetCurrentMethod());
             Attach();
+            AutoBuffGUI.RefreshView();
         }
     }
 }

@@ -624,28 +624,4 @@ namespace PathfinderAutoBuff.QueueOperattions
             }
         }
     }
-    /*
-    [HarmonyLib.HarmonyPatch(typeof(AbilityExecutionProcess), "Tick", HarmonyLib.MethodType.Normal)]
-    class AbilityExecutionProcess__Tick__Patch
-    {
-        static void Postfix(AbilityExecutionProcess __instance)
-        {
-            try
-            {
-                if (__instance != null)
-                {
-                    if (__instance.IsEnded &&  UnitCommand__OnEnded__Patch.HasExecutors())
-                    {
-                        UnitCommand__OnEnded__Patch.ContinueExecution(__instance.Context.Caster);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.StackTrace);
-            }
-
-        }
-    }
-    */
 }

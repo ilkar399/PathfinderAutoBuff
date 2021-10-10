@@ -14,7 +14,7 @@ using PathfinderAutoBuff.UnitLogic;
 
 namespace PathfinderAutoBuff.QueueOperattions
     /*
-     * Queue controller for UI. In the future might be used as a base for the menu viewmodel 
+     * Queue controller for UI/GUI. In the future might be used as a base for the menu viewmodel 
      */
 {
     class QueuesController
@@ -139,6 +139,11 @@ namespace PathfinderAutoBuff.QueueOperattions
                 this.queueController.Clear();
                 this.queueController = null;
             }
+            /*
+            if (Main.uiController != null)
+                if (Main.uiController.AutoBuffGUI.isActiveAndEnabled)
+                    Main.uiController.AutoBuffGUI.RefreshView();
+            */
         }
     }
 
@@ -151,7 +156,7 @@ namespace PathfinderAutoBuff.QueueOperattions
         CommandQueue m_CurrentQueue;
         public bool actionsInit;
         public ActionController actionController;
-        public Dictionary<int, string> favoriteQueues;
+ //       public Dictionary<int, string> favoriteQueues;
 
         //Constructor
         public QueueController(CommandQueue commandQueue)
@@ -171,7 +176,7 @@ namespace PathfinderAutoBuff.QueueOperattions
                 this.actionController.Clear();
                 this.actionController = null;
             }
-            favoriteQueues = new Dictionary<int, string>(FavoriteQueues);
+ //           favoriteQueues = new Dictionary<int, string>(FavoriteQueues);
             this.actionsInit = false;
         }
 

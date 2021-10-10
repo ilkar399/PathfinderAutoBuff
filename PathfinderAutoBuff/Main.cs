@@ -20,7 +20,6 @@ namespace PathfinderAutoBuff
     {
         static Harmony HarmonyInstance;
         static string modId;
- //       public static UnityModManager.ModEntry modEntry = null;
         public static Settings Settings;
         public static bool Enabled;
         static bool harmonyDebug = false;
@@ -29,9 +28,8 @@ namespace PathfinderAutoBuff
         public static LocalizationController<DefaultLanguage> Local;
         public static GUIController uiController { get; internal set; }
         public static RecordController recordQueue { get; internal set; }
+        public static QueuesController QueuesController { get; internal set; }
         public static Controllers.MenuController Menu;
-
-        //        public static ModManager<Core, Settings> Mod;
 
         static bool Load(UnityModManager.ModEntry modEntry)
         {
@@ -40,8 +38,6 @@ namespace PathfinderAutoBuff
             try
             {
                 modId = modEntry.Info.Id;
-                //                Mod = new ModManager<Core, Settings>();
-                //            Menu = new ModMaker.MenuController();
                 //Local
                 Local = new LocalizationController<DefaultLanguage>();
                 //Menu
@@ -61,6 +57,10 @@ namespace PathfinderAutoBuff
                 modEntry.OnUnload = Unload;
 #endif
                 Enabled = modEntry.Enabled;
+                //Transferring settings from the old version
+                Utility.VersionCompatibility.SettingsCompatibility();
+                //Loading Assets
+                Utility.BundleManger.AddBundle("pathfinderautobuffpanel"); //Load AssetBundle.
             }
             catch (Exception ex)
             {

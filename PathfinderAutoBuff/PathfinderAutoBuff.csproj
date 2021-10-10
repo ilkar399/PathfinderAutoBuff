@@ -289,7 +289,9 @@
     <Compile Include="Controllers\GUIController.cs" />
     <Compile Include="DefaultLanguage.cs" />
     <Compile Include="GUI\WoTR\DraggableWindow.cs" />
+    <Compile Include="GUI\WoTR\DropDownIconShow.cs" />
     <Compile Include="GUI\WoTR\GUIManager.cs" />
+    <Compile Include="GUI\WoTR\ToggleSpriteSwap.cs" />
     <Compile Include="Menu\HarmonyPatches.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Menu\Queues.cs" />
@@ -328,6 +330,7 @@
     <Compile Include="Utility\Extensions\UnityExtensions.cs" />
     <Compile Include="Utility\Helpers.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Utility\VersionCompatibility.cs" />
     <Compile Include="Utility\SettingsWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />

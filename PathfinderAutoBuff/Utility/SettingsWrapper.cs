@@ -43,7 +43,14 @@ namespace PathfinderAutoBuff.Utility
                 Main.Settings.uIEnabled = value;
             }
         }
-
+        public static bool GUIFavoriteOnly
+        {
+            get => Main.Settings.guiFavoriteOnly;
+            set
+            {
+                Main.Settings.guiFavoriteOnly = value;
+            }
+        }
         public static float ABToolbarWidth
         {
             get => Main.Settings.aBToolbarWidth;
@@ -64,10 +71,30 @@ namespace PathfinderAutoBuff.Utility
                 Main.Settings.favoriteQueues = value;
             }
         }
+
+        public static List<string> FavoriteQueues2
+        {
+            get => Main.Settings.favoriteQueues2;
+            set => Main.Settings.favoriteQueues2 = value;
+        }
+
         public static float UIScale
         {
             get => Main.Settings.uIScale;
         }
+
+        public static float GUIPosX
+        {
+            get => Main.Settings.gUIPosX;
+            set => Main.Settings.gUIPosX = value;
+        }
+
+        public static float GUIPosY
+        {
+            get => Main.Settings.gUIPosY;
+            set => Main.Settings.gUIPosY = value;
+        }
+
     }
 
 }

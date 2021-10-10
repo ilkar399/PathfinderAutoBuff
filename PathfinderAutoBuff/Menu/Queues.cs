@@ -41,7 +41,6 @@ namespace PathfinderAutoBuff.Menu
         public string Name => "Queues";
         public int Priority => 100;
         private Vector2 _scrollPosition;
-        private QueuesController queuesController;
         private string uiQueueName;
         private int currentQueueIndex = -1;
         private Dictionary<int, bool> targetSelection;
@@ -54,7 +53,7 @@ namespace PathfinderAutoBuff.Menu
         {
             if (!Main.Enabled)
             {
-                queuesController = null;
+                Main.QueuesController = null;
                 EventBus.Unsubscribe(this);
                 return;
             }
@@ -65,10 +64,10 @@ namespace PathfinderAutoBuff.Menu
             }
             bool queueDeletionFlag = true;
             string activeScene = SceneManager.GetActiveScene().name;
-            if (queuesController == null)
+            if (Main.QueuesController == null)
             {
                 EventBus.Subscribe(this);
-                queuesController = new QueuesController();
+                Main.QueuesController = new QueuesController();
             }
             //Overall layout
             GUILayout.BeginVertical();
@@ -82,7 +81,7 @@ namespace PathfinderAutoBuff.Menu
                     ReloadData();
                     return;
                 }
-                if (queuesController.queueController == null)
+                if (Main.QueuesController.queueController == null)
                 {
                     //New queue
                     if (GUILayout.Button(Local["Menu_Queues_NewQueue"], DefaultStyles.ButtonFixed120()))
@@ -90,41 +89,41 @@ namespace PathfinderAutoBuff.Menu
                         List<CommandQueueItem> commandList = new List<CommandQueueItem>();
                         CommandQueue commandQueue = new CommandQueue();
                         commandQueue.CommandList = commandList;
-                        queuesController.queueController = new QueueController(commandQueue);
+                        Main.QueuesController.queueController = new QueueController(commandQueue);
                         uiQueueName = "New queue";
-                        queuesController.CurrentQueueName = "New queue";
-                        queuesController.CurrentQueueIndex = -1;
+                        Main.QueuesController.CurrentQueueName = "New queue";
+                        Main.QueuesController.CurrentQueueIndex = -1;
                     }
                     GUILayout.Label(Local["Menu_Queues_QueueList"], DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(true));
                     //Queue list UI
                     using (var ScrollView = new GUILayout.ScrollViewScope(_scrollPosition))
                     {
                         _scrollPosition = ScrollView.scrollPosition;
-                        Utility.UI.SelectionGrid(ref currentQueueIndex, queuesController.m_Queues, 5, () =>
+                        Utility.UI.SelectionGrid(ref currentQueueIndex, Main.QueuesController.m_Queues, 5, () =>
                         {
-                            queuesController.CurrentQueueIndex = currentQueueIndex;
-                            if (queuesController.queueController == null)
+                            Main.QueuesController.CurrentQueueIndex = currentQueueIndex;
+                            if (Main.QueuesController.queueController == null)
                             {
                                 CommandQueue commandQueue = new CommandQueue();
-                                commandQueue.LoadFromFile($"{queuesController.CurrentQueueName}.json");
-                                queuesController.queueController = new QueueController(commandQueue);
-                                uiQueueName = queuesController.CurrentQueueName;
+                                commandQueue.LoadFromFile($"{Main.QueuesController.CurrentQueueName}.json");
+                                Main.QueuesController.queueController = new QueueController(commandQueue);
+                                uiQueueName = Main.QueuesController.CurrentQueueName;
                             }
                             else
                             {
-                                queuesController.queueController.Clear();
-                                queuesController.queueController = null;
+                                Main.QueuesController.queueController.Clear();
+                                Main.QueuesController.queueController = null;
                                 CommandQueue commandQueue = new CommandQueue();
-                                commandQueue.LoadFromFile($"{queuesController.CurrentQueueName}.json");
-                                queuesController.queueController = new QueueController(commandQueue);
-                                uiQueueName = queuesController.CurrentQueueName;
+                                commandQueue.LoadFromFile($"{Main.QueuesController.CurrentQueueName}.json");
+                                Main.QueuesController.queueController = new QueueController(commandQueue);
+                                uiQueueName = Main.QueuesController.CurrentQueueName;
                             }
 
                         }, DefaultStyles.ButtonSelector(), GUILayout.ExpandWidth(false));
                     }
                 }
             }
-            if (queuesController.queueController != null)
+            if (Main.QueuesController.queueController != null)
             {
                 //Selected Queue
                 GUILayout.BeginVertical("box", GUILayout.ExpandHeight(true));
@@ -141,14 +140,14 @@ namespace PathfinderAutoBuff.Menu
                     if (GUILayout.Button(Local["Menu_Queues_ExecuteQueue"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
                         ScriptController.Reset();
-                        ScriptController.CreateFromQueue(queuesController.queueController.CurrentQueue().CommandList,
-                                                        queuesController.CurrentQueueName);
+                        ScriptController.CreateFromQueue(Main.QueuesController.queueController.CurrentQueue().CommandList,
+                                                        Main.QueuesController.CurrentQueueName);
                         ScriptController.Run();
                     }
                     //Favorite queue saving
                     if (GUILayout.Button(Local["Menu_Queues_SaveQueue"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
-                        bool saveResult = queuesController.queueController.CurrentQueue().SaveToFile(uiQueueName);
+                        bool saveResult = Main.QueuesController.queueController.CurrentQueue().SaveToFile(uiQueueName);
                         if (saveResult)
                         {
                             ReloadData();
@@ -180,31 +179,31 @@ namespace PathfinderAutoBuff.Menu
             }
             //Actions
             //Queue Edit/Info Mode
-            if (queuesController.queueController != null)
+            if (Main.QueuesController.queueController != null)
             {
                 //New Spell/Ability
                 UI.Horizontal(() => {
                     if (GUILayout.Button(Local["Menu_Queues_NewSpell"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
-                        NewAction(queuesController, CommandQueueItem.ActionTypes.Spell);
+                        NewAction(Main.QueuesController, CommandQueueItem.ActionTypes.Spell);
                     }
                     if (GUILayout.Button(Local["Menu_Queues_NewAbility"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
-                        NewAction(queuesController, CommandQueueItem.ActionTypes.Ability);
+                        NewAction(Main.QueuesController, CommandQueueItem.ActionTypes.Ability);
                     }
                 }, "box");
                 //Action list init/view/edit
-                if (!queuesController.queueController.actionsInit)
+                if (!Main.QueuesController.queueController.actionsInit)
                 {
                     actionItemsViews.Clear();
-                    foreach (CommandQueueItem commandQueueItem in queuesController.queueController.CurrentQueue().CommandList)
+                    foreach (CommandQueueItem commandQueueItem in Main.QueuesController.queueController.CurrentQueue().CommandList)
                     {
-                        ActionItemView actionItemView = new ActionItemView(queuesController, commandQueueItem);
+                        ActionItemView actionItemView = new ActionItemView(Main.QueuesController, commandQueueItem);
                         actionItemsViews.Add(actionItemView);
                     }
-                    queuesController.queueController.actionsInit = true;
+                    Main.QueuesController.queueController.actionsInit = true;
                 }
-                if (queuesController.queueController.actionsInit)
+                if (Main.QueuesController.queueController.actionsInit)
                 {
                     for (int i = 0; i < actionItemsViews.Count; i++)
                         actionItemsViews[i].OnGUI();
@@ -234,8 +233,7 @@ namespace PathfinderAutoBuff.Menu
 
         private void ReloadData()
         {
-            queuesController.ReloadQueues();
-            currentQueueIndex = -1;
+            Main.QueuesController.ReloadQueues();
             currentQueueIndex = -1;
             targetSelection = null;
             partyNamesOrdered = null;

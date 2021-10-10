@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using Kingmaker;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -11,14 +12,17 @@ using TMPro;
 using PathfinderAutoBuff.Utility;
 using PathfinderAutoBuff.QueueOperattions;
 using static PathfinderAutoBuff.Main;
+using static PathfinderAutoBuff.Utility.StatusWrapper;
+
 using Kingmaker.UI.Selection;
 
-namespace PathfinderAutoBuff.GUI.WoTR
+namespace PathfinderAutoBuff.GUIWoTR
 {
-    internal class GUIManager : MonoBehaviour
+    public class GUIManager : MonoBehaviour
     {
-        public const string Source = "pathfinderautobuffpanel";
-        private Text _text;
+        public const string Source = "PathfinderAutoBuffActionPanel";
+        private Transform _transform;
+        bool m_enabled;
 
         internal CommandQueue selectedQueue;
 
@@ -28,16 +32,16 @@ namespace PathfinderAutoBuff.GUI.WoTR
 
         [Header("Buttons")]
         [SerializeField]
-        private OwlcatButton m_Execute;
+        private Button m_Execute;
 
         [SerializeField]
-        private OwlcatButton m_RecordStop;
+        private Toggle m_RecordToggle;
 
         [SerializeField]
-        private OwlcatButton m_Remove;
+        private Button m_Remove;
 
         [SerializeField]
-        private OwlcatButton m_Settings;
+        private Toggle m_Favorite;
 
         [SerializeField]
         private bool m_IsInit = false;
@@ -59,9 +63,14 @@ namespace PathfinderAutoBuff.GUI.WoTR
                 //
                 //Attempt to get the objects loaded from the AssetBundles and build the window.
                 //
-                var window = Instantiate(BundleManger.LoadedPrefabs[Source].transform.Find("WeaponWindow")); //We ditch the TutorialCanvas as talked about in the Wiki, we will attach it to a different parent
+                Transform _transform = BundleManger.LoadedPrefabs[Source].transform;
+                Logger.Debug(_transform);
+                var window = Instantiate(_transform); //We ditch the TutorialCanvas as talked about in the Wiki, we will attach it to a different parent
                 window.SetParent(staticCanvas, false); //Attaches our window to the static canvas
                 window.SetAsFirstSibling(); //Our window will always be under other UI elements as not to interfere with the game. Top of the list has the lowest priority
+                RectTransform rectTransform = (RectTransform)window;
+                rectTransform.anchoredPosition = new Vector2(SettingsWrapper.GUIPosX, SettingsWrapper.GUIPosY);
+                window.gameObject.SetActive(true);
                 return window.gameObject.AddComponent<GUIManager>(); //This adds this class as a component so it can handle events, button clicks, awake, update, etc.
             }
             catch (Exception ex)
@@ -74,63 +83,118 @@ namespace PathfinderAutoBuff.GUI.WoTR
         private void Awake()
         {
             //This is a unity message that runs once when the script activates (Check Unity documenation for the differences between Start() and Awake()
-
+            //gameObject.GetComponent<CanvasGroup>().alpha = 0f;
             //
             // Setup the listeners when the script starts
             //
             this.m_Dropdown = this.transform.Find("Container/DropDown")?.gameObject.GetComponent<TMP_Dropdown>();
-            this.m_Execute = this.transform.Find("Container/Buttons/Execute")?.gameObject.GetComponent<OwlcatButton>();
-            this.m_RecordStop = this.transform.Find("Container/Buttons/RecordStop")?.gameObject.GetComponent<OwlcatButton>();
-            this.m_Remove = this.transform.Find("Container/Buttons/Remove")?.gameObject.GetComponent<OwlcatButton>();
-            this.m_Settings = this.transform.Find("Container/Buttons/Settings")?.gameObject.GetComponent<OwlcatButton>();
-
+            m_Dropdown.onValueChanged = new TMP_Dropdown.DropdownEvent();
+            m_Dropdown.onValueChanged.AddListener(new UnityAction<int>(HandleSelectItem));
+            GameObject dropdownItemTemplate = m_Dropdown.transform.Find("Template/Viewport/Content/Item").gameObject;
+            dropdownItemTemplate.AddComponent<DropDownIconShow>();
+            this.m_Execute = this.transform.Find("Container/Buttons/Execute")?.gameObject.GetComponent<Button>();
+            m_Execute.onClick = new Button.ButtonClickedEvent();
+            m_Execute.onClick.AddListener(new UnityAction(HandleExecuteQueueClick));
+            this.m_RecordToggle = this.transform.Find("Container/Buttons/RecordToggle")?.gameObject.GetComponent<Toggle>();
+            m_RecordToggle.gameObject.AddComponent<ToggleImageSwap>();
+            m_RecordToggle.onValueChanged.AddListener(HandleRecordingToggleChange);
+            this.m_Remove = this.transform.Find("Container/Buttons/Remove")?.gameObject.GetComponent<Button>();
+            m_Remove.onClick = new Button.ButtonClickedEvent();
+            m_Remove.onClick.AddListener(new UnityAction(HandleRemoveQueueClick));
+            this.m_Favorite = this.transform.Find("Container/Buttons/Favorite")?.gameObject.GetComponent<Toggle>();
+            m_Favorite.gameObject.AddComponent<ToggleImageSwap>();
+            m_Favorite.onValueChanged.AddListener(HandleFavoriteClick);
+            //Add draggable windows component allowing the window to be dragged when the button is pressed down
+            GameObject dragLeft = this.transform.Find("Container/Buttons/DragHandleLeft")?.gameObject;
+            GameObject dragRight = this.transform.Find("Container/Buttons/DragHandleRight")?.gameObject;
+            dragLeft.AddComponent<DraggableWindow>();
+            dragRight.AddComponent<DraggableWindow>();
+            /*
             var button = this.transform.Find("Foreground/Button").GetComponent<Button>();
             button.onClick = new Button.ButtonClickedEvent();
             button.onClick.AddListener(new UnityAction(HandleButtonClick));
             button.gameObject.AddComponent<DraggableWindow>(); //Add draggable windows component allowing the window to be dragged when the button is pressed down
 
             _text = this.transform.Find("Foreground/Text").GetComponent<Text>(); //Find the text component so we can update later.
+            */
         }
 
         private void Update()
         {
             //This is a unity message that runs each frame.
+            CanvasGroup canvasGroup = gameObject.GetComponent<CanvasGroup>();
+            RectTransform body = gameObject.GetComponent<RectTransform>();
+            if (IsValidMode(Game.Instance.CurrentMode) & IsHUDShown() && UIEnabled())
+            {
+                if (!m_enabled)
+                {
+                    m_enabled = true;
+                    canvasGroup.DOFade(1f, 0.5f).SetUpdate(true);
+ //                   body.DOAnchorPosY(0f, 0.5f, false).SetUpdate(true);
+                }
+            }
+            else
+            {
+                if (m_enabled)
+                {
+                    m_enabled = false;
+                    canvasGroup.DOFade(0f, 0.5f).SetUpdate(true);
+ //                   body.DOAnchorPosY(body.rect.height, 0.5f, false).SetUpdate(true);
+                }
+            }
         }
 
         //Selecting item from DropDown
+        //TODO: Error Handling
         private void HandleSelectItem(int index)
         {
-            if (Main.queueData.CommandQueues.ElementAtOrDefault(index) != null)
-                selectedQueue = queueData.CommandQueues.ElementAtOrDefault(index);
+            Logger.Debug($"index {index} OptionName {this.m_Dropdown.options[index].text}");
+            Logger.Debug($"Favorite queues {String.Join("; ", SettingsWrapper.FavoriteQueues2)}");
+            int queueIndex = Array.IndexOf(Main.QueuesController.m_Queues, this.m_Dropdown.options[index].text);
+            if (queueIndex > -1)
+            {
+                selectedQueue = new CommandQueue();
+                string queueName = Main.QueuesController.m_Queues[queueIndex];
+                if (selectedQueue.LoadFromFile($"{queueName}.json"))
+                {
+                    Main.QueuesController.CurrentQueueName = queueName;
+                    Main.QueuesController.CurrentQueueIndex = queueIndex;
+                    Main.QueuesController.queueController = new QueueController(selectedQueue);
+                    m_Favorite.isOn = SettingsWrapper.FavoriteQueues2.Contains(Main.QueuesController.CurrentQueueName);
+                }
+                else
+                {
+                    Logger.Log($"Error loading queue {queueName}");
+                }
+            }
         }
 
         //Starting/stop recording
-        private void HandleRecordingToggleClick()
+        private void HandleRecordingToggleChange(bool state)
         {
-            Logger.Log("OnRecordingToggle");
+            Logger.Debug("HandleRecordingToggleClick");
             Main.recordQueue.Toggle();
-            HandleRecordingToggle(Main.recordQueue.Enabled);
+            HandleRecordingToggle(state);
         }
 
-        //Handling Recording status change
-        private void HandleRecordingToggle(bool isRecording)
+        public void HandleRecordingToggle(bool state)
         {
-
+            m_RecordToggle.isOn = state;
         }
 
         //Execuute selected queue
         private void HandleExecuteQueueClick()
         {
-            Logger.Log("ExecuteQueue");
+            Logger.Debug("ExecuteQueue");
+            Logger.Debug(selectedQueue);
             if (selectedQueue != null)
             {
                 ScriptController.Reset();
                 try
                 {
-                    CommandQueue executingQueue = new CommandQueue();
-                    bool result1 = executingQueue.LoadFromFile($"{Main.Settings.favoriteQueues[queueID]}.json");
-                    ScriptController.CreateFromQueue(selectedQueue.CommandList,
-                                                    selectedQueue);
+                    ScriptController.Reset();
+                    ScriptController.CreateFromQueue(Main.QueuesController.queueController.CurrentQueue().CommandList,
+                                                    Main.QueuesController.CurrentQueueName);
                     ScriptController.Run();
                 }
                 catch (Exception ex)
@@ -139,8 +203,12 @@ namespace PathfinderAutoBuff.GUI.WoTR
                     Logger.Log(ex.StackTrace);
                     throw ex;
 #endif
-                    Logger.Log($"Error executing queue {Main.Settings.favoriteQueues[queueID]}");
+                    Logger.Log($"Error executing queue {Main.QueuesController.CurrentQueueName}");
                 }
+            }
+            else
+            {
+                Logger.Log("No queue selected");
             }
         }
 
@@ -149,33 +217,62 @@ namespace PathfinderAutoBuff.GUI.WoTR
         {
             if (selectedQueue != null)
             {
-                queueData.DeleteQueue(selectedQueue.QueueName);
-
+                bool queueDeletionFlag = IOHelpers.DeleteQueue(Main.QueuesController.CurrentQueueName);
+                if (!queueDeletionFlag)
+                    Logger.Log(string.Format(Local["Menu_Queues_ErrorDeleting"], Main.QueuesController.CurrentQueueName));
+                else
+                {
+                    RefreshView();
+                    return;
+                }
             }
-            Logger.Log("RemoveQueue");
+            Logger.Debug("RemoveQueue");
         }
 
         //Open mod settings window
-        private void HandleStartSettingsClick()
+        private void HandleFavoriteClick(bool state)
         {
-            Kingmaker.Modding.OwlcatModificationsWindow.Show();
-            Logger.Log("StartSettings");
+            Logger.Debug($"Favorite {Main.QueuesController.CurrentQueueName} {state}");
+            if (!SettingsWrapper.FavoriteQueues2.Contains(Main.QueuesController.CurrentQueueName) && state)
+            {
+                SettingsWrapper.FavoriteQueues2.Add(Main.QueuesController.CurrentQueueName);
+            }
+            else if (!state)
+            {
+                SettingsWrapper.FavoriteQueues2.Remove(Main.QueuesController.CurrentQueueName);
+            }
+            this.m_Favorite.isOn = state;
+            this.m_Dropdown.RefreshShownValue();
         }
 
-
-        private void HandleButtonClick()
+        public void RefreshView()
         {
-            //Display the equiped weapon wame of the selected character
-            var selection = SelectionManager.Instance.SelectedUnits;
-            var color = _text.color;
-            _text.color = new Color(color.r, color.g, color.b, 0f);
-            if ((selection != null) && (selection.Count == 1))
-                _text.text = selection[0].Body.PrimaryHand.MaybeWeapon.Name;
-            else if (selection.Count == 0)
-                _text.text = "No one selected";
-            else if (selection.Count > 1)
-                _text.text = "Select only one";
-            _text.DOFade(1f, 1.5f); //fade text alpha in using tweening
+            this.m_Dropdown.ClearOptions();
+            List<string> list = new List<string>();
+            if (Main.QueuesController == null)
+            {
+                Main.QueuesController = new QueuesController();
+            }
+            int favoriteIndex = 0;
+            foreach (string queueName in Main.QueuesController.m_Queues)
+            {
+                if (SettingsWrapper.FavoriteQueues2.Contains(queueName))
+                {
+                    list.Insert(favoriteIndex, queueName);
+                    favoriteIndex++;
+                }
+                else
+                    list.Add(queueName);
+            }
+            this.m_Dropdown.AddOptions(list);
+//            this.m_Dropdown.options
+            Logger.Debug($"RefreshView {list.Count} queues");
+        }
+
+        public bool Enabled
+        {
+            get => this.m_enabled;
+            private set => this.m_enabled = value;
         }
     }
 }

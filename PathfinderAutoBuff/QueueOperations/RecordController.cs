@@ -126,6 +126,9 @@ namespace PathfinderAutoBuff.QueueOperattions
                 Disable();
             else
                 Enable();
+            if (Main.uiController != null)
+                if (Main.uiController.AutoBuffGUI != null)
+                    Main.uiController.AutoBuffGUI.HandleRecordingToggle(this.Enabled);
         }
 
         //TODO: Cleaning up
