@@ -54,7 +54,7 @@ namespace PathfinderAutoBuff.Menu
             using (new GUILayout.VerticalScope())
             {
                 //TODO Styling
-                UI.Label("Mechanics settings:");
+                UI.Label(Local["Menu_Settings_MechanicsLabel"]);
                 IgnoreModifiiers = UI.ToggleButton(IgnoreModifiiers, Local["Menu_Settings_IgnoreModifiiers"], labelDefault, UI.AutoWidth());
                 RefreshShort = UI.ToggleButton(RefreshShort, Local["Menu_Settings_RefreshShort"], labelDefault, UI.AutoWidth());
                 UI.Label(string.Format(Local["Menu_Settings_RefreshLabel"], RefreshTime));
@@ -66,19 +66,19 @@ namespace PathfinderAutoBuff.Menu
                     return;
                 }*/
                 //GUI settings
-                UI.Label("GUI Settings:");
+                UI.Label(Local["Menu_Settings_GUILabel"]);
                 UIEnabled = UI.ToggleButton(UIEnabled, Local["Menu_Settings_UIEnabled"], labelDefault, UI.AutoWidth());
-                UIEnabled = UI.ToggleButton(GUIFavoriteOnly, "Show only Favorite queues in GUI", labelDefault, UI.AutoWidth());
+                UIEnabled = UI.ToggleButton(GUIFavoriteOnly, Local["Menu_Settings_FavoriteQueuesOnly"], labelDefault, UI.AutoWidth());
                 UI.Label(Local["Menu_Settings_FavoriteQueuesLabel"]);
                 if (GUILayout.Button(Local["Menu_Settings_ReloadQueues"], GUILayout.ExpandWidth(false)))
                 {
                     ReloadQueues();
                 }
-                if (GUILayout.Button("Refresh GUI", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(Local["Menu_Settings_RefreshGUI"], GUILayout.ExpandWidth(false)))
                 {
                     Main.uiController.Update();
                 }
-                if (GUILayout.Button("Reset GUI to Default", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(Local["Menu_Settings_ResetGUI"], GUILayout.ExpandWidth(false)))
                 { 
                     SettingsWrapper.ABToolbarScale = 1;
                     SettingsWrapper.GUIPosX = 0;

@@ -262,10 +262,10 @@ namespace PathfinderAutoBuff.GUIWoTR
                     favoriteIndex++;
                 }
                 else
-                    list.Add(queueName);
+                    if (!SettingsWrapper.GUIFavoriteOnly)
+                        list.Add(queueName);
             }
             this.m_Dropdown.AddOptions(list);
-//            this.m_Dropdown.options
             Logger.Debug($"RefreshView {list.Count} queues");
         }
 
