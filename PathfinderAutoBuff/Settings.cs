@@ -31,7 +31,7 @@ namespace PathfinderAutoBuff
         //Button/UI Toolbar width
         public float aBToolbarWidth = 60f;
         //GUI scale
-        public float aBToolbarScale = 0.5f;
+        public float aBToolbarScale = 1.0f;
         //UI scale
         public float uIScale = 1f;
 

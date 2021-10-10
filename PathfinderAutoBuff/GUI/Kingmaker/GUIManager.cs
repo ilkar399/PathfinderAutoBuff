@@ -18,7 +18,7 @@ namespace PathfinderAutoBuff.GUI
     public class GUIManager : MonoBehaviour
     {
         public const string Source = "PathfinderAutoBuffActionPanel";
-        private Transform _transform;
+        private RectTransform rectTransform;
         bool m_enabled;
 
         internal CommandQueue selectedQueue;
@@ -66,6 +66,8 @@ namespace PathfinderAutoBuff.GUI
                 window.SetParent(staticCanvas, false); //Attaches our window to the static canvas
                 window.SetAsFirstSibling(); //Our window will always be under other UI elements as not to interfere with the game. Top of the list has the lowest priority
                 RectTransform rectTransform = (RectTransform)window;
+                //Scaling according to settings
+                rectTransform.localScale = new Vector3(SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale);
                 rectTransform.anchoredPosition = new Vector2(SettingsWrapper.GUIPosX, SettingsWrapper.GUIPosY);
                 window.gameObject.SetActive(true);
                 return window.gameObject.AddComponent<GUIManager>(); //This adds this class as a component so it can handle events, button clicks, awake, update, etc.
@@ -85,6 +87,7 @@ namespace PathfinderAutoBuff.GUI
             // Setup the listeners when the script starts
             //
             Logger.Debug("Awake");
+            rectTransform = (RectTransform)this.transform;
             this.m_Dropdown = this.transform.Find("Container/DropDown")?.gameObject.GetComponent<Dropdown>();
             m_Dropdown.onValueChanged = new Dropdown.DropdownEvent();
             m_Dropdown.onValueChanged.AddListener(new UnityAction<int>(HandleSelectItem));
@@ -237,7 +240,7 @@ namespace PathfinderAutoBuff.GUI
 
         public void RefreshView()
         {
-            Logger.Debug("RefreshViewStart");
+            //Update Dropdown Options
             this.m_Dropdown.ClearOptions();
             List<string> list = new List<string>();
             if (Main.QueuesController == null)
@@ -258,6 +261,8 @@ namespace PathfinderAutoBuff.GUI
             }
             this.m_Dropdown.AddOptions(list);
             Logger.Debug($"RefreshView {list.Count} queues");
+            //Rescale
+            rectTransform.localScale = new Vector3(SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale);
         }
 
         public bool Enabled

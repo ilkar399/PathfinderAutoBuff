@@ -70,6 +70,12 @@ namespace PathfinderAutoBuff.Menu
                 UIEnabled = UI.ToggleButton(UIEnabled, Local["Menu_Settings_UIEnabled"], labelDefault, UI.AutoWidth());
                 GUIFavoriteOnly = UI.ToggleButton(GUIFavoriteOnly, Local["Menu_Settings_FavoriteQueuesOnly"], labelDefault, UI.AutoWidth());
                 UI.Label(Local["Menu_Settings_FavoriteQueuesLabel"]);
+                //GUI Scale
+                UI.Label("GUI Scale: " + ABToolbarScale);
+                ABToolbarScale = Utility.UI.RoundedHorizontalSlider(ABToolbarScale, 2, 0.5f, 2.0f, GUILayout.Width(200f), UI.AutoWidth());
+                UI.ActionButton("Apply", () => {
+                    Main.uiController.AutoBuffGUI.RefreshView();
+                }, buttonFixed120);
                 if (GUILayout.Button(Local["Menu_Settings_ReloadQueues"], GUILayout.ExpandWidth(false)))
                 {
                     ReloadQueues();
