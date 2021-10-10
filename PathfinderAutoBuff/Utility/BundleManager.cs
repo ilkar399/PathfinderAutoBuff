@@ -34,8 +34,12 @@ namespace PathfinderAutoBuff.Utility
                 Sprite sprite;
 
                 RemoveBundle(loadAss, true);
-
-                bundle = AssetBundle.LoadFromFile(ModPath + loadAss);
+#if (KINGMAKER)
+                string assetPath = "AssetBundles\\Kingmaker";
+#elif (WOTR)
+                string assetPath = "AssetBundles\\WoTR";
+#endif
+                bundle = AssetBundle.LoadFromFile(Path.Combine(ModPath,assetPath,loadAss));
                 if (!bundle) throw new Exception($"Failed to load AssetBundle! {ModPath + loadAss}");
                 foreach (string b in bundle.GetAllAssetNames())
                 {

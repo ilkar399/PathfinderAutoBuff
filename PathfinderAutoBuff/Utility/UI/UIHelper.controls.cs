@@ -60,22 +60,22 @@ namespace PathfinderAutoBuff.Utility
 
         public static void Hyperlink(string text, string url, Color normalColor, Color hoverColor, GUIStyle style)
         {
-            Color color = GUI.color;
-            GUI.color = Color.clear;
+            Color color = UnityEngine.GUI.color;
+            UnityEngine.GUI.color = Color.clear;
             GUILayout.Label(text, style, GUILayout.ExpandWidth(false));
             Rect lastRect = GUILayoutUtility.GetLastRect();
-            GUI.color = lastRect.Contains(Event.current.mousePosition) ? hoverColor : normalColor;
-            if (GUI.Button(lastRect, text, style))
+            UnityEngine.GUI.color = lastRect.Contains(Event.current.mousePosition) ? hoverColor : normalColor;
+            if (UnityEngine.GUI.Button(lastRect, text, style))
                 Application.OpenURL(url);
             lastRect.y += lastRect.height - 2;
             lastRect.height = 1;
-            GUI.DrawTexture(lastRect, Texture2D.whiteTexture, ScaleMode.StretchToFill);
-            GUI.color = color;
+            UnityEngine.GUI.DrawTexture(lastRect, Texture2D.whiteTexture, ScaleMode.StretchToFill);
+            UnityEngine.GUI.color = color;
         }
 
         public static void TextField(ref string value, GUIStyle style = null, params GUILayoutOption[] options)
         {
-            value = GUILayout.TextField(value, style ?? GUI.skin.textField, options);
+            value = GL.TextField(value, style ?? UnityEngine.GUI.skin.textField, options);
         }
 
         public static void TextField(ref string value, Action onChanged, GUIStyle style = null, params GUILayoutOption[] options)

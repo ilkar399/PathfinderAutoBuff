@@ -14,7 +14,7 @@ namespace PathfinderAutoBuff.Utility
 
         static UI()
         {
-            GUISkin skin = GUI.skin;
+            GUISkin skin = UnityEngine.GUI.skin;
 
             splitterStyle = new GUIStyle();
             splitterStyle.normal.background = Texture2D.whiteTexture;

@@ -288,10 +288,9 @@
     <Compile Include="DefaultStyles.cs" />
     <Compile Include="Controllers\GUIController.cs" />
     <Compile Include="DefaultLanguage.cs" />
-    <Compile Include="GUI\WoTR\DraggableWindow.cs" />
-    <Compile Include="GUI\WoTR\DropDownIconShow.cs" />
-    <Compile Include="GUI\WoTR\GUIManager.cs" />
-    <Compile Include="GUI\WoTR\ToggleSpriteSwap.cs" />
+    <Compile Include="GUI\DraggableWindow.cs" />
+    <Compile Include="GUI\DropDownIconShow.cs" />
+    <Compile Include="GUI\ToggleSpriteSwap.cs" />
     <Compile Include="Menu\HarmonyPatches.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Menu\Queues.cs" />
@@ -347,9 +346,11 @@
   -->
   <ItemGroup Condition="'$(TargetGame)' == 'WoTR'">
     <Compile Include="GUI\WoTR\QueuesToolbar.cs" />
+    <Compile Include="GUI\WoTR\GUIManager.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetGame)' == 'Kingmaker'">
     <Compile Include="GUI\Kingmaker\QueuesToolbar.cs" />
+    <Compile Include="GUI\Kingmaker\GUIManager.cs" />
     <Compile Include="Utility\Extensions\WoTRExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -368,6 +369,40 @@
     </None>
     <None Include="Repository.json" />
   </ItemGroup>
+  <Choose>
+    <When Condition="'$(TargetGame)' == 'Kingmaker'">
+      <ItemGroup>
+        <None Include="AssetBundles\Kingmaker\AssetBundles">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\Kingmaker\AssetBundles.manifest">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\Kingmaker\pathfinderautobuffpanel">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\Kingmaker\pathfinderautobuffpanel.manifest">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+      </ItemGroup>
+    </When>
+    <When Condition="'$(TargetGame)' == 'WoTR'">
+      <ItemGroup>
+        <None Include="AssetBundles\WoTR\AssetBundles">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\WoTR\AssetBundles.manifest">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\WoTR\pathfinderautobuffpanel">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\WoTR\pathfinderautobuffpanel.manifest">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+      </ItemGroup>
+    </When>
+  </Choose>
   <ItemGroup />
   <ItemGroup>
     <Content Include="Doc\LICENSE.txt" />

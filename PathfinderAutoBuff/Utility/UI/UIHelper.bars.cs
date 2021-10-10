@@ -18,7 +18,7 @@ namespace PathfinderAutoBuff.Utility
     {
         public static void Toolbar(ref int selected, string[] texts, GUIStyle style = null, params GUILayoutOption[] options)
         {
-            selected = GUILayout.Toolbar(selected, texts, style ?? GUI.skin.button, options);
+            selected = GUILayout.Toolbar(selected, texts, style ?? UnityEngine.GUI.skin.button, options);
         }
 
         public static float RoundedHorizontalSlider(float value, int digits, float leftValue, float rightValue, params GUILayoutOption[] options)
@@ -43,10 +43,10 @@ namespace PathfinderAutoBuff.Utility
                 );
             if (Event.current.type == EventType.Repaint)
             {
-                Color restoreColor = GUI.color;
-                GUI.color = color;
+                Color restoreColor = UnityEngine.GUI.color;
+                UnityEngine.GUI.color = color;
                 splitterStyle.Draw(position, false, false, false, false);
-                GUI.color = restoreColor;
+                UnityEngine.GUI.color = restoreColor;
             }
         }
     }

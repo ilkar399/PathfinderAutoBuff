@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace PathfinderAutoBuff.GUIWoTR
+namespace PathfinderAutoBuff.GUI
 {
     /*
     * Showing icon of the dropdown item if queueName is in favorites
@@ -21,7 +21,11 @@ namespace PathfinderAutoBuff.GUIWoTR
 
         public void Update()
         {
+#if (WOTR)
             string queueName = gameObject.GetComponentInChildren<TextMeshProUGUI>().text;
+#elif (KINGMAKER)
+            string queueName = gameObject.GetComponentInChildren<UnityEngine.UI.Text>().text;
+#endif
             if (queueName != null && queueName != "")
                 if (Utility.SettingsWrapper.FavoriteQueues2.Contains(queueName))
                 {

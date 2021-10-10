@@ -2,11 +2,7 @@
 using Kingmaker.PubSubSystem;
 using PathfinderAutoBuff.Utility;
 using System.Reflection;
-#if (WOTR)
-using PathfinderAutoBuff.GUIWoTR;
-#elif (KINGMAKER)
-using PathfinderAutoBuff.GUIKingmaker;
-#endif
+using PathfinderAutoBuff.GUI;
 using UnityEngine;
 using static PathfinderAutoBuff.Main;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
@@ -27,15 +23,7 @@ namespace PathfinderAutoBuff.Controllers
 
         public void Attach()
         {
-            /*
-            if (!ABQueuesToolbar)
-            {
-                Logger.Log("Attach");
-                //               ABQueuesToolbar = ABQueuesToolbar.CreateObject();
-                if (AutoBuffGUI == null)
-                    AutoBuffGUI = GUIManager.CreateObject();
-            }
-            */
+
             if (!AutoBuffGUI)
             {
                 Logger.Log("Attach");
@@ -50,14 +38,6 @@ namespace PathfinderAutoBuff.Controllers
             Logger.Log("Detach");
             AutoBuffGUI.SafeDestroy();
             AutoBuffGUI = null;
-            /*
-            if (ABQueuesToolbar)
-            {
-//                ABQueuesToolbar.Clear();
-                ABQueuesToolbar.SafeDestroy();
-                ABQueuesToolbar = null;
-            }
-            */
         }
 
 #if (DEBUG)

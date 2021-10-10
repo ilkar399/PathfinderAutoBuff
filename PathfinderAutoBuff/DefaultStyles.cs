@@ -55,13 +55,13 @@ namespace PathfinderAutoBuff
 
         static DefaultStyles()
         {
-            buttonFixed120 = new GUIStyle(GUI.skin.button) { fixedWidth = 120f, wordWrap = true, alignment = TextAnchor.MiddleCenter };
-            labelFixed120 = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fixedWidth = 120f };
-            labelFixed200 = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fixedWidth = 200f, wordWrap = true};
-            textField200 = new GUIStyle(GUI.skin.textField) { fixedWidth = 200f, wordWrap = true };
-            labelDefault = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft };
-            buttonDefault = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleCenter };
-            buttonSelector = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleCenter, wordWrap = true };
+            buttonFixed120 = new GUIStyle(UnityEngine.GUI.skin.button) { fixedWidth = 120f, wordWrap = true, alignment = TextAnchor.MiddleCenter };
+            labelFixed120 = new GUIStyle(UnityEngine.GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fixedWidth = 120f };
+            labelFixed200 = new GUIStyle(UnityEngine.GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fixedWidth = 200f, wordWrap = true};
+            textField200 = new GUIStyle(UnityEngine.GUI.skin.textField) { fixedWidth = 200f, wordWrap = true };
+            labelDefault = new GUIStyle(UnityEngine.GUI.skin.label) { alignment = TextAnchor.MiddleLeft };
+            buttonDefault = new GUIStyle(UnityEngine.GUI.skin.button) { alignment = TextAnchor.MiddleCenter };
+            buttonSelector = new GUIStyle(UnityEngine.GUI.skin.button) { alignment = TextAnchor.MiddleCenter, wordWrap = true };
         }
 
         //Default styles with variable parameters
@@ -79,14 +79,14 @@ namespace PathfinderAutoBuff
         public static GUIStyle ButtonSelectorLeft()
         {
             GUIStyle result;
-            result = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft, wordWrap = true };
+            result = new GUIStyle(UnityEngine.GUI.skin.button) { alignment = TextAnchor.MiddleLeft, wordWrap = true };
             result.onNormal.textColor = Color.yellow;
             return result;
         }
         public static GUIStyle ButtonSelector120()
         {
             GUIStyle result;
-            result = new GUIStyle(GUI.skin.button) {  alignment = TextAnchor.MiddleCenter, fixedWidth = 120f, wordWrap = true,  };
+            result = new GUIStyle(UnityEngine.GUI.skin.button) {  alignment = TextAnchor.MiddleCenter, fixedWidth = 120f, wordWrap = true,  };
             result.onNormal.textColor = Color.yellow;
             return result;
         }
@@ -98,7 +98,7 @@ namespace PathfinderAutoBuff
             return result;
         }
 
-        public static GUIStyle ButtonWrapped() { return new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleCenter, wordWrap = true }; }
+        public static GUIStyle ButtonWrapped() { return new GUIStyle(UnityEngine.GUI.skin.button) { alignment = TextAnchor.MiddleCenter, wordWrap = true }; }
 
         //Text style wrappers
         //Header2

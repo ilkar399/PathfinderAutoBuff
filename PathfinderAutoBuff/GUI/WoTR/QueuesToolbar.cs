@@ -20,7 +20,7 @@ using static PathfinderAutoBuff.Utility.StatusWrapper;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
 
 
-namespace PathfinderAutoBuff.GUIWoTR
+namespace PathfinderAutoBuff.GUI
 {
     /*
      * Toolbar to execute one of the defined in settings queues

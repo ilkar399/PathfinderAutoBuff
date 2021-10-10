@@ -234,6 +234,9 @@ namespace PathfinderAutoBuff.Menu
         private void ReloadData()
         {
             Main.QueuesController.ReloadQueues();
+            if (Main.uiController != null)
+                if (Main.uiController.AutoBuffGUI.isActiveAndEnabled)
+                    Main.uiController.AutoBuffGUI.RefreshView();
             currentQueueIndex = -1;
             targetSelection = null;
             partyNamesOrdered = null;

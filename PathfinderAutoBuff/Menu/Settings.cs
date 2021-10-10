@@ -68,7 +68,7 @@ namespace PathfinderAutoBuff.Menu
                 //GUI settings
                 UI.Label(Local["Menu_Settings_GUILabel"]);
                 UIEnabled = UI.ToggleButton(UIEnabled, Local["Menu_Settings_UIEnabled"], labelDefault, UI.AutoWidth());
-                UIEnabled = UI.ToggleButton(GUIFavoriteOnly, Local["Menu_Settings_FavoriteQueuesOnly"], labelDefault, UI.AutoWidth());
+                GUIFavoriteOnly = UI.ToggleButton(GUIFavoriteOnly, Local["Menu_Settings_FavoriteQueuesOnly"], labelDefault, UI.AutoWidth());
                 UI.Label(Local["Menu_Settings_FavoriteQueuesLabel"]);
                 if (GUILayout.Button(Local["Menu_Settings_ReloadQueues"], GUILayout.ExpandWidth(false)))
                 {

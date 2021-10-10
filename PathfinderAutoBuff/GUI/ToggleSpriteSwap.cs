@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-namespace PathfinderAutoBuff.GUIWoTR
+namespace PathfinderAutoBuff.GUI
 {
     [RequireComponent(typeof(Toggle))]
     public class ToggleImageSwap : MonoBehaviour

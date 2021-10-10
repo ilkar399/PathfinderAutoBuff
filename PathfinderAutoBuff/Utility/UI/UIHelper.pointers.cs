@@ -18,7 +18,7 @@ namespace PathfinderAutoBuff.Utility
     {
         public static void SelectionGrid(ref int selected, string[] texts, int xCount, GUIStyle style = null, params GUILayoutOption[] options)
         {
-            selected = GUILayout.SelectionGrid(selected, texts, xCount, style ?? GUI.skin.button, options);
+            selected = GUILayout.SelectionGrid(selected, texts, xCount, style ?? UnityEngine.GUI.skin.button, options);
         }
 
         public static void SelectionGrid(ref int selected, string[] texts, int xCount, Action onChanged, GUIStyle style = null, params GUILayoutOption[] options)

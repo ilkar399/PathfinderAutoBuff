@@ -5,9 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using Owlcat.Runtime.UI.Controls.Button;
-using Owlcat.Runtime.UI.Controls.Other;
-using Owlcat.Runtime.UI.MVVM;
 using TMPro;
 using PathfinderAutoBuff.Utility;
 using PathfinderAutoBuff.QueueOperattions;
@@ -28,7 +25,7 @@ namespace PathfinderAutoBuff.GUI
 
         [Header("DropList")]
         [SerializeField]
-        private TMP_Dropdown m_Dropdown;
+        private Dropdown m_Dropdown;
 
         [Header("Buttons")]
         [SerializeField]
@@ -87,8 +84,9 @@ namespace PathfinderAutoBuff.GUI
             //
             // Setup the listeners when the script starts
             //
-            this.m_Dropdown = this.transform.Find("Container/DropDown")?.gameObject.GetComponent<TMP_Dropdown>();
-            m_Dropdown.onValueChanged = new TMP_Dropdown.DropdownEvent();
+            Logger.Debug("Awake");
+            this.m_Dropdown = this.transform.Find("Container/DropDown")?.gameObject.GetComponent<Dropdown>();
+            m_Dropdown.onValueChanged = new Dropdown.DropdownEvent();
             m_Dropdown.onValueChanged.AddListener(new UnityAction<int>(HandleSelectItem));
             GameObject dropdownItemTemplate = m_Dropdown.transform.Find("Template/Viewport/Content/Item").gameObject;
             dropdownItemTemplate.AddComponent<DropDownIconShow>();
@@ -109,14 +107,6 @@ namespace PathfinderAutoBuff.GUI
             GameObject dragRight = this.transform.Find("Container/Buttons/DragHandleRight")?.gameObject;
             dragLeft.AddComponent<DraggableWindow>();
             dragRight.AddComponent<DraggableWindow>();
-            /*
-            var button = this.transform.Find("Foreground/Button").GetComponent<Button>();
-            button.onClick = new Button.ButtonClickedEvent();
-            button.onClick.AddListener(new UnityAction(HandleButtonClick));
-            button.gameObject.AddComponent<DraggableWindow>(); //Add draggable windows component allowing the window to be dragged when the button is pressed down
-
-            _text = this.transform.Find("Foreground/Text").GetComponent<Text>(); //Find the text component so we can update later.
-            */
         }
 
         private void Update()
@@ -247,6 +237,7 @@ namespace PathfinderAutoBuff.GUI
 
         public void RefreshView()
         {
+            Logger.Debug("RefreshViewStart");
             this.m_Dropdown.ClearOptions();
             List<string> list = new List<string>();
             if (Main.QueuesController == null)

@@ -13,13 +13,13 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using PathfinderAutoBuff.Scripting;
+using PathfinderAutoBuff.QueueOperattions;
 using PathfinderAutoBuff.Utility;
 using static PathfinderAutoBuff.Utility.StatusWrapper;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
 
 
-namespace PathfinderAutoBuff.GUIKingmaker
+namespace PathfinderAutoBuff.GUI
 {
     /*
      * Toolbar to execute one of the defined in settings queues

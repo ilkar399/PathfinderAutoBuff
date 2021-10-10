@@ -51,8 +51,8 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 buttonEmpty = DefaultStyles.ButtonEmpty();
                 styleInit = true;
             }
-            int defaultFontSize = GUI.skin.label.fontSize;
-            GUI.skin.label.wordWrap = true;
+            int defaultFontSize = UnityEngine.GUI.skin.label.fontSize;
+            UnityEngine.GUI.skin.label.wordWrap = true;
             //Action description for title section
             string actionDescription;
             switch(actionType)

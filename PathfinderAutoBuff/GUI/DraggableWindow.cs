@@ -4,7 +4,7 @@ using Kingmaker.UI.Tooltip;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace PathfinderAutoBuff.GUIWoTR
+namespace PathfinderAutoBuff.GUI
 {
     /*
      * Draggable window component

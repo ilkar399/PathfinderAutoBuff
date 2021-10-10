@@ -45,7 +45,7 @@ namespace PathfinderAutoBuff.Utility
             params GUILayoutOption[] options)
         {
 
-            if (GUILayout.Button(GetToggleText(toggle, text, formatOn, formatOff), style ?? GUI.skin.button, options))
+            if (GUILayout.Button(GetToggleText(toggle, text, formatOn, formatOff), style ?? UnityEngine.GUI.skin.button, options))
                 toggle = !toggle;
         }
 
@@ -57,7 +57,7 @@ namespace PathfinderAutoBuff.Utility
 
         public static void ToggleButton(ref bool toggle, string text, GUIStyle style = null, params GUILayoutOption[] options)
         {
-            if (GUILayout.Button(GetToggleText(toggle, text, DefaultFormatOn, DefaultFormatOff), style ?? GUI.skin.button, options))
+            if (GUILayout.Button(GetToggleText(toggle, text, DefaultFormatOn, DefaultFormatOff), style ?? UnityEngine.GUI.skin.button, options))
                 toggle = !toggle;
         }
 
@@ -83,7 +83,7 @@ namespace PathfinderAutoBuff.Utility
         public static void ToggleButton(ref bool toggle, string text, ref float minWidth, GUIStyle style = null, params GUILayoutOption[] options)
         {
             GUIContent content = new GUIContent(GetToggleText(toggle, text, DefaultFormatOn, DefaultFormatOff));
-            style = style ?? GUI.skin.button;
+            style = style ?? UnityEngine.GUI.skin.button;
             minWidth = Math.Max(minWidth, style.CalcSize(content).x);
             if (GUILayout.Button(content, style, options?.Concat(new[] { GUILayout.Width(minWidth) }).ToArray() ?? new[] { GUILayout.Width(minWidth) }))
                 toggle = !toggle;
