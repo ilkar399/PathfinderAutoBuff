@@ -309,6 +309,7 @@
     <Compile Include="QueueOperations\QueueControllers.cs" />
     <Compile Include="QueueOperations\RecordController.cs" />
     <Compile Include="QueueOperations\CommandProvider.cs" />
+    <Compile Include="Tests\GUITests.cs" />
     <Compile Include="UnitLogic\Targets.cs" />
     <Compile Include="Tests\QueueBase.cs" />
     <Compile Include="Tests\QueueUI.cs" />
@@ -345,11 +346,9 @@
   Compiler different target groups
   -->
   <ItemGroup Condition="'$(TargetGame)' == 'WoTR'">
-    <Compile Include="GUI\WoTR\QueuesToolbar.cs" />
     <Compile Include="GUI\WoTR\GUIManager.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetGame)' == 'Kingmaker'">
-    <Compile Include="GUI\Kingmaker\QueuesToolbar.cs" />
     <Compile Include="GUI\Kingmaker\GUIManager.cs" />
     <Compile Include="Utility\Extensions\WoTRExtensions.cs" />
   </ItemGroup>

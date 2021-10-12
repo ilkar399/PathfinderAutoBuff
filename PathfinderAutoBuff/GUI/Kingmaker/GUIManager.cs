@@ -32,11 +32,12 @@ namespace PathfinderAutoBuff.GUI
         private Button m_Execute;
 
         [SerializeField]
-        private Toggle m_RecordToggle;
-
-        [SerializeField]
         private Button m_Remove;
 
+        [SerializeField]
+        private Toggle m_RecordToggle;
+
+        [Header("Toggles")]
         [SerializeField]
         private Toggle m_Favorite;
 
@@ -82,7 +83,6 @@ namespace PathfinderAutoBuff.GUI
         private void Awake()
         {
             //This is a unity message that runs once when the script activates (Check Unity documenation for the differences between Start() and Awake()
-            //gameObject.GetComponent<CanvasGroup>().alpha = 0f;
             //
             // Setup the listeners when the script starts
             //
@@ -108,14 +108,14 @@ namespace PathfinderAutoBuff.GUI
             //Add draggable windows component allowing the window to be dragged when the button is pressed down
             GameObject dragLeft = this.transform.Find("Container/Buttons/DragHandleLeft")?.gameObject;
             GameObject dragRight = this.transform.Find("Container/Buttons/DragHandleRight")?.gameObject;
+            dragLeft.AddComponent<DraggableWindow>();
+            dragRight.AddComponent<DraggableWindow>();
+            //Fix for Unity not linking Handle to Scrollbar properly
             GameObject scrollbar = this.transform.Find("Container/DropDown/Template/Scrollbar")?.gameObject;
             if (scrollbar != null)
             {
                 scrollbar.GetComponent<Scrollbar>().handleRect = (RectTransform)scrollbar.transform.Find("Handle").transform;
-                scrollbar.GetComponent<Scrollbar>().value = 1;
             }
-            dragLeft.AddComponent<DraggableWindow>();
-            dragRight.AddComponent<DraggableWindow>();
         }
 
         private void Update()
@@ -129,7 +129,6 @@ namespace PathfinderAutoBuff.GUI
                 {
                     m_enabled = true;
                     canvasGroup.DOFade(1f, 0.5f).SetUpdate(true);
- //                   body.DOAnchorPosY(0f, 0.5f, false).SetUpdate(true);
                 }
             }
             else
@@ -138,7 +137,6 @@ namespace PathfinderAutoBuff.GUI
                 {
                     m_enabled = false;
                     canvasGroup.DOFade(0f, 0.5f).SetUpdate(true);
- //                   body.DOAnchorPosY(body.rect.height, 0.5f, false).SetUpdate(true);
                 }
             }
         }
@@ -168,7 +166,7 @@ namespace PathfinderAutoBuff.GUI
             }
         }
 
-        //Starting/stop recording
+        //Start/stop recording
         private void HandleRecordingToggleChange(bool state)
         {
             Logger.Debug("HandleRecordingToggleClick");
@@ -181,7 +179,7 @@ namespace PathfinderAutoBuff.GUI
             m_RecordToggle.isOn = state;
         }
 
-        //Execuute selected queue
+        //Execute selected queue
         private void HandleExecuteQueueClick()
         {
             Logger.Debug("ExecuteQueue");
@@ -228,7 +226,7 @@ namespace PathfinderAutoBuff.GUI
             Logger.Debug("RemoveQueue");
         }
 
-        //Open mod settings window
+        //Add/remove from Favorites
         private void HandleFavoriteClick(bool state)
         {
             Logger.Debug($"Favorite {Main.QueuesController.CurrentQueueName} {state}");
@@ -244,6 +242,7 @@ namespace PathfinderAutoBuff.GUI
             this.m_Dropdown.RefreshShownValue();
         }
 
+        //Force refreshing view if data/scale changed
         public void RefreshView()
         {
             //Update Dropdown Options
@@ -269,6 +268,14 @@ namespace PathfinderAutoBuff.GUI
             Logger.Debug($"RefreshView {list.Count} queues");
             //Rescale
             rectTransform.localScale = new Vector3(SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale);
+        }
+
+        public int DropdownOptionsCount()
+        {
+            if (this.m_Dropdown != null)
+                return this.m_Dropdown.options.Count;
+            else
+                return -1;
         }
 
         public bool Enabled

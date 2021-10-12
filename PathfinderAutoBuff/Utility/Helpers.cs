@@ -98,13 +98,6 @@ namespace PathfinderAutoBuff.Utility
             {
                 return false;
             }
-            /*
-            AbilityEffectStickyTouch stickyTouch = blueprintAbility.StickyTouch;
-            if (stickyTouch != null)
-            {
-                blueprintAbility = stickyTouch.TouchDeliveryAbility;
-            }
-            */
             blueprintAbility = blueprintAbility.StickyTouch?.TouchDeliveryAbility == null 
                 ? blueprintAbility
                 : blueprintAbility.StickyTouch?.TouchDeliveryAbility;
@@ -244,6 +237,7 @@ namespace PathfinderAutoBuff.Utility
             return unitEntityData.IsPet();                                                  
 #endif
         }
+
         //Master wrapper for both Kingmaker and WoTR
         public static UnitEntityData MasterWrapper(UnitEntityData unitEntityData)
         {

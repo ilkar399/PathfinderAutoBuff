@@ -18,7 +18,6 @@ namespace PathfinderAutoBuff.Controllers
 #endif
     {
         public GUIManager AutoBuffGUI { get; private set; }
-        public ABQueuesToolbar ABQueuesToolbar { get; private set; }
         public int Priority => 400;
 
         public void Attach()
@@ -29,7 +28,6 @@ namespace PathfinderAutoBuff.Controllers
                 Logger.Log("Attach");
                 if (AutoBuffGUI == null)
                     AutoBuffGUI = GUIManager.CreateObject();
- //               AutoBuffGUI.RefreshView();
             }
         }
 
@@ -49,12 +47,6 @@ namespace PathfinderAutoBuff.Controllers
                 transform.SafeDestroy();
             }
             transform = null;
-            /*
-            Transform abQueuesToolbar;
-            while (abQueuesToolbar = Game.Instance.UI.Common.transform.Find("Formations/ToggleGroup/"))
-                abQueuesToolbar.SafeDestroy();
-            ABQueuesToolbar = null;
-            */
         }
 
 #endif
@@ -67,7 +59,6 @@ namespace PathfinderAutoBuff.Controllers
         }
 
         //Event handlers
-
         public void Enable()
         {
             if (UIEnabled)

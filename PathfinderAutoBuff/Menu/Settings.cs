@@ -91,29 +91,6 @@ namespace PathfinderAutoBuff.Menu
                     SettingsWrapper.GUIPosY = 0;
                     Main.uiController.Update();
                 }
-                //Favorite queue selection
-                using (new GUILayout.HorizontalScope(GUILayout.ExpandWidth(false)))
-                {
-                    if (FavoriteQueues.Keys.Count > 0)
-                    {
-                        for (int favoriteQueueNumber = 0; favoriteQueueNumber < favorite_count; favoriteQueueNumber++)
-                        {
-                            int selected = m_QueueList.IndexOf(FavoriteQueues[favoriteQueueNumber + 1]);
-                            using (new GUILayout.VerticalScope(GUILayout.Width(120f)))
-                            {
-                                Utility.UI.DropDownList(ref m_favoriteToggles[favoriteQueueNumber], ref selected, m_QueueList, () =>
-                                 {
-                                     if (selected == -1)
-                                         FavoriteQueues[favoriteQueueNumber + 1] = "";
-                                     else
-                                         FavoriteQueues[favoriteQueueNumber + 1] = m_QueueList[selected];
-                                     Main.uiController.ABQueuesToolbar.UpdateButtonStatus();
-                                 }
-                                , true, buttonFixed120, GUILayout.ExpandWidth(false));
-                            }
-                        }
-                    }
-                }
             }
         }
 

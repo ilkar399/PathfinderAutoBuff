@@ -94,15 +94,32 @@ namespace PathfinderAutoBuff.Menu
             }
             //Queue Recording
             //TODO
+            if (GUILayout.Button("Test queue recording NOT IMPLEMENTED", DefaultStyles.ButtonDefault(), GUILayout.ExpandWidth(false)))
+            {
 
+            }
             //Queue UI component test
             if (GUILayout.Button("Queue UI component test", DefaultStyles.ButtonDefault(), GUILayout.ExpandWidth(false)))
             {
                 QueueUI.AbilityFilterComponentTest("TestBard", "TestBard", "TestBard");
             }
-            if (GUILayout.Button("Flatten Actions Test", DefaultStyles.ButtonDefault(), GUILayout.ExpandWidth(false)))
+            //GUI tests
+            if (GUILayout.Button("GUI objects", DefaultStyles.ButtonDefault(), GUILayout.ExpandWidth(false)))
             {
-
+                if (GUITests.MainObjectTests() && GUITests.GUIComponentsTest())
+                    TestHelpers.TestLog("GUI Tests", "SUCCESS");
+                else
+                {
+                    if (!GUITests.MainObjectTests())
+                        TestHelpers.TestLog("GUI MainObjectTests", "FAIL");
+                    if (!GUITests.GUIComponentsTest())
+                        TestHelpers.TestLog("GUI GUIComponentsTest", "FAIL");
+                }
+            }
+            //Utilities tests
+            if (GUILayout.Button("Utilities - Flatten Actions Test", DefaultStyles.ButtonDefault(), GUILayout.ExpandWidth(false)))
+            {
+                UtilitiesTests.FlattenActions();
             }
         }
     }
