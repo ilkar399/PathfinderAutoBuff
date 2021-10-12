@@ -35,15 +35,15 @@ namespace PathfinderAutoBuff.Utility.Extensions
 				}
 			}
 #if (WOTR)
-			if (!spellbook.IsStandaloneMythic && spellbook.Owner.Stats.GetStat(spellbook.Blueprint.CastingAttribute) < 10 + num)
-			{
-				return false;
-			}
-#endif
-#if (WOTR)
             int blueprintLevel = spellbook.GetMinSpellLevel(blueprint);
 #else
             int blueprintLevel = spellbook.GetSpellLevel(blueprint);
+#endif
+#if (WOTR)
+            if (!spellbook.IsStandaloneMythic && spellbook.Owner.Stats.GetStat(spellbook.Blueprint.CastingAttribute) < 10 + blueprintLevel)
+            {
+                return false;
+            }
 #endif
             if (blueprintLevel < 0)
                 return false;
@@ -87,6 +87,7 @@ namespace PathfinderAutoBuff.Utility.Extensions
 			return false;
 		}
 
+        //Determining which exact spellslot to use
 		internal static AbilityData PASpellAbility(this Spellbook spellbook, [NotNull] BlueprintAbility blueprint, bool excludeSpecial = false, UnitEntityData executor = null)
 		{
 			int maxSpellLevel = spellbook.MaxSpellLevel;
