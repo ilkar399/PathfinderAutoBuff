@@ -270,6 +270,7 @@ namespace PathfinderAutoBuff.GUI
             rectTransform.localScale = new Vector3(SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale);
         }
 
+        //Options count for tests
         public int DropdownOptionsCount()
         {
             if (this.m_Dropdown != null)

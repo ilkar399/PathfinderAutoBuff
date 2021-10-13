@@ -55,7 +55,8 @@ namespace PathfinderAutoBuff.Controllers
         {
             Detach();
             Attach();
-            AutoBuffGUI.RefreshView();
+            if (AutoBuffGUI != null)
+                AutoBuffGUI.RefreshView();
         }
 
         //Event handlers
@@ -64,7 +65,6 @@ namespace PathfinderAutoBuff.Controllers
             if (UIEnabled)
             {
                 Logger.Debug(MethodBase.GetCurrentMethod());
-                Main.uiController = this;
                 Attach();
                 if (AutoBuffGUI != null)
                     AutoBuffGUI.RefreshView();
@@ -86,7 +86,8 @@ namespace PathfinderAutoBuff.Controllers
         {
             Logger.Debug(MethodBase.GetCurrentMethod());
             Attach();
-            AutoBuffGUI.RefreshView();
+            if (AutoBuffGUI != null)
+                AutoBuffGUI.RefreshView();
         }
     }
 }

@@ -158,6 +158,7 @@ namespace PathfinderAutoBuff.UnitLogic
 
         public void RefreshData()
         {
+            Logger.Debug("partySpellList.RefreshData");
             this.m_AllSpells.Clear();
             this.m_AllSpells = null;
             this.m_AvailableSpells.Clear();

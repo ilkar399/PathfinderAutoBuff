@@ -39,14 +39,16 @@ namespace PathfinderAutoBuff.Tests
                 return false;
             bool result = true;
             //DraggableWindow
-            GameObject draggableWindowObject = transform.Find("Container/Buttons/DragHandleLeft")?.gameObject;
-            GUI.DraggableWindow draggableWindow = draggableWindowObject.GetComponent<GUI.DraggableWindow>();
+            Transform draggableWindowObject = transform.Find("Container/Buttons/DragHandleLeft");
             //DropDownIconShow
-            GameObject dropdownItemTemplate = transform.Find("Template/Viewport/Content/Item").gameObject;
-            GUI.DropDownIconShow dropdownIconShow = dropdownItemTemplate.GetComponent<GUI.DropDownIconShow>();
+            Transform dropdownItemTemplate = transform.Find("Container/DropDown/Template/Viewport/Content/Item");
             //ToggleSpriteSwap
-            GameObject recordToggleObject = transform.Find("Container/Buttons/RecordToggle")?.gameObject;
-            GUI.ToggleImageSwap toggleImageSwap = recordToggleObject.GetComponent<GUI.ToggleImageSwap>();
+            Transform recordToggleObject = transform.Find("Container/Buttons/RecordToggle");
+            if (draggableWindowObject == null || dropdownItemTemplate == null || recordToggleObject == null)
+                return false;
+            GUI.DropDownIconShow dropdownIconShow = dropdownItemTemplate.gameObject.GetComponent<GUI.DropDownIconShow>();
+            GUI.DraggableWindow draggableWindow = draggableWindowObject.gameObject.GetComponent<GUI.DraggableWindow>();
+            GUI.ToggleImageSwap toggleImageSwap = recordToggleObject.gameObject.GetComponent<GUI.ToggleImageSwap>();
             result = result && (draggableWindow != null) && (dropdownIconShow != null) && (toggleImageSwap != null);
             return result;
         }

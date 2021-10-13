@@ -120,17 +120,25 @@ namespace PathfinderAutoBuff.QueueOperattions
             }
             this.m_Queues = queuesList.ToArray();
             Logger.Debug("Queues: " + String.Join("; ", m_Queues));
-            if ((this.partySpellList == null) || (this.partyAbilityList == null) || (this.partyActivatableList == null))
+            try
             {
-                this.partySpellList = new PartySpellList();
-                this.partyAbilityList = new PartyAbilityList();
-                this.partyActivatableList = new PartyActivatableList();
+                if ((this.partySpellList == null) || (this.partyAbilityList == null) || (this.partyActivatableList == null))
+                {
+                    this.partySpellList = new PartySpellList();
+                    this.partyAbilityList = new PartyAbilityList();
+                    this.partyActivatableList = new PartyActivatableList();
+                }
+                else
+                {
+                    this.partySpellList.RefreshData();
+                    this.partyAbilityList.RefreshData();
+                    this.partyActivatableList.RefreshData();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                this.partySpellList.RefreshData();
-                this.partyAbilityList.RefreshData();
-                this.partyActivatableList.RefreshData();
+                Logger.Error(ex.StackTrace);
+                throw ex;
             }
             this.m_CurrentQueueName = "";
             this.m_CurrentQueueIndex = -1;

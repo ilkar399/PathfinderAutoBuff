@@ -92,8 +92,11 @@ namespace PathfinderAutoBuff
                     ModPath = modEntry.Path;
                     uiController = new GUIController();
                     recordQueue = new RecordController();
-                    uiController.Enable();
-                    recordQueue.ModEnable();
+                    if (uiController != null && recordQueue != null)
+                    {
+                        uiController.Enable();
+                        recordQueue.ModEnable();
+                    }
                 }
                 else
                 {
