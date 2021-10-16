@@ -12,12 +12,12 @@ using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.EntitySystem.Entities;
 using PathfinderAutoBuff.Utility;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 #if (KINGMAKER)
 using static KingmakerAutoBuff.Extensions.WoTRExtensions;
 #endif
 
-namespace PathfinderAutoBuff.QueueOperattions
+namespace PathfinderAutoBuff.QueueOperations
 {
     /*
      * Controller for the action recording

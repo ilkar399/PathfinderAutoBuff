@@ -18,8 +18,11 @@ using Kingmaker.UnitLogic.Commands.Base;
 using PathfinderAutoBuff.UnitLogic;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using static PathfinderAutoBuff.Utility.Extensions.LogicExtensions;
+#if (KINGMAKER)
+using static KingmakerAutoBuff.Extensions.WoTRExtensions;
+#endif
 
-namespace PathfinderAutoBuff.QueueOperattions
+namespace PathfinderAutoBuff.QueueOperations
 {
     /*
      * Unit command handlers and action queue=>command converters.
@@ -119,6 +122,7 @@ namespace PathfinderAutoBuff.QueueOperattions
             }
             else
             {
+ //               aa.IsOn = false;
                 return new UnitDeactivateAbility(aa);
             }
         }
@@ -229,9 +233,39 @@ namespace PathfinderAutoBuff.QueueOperattions
 
         private Spellbook getSpellbookForUse(UnitDescriptor unit)
         {
-            //            return unit.Spellbooks.FirstOrDefault<Spellbook>((Func<Spellbook, bool>)(spellbook => spellbook.CanSpend(ability)))?.Blueprint;
+            //TODO - replace with metamagic data
+            bool metadataMythicSpellbookPriority = false;
+            bool metadataInverseCasterLevelPriority = false;
+            if (Main.QueuesController?.queueController?.CurrentMetadata() != null)
+            {
+#if (WOTR)
+                metadataMythicSpellbookPriority = Main.QueuesController.queueController.CurrentMetadata().MetadataMythicSpellbookPriority;
+#endif
+                metadataInverseCasterLevelPriority = Main.QueuesController.queueController.CurrentMetadata().MetadataInverseCasterLevelPriority;
+            }
+            else
+            {
+#if (WOTR)
+                metadataMythicSpellbookPriority = Utility.SettingsWrapper.MetadataMythicSpellbookPriority;
+#endif
+                metadataInverseCasterLevelPriority = Utility.SettingsWrapper.MetadataInverseCasterLevelPriority;
+            }
+            Spellbook result = null;
             IEnumerable<Kingmaker.UnitLogic.Spellbook> spellbooks = unit.Spellbooks.Where(spellbook => spellbook.PACanSpendSpell(ability)).ToList();
-            return spellbooks.Count() > 0 ? spellbooks.MaxBy(spellbook => spellbook.CasterLevel) : null;
+            if (spellbooks.Count() < 1)
+                return null;
+#if (WOTR)
+            if (metadataMythicSpellbookPriority)
+                result = spellbooks.Where(spellbook => spellbook.IsMythic).FirstOrDefault();
+#endif
+            if (result == null)
+            {
+                if (metadataInverseCasterLevelPriority)
+                    result = spellbooks.MinBy(spellbook => spellbook.CasterLevel);
+                else
+                    result = spellbooks.MaxBy(spellbook => spellbook.CasterLevel);
+            }
+            return result;
         }
 
         private AbilityData getAbilityForUse(UnitDescriptor unit)
@@ -377,8 +411,10 @@ namespace PathfinderAutoBuff.QueueOperattions
             if (currentCommand == null)
             {
                 TryNextCommand();
+                return;
             }
-            executor.Commands.InterruptAll();
+            if (!executor.Commands.Empty)
+                executor.Commands.InterruptAll();
             if (currentCommand != null)
                 executor.Commands.AddToQueue(currentCommand);
         }

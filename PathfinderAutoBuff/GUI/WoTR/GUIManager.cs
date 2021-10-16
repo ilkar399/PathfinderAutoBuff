@@ -10,7 +10,7 @@ using Owlcat.Runtime.UI.Controls.Other;
 using Owlcat.Runtime.UI.MVVM;
 using TMPro;
 using PathfinderAutoBuff.Utility;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using static PathfinderAutoBuff.Main;
 using static PathfinderAutoBuff.Utility.StatusWrapper;
 

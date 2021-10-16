@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 using PathfinderAutoBuff.Utility;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using static PathfinderAutoBuff.Main;
 using static PathfinderAutoBuff.Utility.StatusWrapper;
 

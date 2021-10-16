@@ -10,7 +10,7 @@ using UnityModManagerNet;
 using PathfinderAutoBuff.Controllers;
 using PathfinderAutoBuff.Utility.Extensions;
 using static PathfinderAutoBuff.Main;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using PathfinderAutoBuff.Tests;
 
 
@@ -115,6 +115,12 @@ namespace PathfinderAutoBuff.Menu
                     if (!GUITests.GUIComponentsTest())
                         TestHelpers.TestLog("GUI GUIComponentsTest", "FAIL");
                 }
+            }
+            //Queue Metadata tests
+            if (GUILayout.Button("Queue metadata test", DefaultStyles.ButtonDefault(), GUILayout.ExpandWidth(false)))
+            {
+                bool result = true & QueueMetadataTests.SpellbookPriority();
+                result = result & QueueMetadataTests.SpellCastingPriority();
             }
             //Utilities tests
             if (GUILayout.Button("Utilities - Flatten Actions Test", DefaultStyles.ButtonDefault(), GUILayout.ExpandWidth(false)))

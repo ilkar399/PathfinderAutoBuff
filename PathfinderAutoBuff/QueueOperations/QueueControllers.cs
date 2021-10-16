@@ -9,10 +9,10 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using static PathfinderAutoBuff.Main;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using PathfinderAutoBuff.UnitLogic;
 
-namespace PathfinderAutoBuff.QueueOperattions
+namespace PathfinderAutoBuff.QueueOperations
     /*
      * Queue controller for UI/GUI. In the future might be used as a base for the menu viewmodel 
      */
@@ -147,11 +147,6 @@ namespace PathfinderAutoBuff.QueueOperattions
                 this.queueController.Clear();
                 this.queueController = null;
             }
-            /*
-            if (Main.uiController != null)
-                if (Main.uiController.AutoBuffGUI.isActiveAndEnabled)
-                    Main.uiController.AutoBuffGUI.RefreshView();
-            */
         }
     }
 
@@ -162,15 +157,20 @@ namespace PathfinderAutoBuff.QueueOperattions
         string m_CurrentActionName;
         int m_CurrentActionIndex;
         CommandQueue m_CurrentQueue;
+        internal QueueMetadata m_CurrentMetadata;
         public bool actionsInit;
         public ActionController actionController;
- //       public Dictionary<int, string> favoriteQueues;
 
         //Constructor
         public QueueController(CommandQueue commandQueue)
         {
             this.m_CurrentQueue = commandQueue;
             this.Refresh();
+        }
+
+        public void LoadMetadata(string queueName)
+        {
+            this.m_CurrentMetadata = new QueueMetadata(queueName);
         }
 
         //TODO: Refresh content
@@ -184,7 +184,6 @@ namespace PathfinderAutoBuff.QueueOperattions
                 this.actionController.Clear();
                 this.actionController = null;
             }
- //           favoriteQueues = new Dictionary<int, string>(FavoriteQueues);
             this.actionsInit = false;
         }
 
@@ -236,6 +235,11 @@ namespace PathfinderAutoBuff.QueueOperattions
         public CommandQueue CurrentQueue()
         {
             return m_CurrentQueue;
+        }
+
+        public QueueMetadata CurrentMetadata()
+        {
+            return m_CurrentMetadata;
         }
     }
 

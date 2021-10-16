@@ -9,7 +9,7 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityModManagerNet;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using PathfinderAutoBuff.UnitLogic;
 using PathfinderAutoBuff.Utility;
 using static PathfinderAutoBuff.Main;

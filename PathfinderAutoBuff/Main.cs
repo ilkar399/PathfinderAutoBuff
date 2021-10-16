@@ -4,7 +4,7 @@ using System.Reflection;
 using Kingmaker;
 using UnityModManagerNet;
 using PathfinderAutoBuff.Controllers;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using PathfinderAutoBuff.Utility;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using HarmonyLib;

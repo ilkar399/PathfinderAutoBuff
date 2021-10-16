@@ -19,7 +19,7 @@ using static PathfinderAutoBuff.Utility.IOHelpers;
 using static PathfinderAutoBuff.Utility.Extensions.RichTextExtensions;
 using static PathfinderAutoBuff.Utility.Extensions.CommonExtensions;
 using PathfinderAutoBuff.Menu.QueuesComponents;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using PathfinderAutoBuff.UnitLogic;
 #if (KINGMAKER)
 using static KingmakerAutoBuff.Extensions.WoTRExtensions;
@@ -47,6 +47,7 @@ namespace PathfinderAutoBuff.Menu
         private List<string> partyNamesOrdered;
         private float uiScale = 1f;
         private List<ActionItemView> actionItemsViews = new List<ActionItemView>();
+        QueueMetadataSettings queueMetadataSettings;
 
 
         public void OnGUI(UnityModManager.ModEntry modentry)
@@ -101,23 +102,24 @@ namespace PathfinderAutoBuff.Menu
                         _scrollPosition = ScrollView.scrollPosition;
                         Utility.UI.SelectionGrid(ref currentQueueIndex, Main.QueuesController.m_Queues, 5, () =>
                         {
+                            CommandQueue commandQueue;
                             Main.QueuesController.CurrentQueueIndex = currentQueueIndex;
                             if (Main.QueuesController.queueController == null)
                             {
-                                CommandQueue commandQueue = new CommandQueue();
+                                commandQueue = new CommandQueue();
                                 commandQueue.LoadFromFile($"{Main.QueuesController.CurrentQueueName}.json");
-                                Main.QueuesController.queueController = new QueueController(commandQueue);
-                                uiQueueName = Main.QueuesController.CurrentQueueName;
                             }
                             else
                             {
                                 Main.QueuesController.queueController.Clear();
                                 Main.QueuesController.queueController = null;
-                                CommandQueue commandQueue = new CommandQueue();
+                                commandQueue = new CommandQueue();
                                 commandQueue.LoadFromFile($"{Main.QueuesController.CurrentQueueName}.json");
-                                Main.QueuesController.queueController = new QueueController(commandQueue);
-                                uiQueueName = Main.QueuesController.CurrentQueueName;
                             }
+                            Main.QueuesController.queueController = new QueueController(commandQueue);
+                            uiQueueName = Main.QueuesController.CurrentQueueName;
+                            Main.QueuesController.queueController.LoadMetadata(Main.QueuesController.CurrentQueueName);
+                            queueMetadataSettings = new QueueMetadataSettings(Main.QueuesController);
 
                         }, DefaultStyles.ButtonSelector(), GUILayout.ExpandWidth(false));
                     }
@@ -174,6 +176,11 @@ namespace PathfinderAutoBuff.Menu
                             return;
                         }
                     }
+                }
+                //Queue Metadata Settings
+                if (this.queueMetadataSettings != null)
+                {
+                    this.queueMetadataSettings.OnGUI();
                 }
                 GUILayout.EndVertical();
             }

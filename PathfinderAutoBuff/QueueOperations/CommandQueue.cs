@@ -20,7 +20,7 @@ using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using static KingmakerAutoBuff.Extensions.WoTRExtensions;
 #endif
 
-namespace PathfinderAutoBuff.QueueOperattions
+namespace PathfinderAutoBuff.QueueOperations
 {
     [Serializable]
     public class CommandQueueItem
@@ -447,6 +447,16 @@ namespace PathfinderAutoBuff.QueueOperattions
     public class CommandQueue
     {
         List<CommandQueueItem> m_List;
+
+        public CommandQueue()
+        {
+
+        }
+
+        public CommandQueue(List<CommandQueueItem> commandQueueItems)
+        {
+            this.m_List = commandQueueItems;
+        }
 
         public List<CommandQueueItem> CommandList
         {

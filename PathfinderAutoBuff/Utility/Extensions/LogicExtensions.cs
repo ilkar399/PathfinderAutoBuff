@@ -22,6 +22,7 @@ namespace PathfinderAutoBuff.Utility.Extensions
 		internal static bool PACanSpendSpell(this Spellbook spellbook, [NotNull] BlueprintAbility blueprint, [CanBeNull] AbilityData spell, bool excludeSpecial = false)
 		{
             int num = (spell != null) ? spellbook.GetSpellLevel(spell) : spellbook.MaxSpellLevel;
+            int castCount = 0;
 			if (num < 0)
 			{
 				return false;
@@ -49,8 +50,8 @@ namespace PathfinderAutoBuff.Utility.Extensions
                 return false;
             if (spellbook.Blueprint.Spontaneous)
             {
-                int spontSlots = spellbook.GetSpontaneousSlots(blueprintLevel);
-                if (spontSlots > 0)
+                castCount = spellbook.GetSpontaneousSlots(blueprintLevel);
+                if (castCount > 0)
                 {
                     return true;
                 }
@@ -69,6 +70,7 @@ namespace PathfinderAutoBuff.Utility.Extensions
                             {
                                 if (spell.Equals(spellSlot.Spell))
                                 {
+//                                    castCount++;
                                     return true;
                                 }
                             }
@@ -77,6 +79,7 @@ namespace PathfinderAutoBuff.Utility.Extensions
                                 AbilityData spell2 = spellSlot.Spell;
                                 if (blueprint == ((spell2 != null) ? spell2.Blueprint : null))
                                 {
+//                                    castCount++;
                                     return true;
                                 }
                             }
@@ -84,17 +87,37 @@ namespace PathfinderAutoBuff.Utility.Extensions
                     }
                 }
             }
+ //           Logger.Debug($"Spellbook {spellbook.Blueprint.Name} spell {blueprint.Name} casts {castCount}");
+ //           if (castCount > 0)
+ //               return true;
 			return false;
 		}
 
         //Determining which exact spellslot to use
-		internal static AbilityData PASpellAbility(this Spellbook spellbook, [NotNull] BlueprintAbility blueprint, bool excludeSpecial = false, UnitEntityData executor = null)
-		{
+        internal static AbilityData PASpellAbility(this Spellbook spellbook, [NotNull] BlueprintAbility blueprint, bool excludeSpecial = false, UnitEntityData executor = null)
+        {
+            //TODO replace with metadata class
+            bool metadataIgnoreMetamagic;
+            bool metadataLowestSlotFirst;
+            List<Metamagic> metamagicPriority;
+            if (Main.QueuesController?.queueController?.CurrentMetadata() != null)
+            {
+                metadataIgnoreMetamagic = Main.QueuesController.queueController.CurrentMetadata().MetadataIgnoreMetamagic;
+                metadataLowestSlotFirst = Main.QueuesController.queueController.CurrentMetadata().MetadataLowestSlotFirst;
+                metamagicPriority = Main.QueuesController.queueController.CurrentMetadata().MetamagicPriority;
+            }
+            else
+            {
+                metadataIgnoreMetamagic = SettingsWrapper.MetadataIgnoreMetamagic;
+                metadataLowestSlotFirst = SettingsWrapper.MetadataLowestSlotFirst;
+                metamagicPriority = SettingsWrapper.MetamagicPriority;
+            }
 			int maxSpellLevel = spellbook.MaxSpellLevel;
+            List<AbilityData> availableSpells = new List<AbilityData>();
+            //Getting available spelllist/spellslot
+            //Spontaneous
             if (spellbook.Blueprint.Spontaneous)
             {
-                List<AbilityData> availableSpells = new List<AbilityData>();
-
 #if (WOTR)
                 for (int spellLevel = maxSpellLevel; spellLevel >= spellbook.GetMinSpellLevel(blueprint); spellLevel--)
 #else
@@ -106,17 +129,14 @@ namespace PathfinderAutoBuff.Utility.Extensions
                         foreach (AbilityData spell2 in customSpells)
                             if (spellbook.GetAvailableForCastSpellCount(spell2) > 0)
                                 availableSpells.Add(spell2);
-                    availableSpells.AddRange(spellbook.GetAllKnownSpells().Where(spell => spell.Blueprint == blueprint).ToList());
+                    availableSpells.AddRange(spellbook.GetAllKnownSpells().Where(spell => {
+                        return (spell.Blueprint == blueprint && spell.GetAvailableForCastCount() > 0);
+                        }).ToList());
                 }
-                AbilityData result = null;
-                List<AbilityData> results = availableSpells.Where(spell => spell.HasMetamagic(Metamagic.Extend)).ToList();
-                if (results != null)
-                    result = results.OrderBy(spell => spell.SpellLevel).FirstOrDefault();
-                return result != null ? result : availableSpells.OrderBy(spell => spell.SpellLevel).FirstOrDefault();
             }
             else
+            //Non-spontaneous
             {
-                List<AbilityData> availableSpells = new List<AbilityData>();
                 for (int spellLevel = maxSpellLevel; spellLevel >= 0; spellLevel--)
                 {
                     List<SpellSlot> list = spellbook.GetMemorizedSpellSlots(spellLevel).ToList();
@@ -134,10 +154,48 @@ namespace PathfinderAutoBuff.Utility.Extensions
                     }
                 }
                 availableSpells.AddRange(spellbook.GetAllKnownSpells().Where(spell => spell.Blueprint == blueprint).ToList());
-                AbilityData result = availableSpells.Where(spell => spell.HasMetamagic(Metamagic.Extend)).FirstOrDefault();
-                return result != null ? result : availableSpells.OrderBy(spell => spell.SpellLevel).FirstOrDefault();
             }
-		}
+            //Prioretizing spells in accordance to the metadata settings
+            AbilityData result = null;
+            List<AbilityData> results = availableSpells.ToList();
+            //Metamagic
+            if (!metadataIgnoreMetamagic)
+            {
+                foreach (Metamagic metamagic in metamagicPriority)
+                {
+                    List<AbilityData> results2 = new List<AbilityData>();
+                    if (metamagic == 0)
+                        results2 = results.Where(spell =>
+                        {
+                            if (spell.MetamagicData == null)
+                                return true;
+                            if (!spell.MetamagicData.NotEmpty)
+                                return true;
+                            return false;
+                        }).ToList();
+                    else
+                    {
+                        results2 = results.Where(spell => spell.HasMetamagic(metamagic)).ToList();
+                    }
+                    if (results2.Count == 0)
+                    {
+                        break;
+                    }
+                    else
+                        results = results2;
+                }
+            }
+            if (results.Count < 1)
+                results = availableSpells.ToList();
+            //Spell level priority
+            if (results.Count < 1)
+                results = availableSpells.ToList();
+            if (metadataLowestSlotFirst)
+                result = results.OrderBy(spell => spell.SpellLevel).FirstOrDefault();
+            else
+                result = results.OrderByDescending(spell => spell.SpellLevel).FirstOrDefault();
+            return result;
+        }
 	}
 
 }

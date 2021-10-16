@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Kingmaker.UnitLogic.Abilities;
+using PathfinderAutoBuff.QueueOperations;
 using PathfinderAutoBuff.Utility;
 using UnityModManagerNet;
 
@@ -39,6 +41,16 @@ namespace PathfinderAutoBuff
         public float gUIPosX = 0f;
         //GUI pos Y
         public float gUIPosY = 0f;
+
+        //Default Queue Metadata
+        //Spellbook priorities
+        public bool metadataMythicSpellbookPriority = false;
+        public bool metadataInverseCasterLevelPriority = false;
+        //Spellslot priorities
+        public bool metadataIgnoreMetamagic = false;
+        public bool metadataLowestSlotFirst = true;
+        //Metamagic priorities
+        public List<Metamagic> metamagicPriority = new List<Metamagic>();
 
         public override void Save(UnityModManager.ModEntry modEntry)
         {
