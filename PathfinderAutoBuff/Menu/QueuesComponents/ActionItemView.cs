@@ -232,7 +232,11 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 {
                     List<string> partyList = selectedActionController.actionType == CommandQueueItem.ActionTypes.Spell
                         ? new List<string> { "Highest duration" } : new List<string>();
-                    foreach (UnitEntityData unit in (from u in Kingmaker.Game.Instance?.Player?.Party where u.IsDirectlyControllable select u))
+#if (WOTR)
+                    foreach (UnitEntityData unit in (from u in Kingmaker.Game.Instance?.Player?.PartyAndPets where u.IsDirectlyControllable select u))
+#elif (KINGMAKER)
+                    foreach (UnitEntityData unit in (from u in Kingmaker.Game.Instance?.Player?.PartyAndPets() where u.IsDirectlyControllable select u))
+#endif
                     {
                         partyList.Add(unit.CharacterName);
                     }

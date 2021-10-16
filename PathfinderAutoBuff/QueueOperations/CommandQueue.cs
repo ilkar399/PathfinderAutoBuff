@@ -136,7 +136,11 @@ namespace PathfinderAutoBuff.QueueOperations
         //Get Command Caster
         public UnitEntityData GetCaster(PartySpellList partySpellList)
         {
-            var party = Kingmaker.Game.Instance?.Player?.Party;
+#if (WOTR)
+            var party = Kingmaker.Game.Instance?.Player?.PartyAndPets;
+#elif (KINGMAKER)
+            var party = Kingmaker.Game.Instance?.Player?.PartyAndPets();
+#endif
             if (party == null || party.Count < 1)
             {
                 return null;
@@ -339,7 +343,11 @@ namespace PathfinderAutoBuff.QueueOperations
         public IEnumerable<string> GetStatus(PartySpellList partySpellList)
         {
             List<string> Result = new List<string>();
-            var party = Kingmaker.Game.Instance?.Player?.Party;
+#if (WOTR)
+            var party = Kingmaker.Game.Instance?.Player?.PartyAndPets;
+#elif (KINGMAKER)
+            var party = Kingmaker.Game.Instance?.Player?.PartyAndPets();
+#endif
             BlueprintAbility blueprintAbility = ResourcesLibrary.TryGetBlueprint<BlueprintAbility>(this.AbilityId);
             if (party == null || party.Count < 1 || blueprintAbility == null )
             {
