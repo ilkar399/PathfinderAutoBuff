@@ -31,7 +31,7 @@ namespace PathfinderAutoBuff
             { "Menu_Tab_Recording", "Queue recording" },
 
             { "Menu_Settings_IgnoreModifiiers", "Ignore Ability/Activatable ability modifiers while processing"},
-            { "Menu_Settings_RefreshShort", "Refresh buffs when they have a short duration"},
+            { "Menu_Settings_RefreshShort", "Refresh buffs only when they have a short duration"},
             { "Menu_Settings_UIEnabled", "Enable in-game UI"},
             { "Menu_Settings_ReloadQueues", "Reload Queues"},
             { "Menu_Settings_RefreshLabel", "Refresh in seconds: {0}"},

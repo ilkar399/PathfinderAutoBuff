@@ -441,7 +441,14 @@ namespace PathfinderAutoBuff.QueueOperations
                 return false;
             }
 #if (WOTR)
-            Logger.Debug($"Command {commandAbility?.Ability.Name} {command.Result.ToString()}");
+            if (commandAbility != null)
+            {
+                Logger.Debug($"{command.Result} Ability {commandAbility.Ability.Name} " +
+                    $"Target {commandAbility.Target.Unit.CharacterName} " +
+                    $"IsAvailable {commandAbility.Ability.IsAvailableForCast} " +
+                    $"Spellbook {commandAbility.Ability.Spellbook}" +
+                    $"ShareTransmutation {commandAbility.Ability.ArcanistShareTransmutation}");
+            }
 #elif (KINGMAKER)
             Logger.Debug($"Command {command} {command.Type} {commandAbility?.Spell.Name} {command.Result.ToString()}");
             if (commandAbility.Spell.MetamagicData != null)
@@ -452,18 +459,32 @@ namespace PathfinderAutoBuff.QueueOperations
                 if (commandAbility != null)
                 {
 #if (WOTR)
-                    if (!commandAbility.Ability.CanTarget(commandAbility.Target))
+ //                   if (!commandAbility.Ability.CanTarget(commandAbility.Target))
 #elif (KINGMAKER)
-                    if (!commandAbility.Spell.CanTarget(commandAbility.Target))
+ //                   if (!commandAbility.Spell.CanTarget(commandAbility.Target))
 #endif
                     {
 #if (WOTR)
-                        Logger.Log($"Unable to use {commandAbility.Ability.Name} on target");
+                        Logger.Log($"Unable to use {commandAbility.Ability.Name} on {commandAbility.Target.Unit.CharacterName}");
 #elif (KINGMAKER)
                         Logger.Log($"Unable to use {commandAbility.Spell.Name} on target");
 #endif
                         TryNextCommand();
                         return true;
+                    }
+                    {
+                        /*
+                        UnitUseAbility unitUseAbility = (UnitUseAbility)command;
+                        if (unitUseAbility != null)
+                        {
+                            Logger.Debug($"Failed Ability {unitUseAbility.Ability.Name} " +
+                                $"Target {commandAbility.Target.Unit.CharacterName} " +
+                                $"IsAvailable {commandAbility.Ability.IsAvailable} " +
+                                $"ForceCastOnBadTarget {commandAbility.ForceCastOnBadTarget}");
+                        }
+                        TryNextCommand();
+                        return true;
+                        */
                     }
                 }
                 return false;

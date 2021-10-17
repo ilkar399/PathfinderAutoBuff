@@ -12,9 +12,13 @@ using UnityModManagerNet;
 using static PathfinderAutoBuff.Main;
 using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Controllers;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Items.Slots;
+using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.UI.GenericSlot;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
@@ -112,7 +116,27 @@ namespace PathfinderAutoBuff.Utility
                 Where(action => (action as ContextActionReduceBuffDuration) != null).Count() > 0)
             {
                 return true;
-            }       
+            }
+            //Checking if action applies buff to item (Bless Weapon, etc.)
+            ContextActionEnchantWornItem contextActionEnchantWornItem = Utility.LogicHelpers.FlattenAllActions(blueprintAbility, true).
+                Where(action => (action as ContextActionEnchantWornItem) != null).FirstOrDefault() as ContextActionEnchantWornItem;
+            if (contextActionEnchantWornItem != null)
+            {
+                ItemSlot itemSlot = EquipSlotBase.ExtractSlot(contextActionEnchantWornItem.Slot, target.Body);
+                if (!itemSlot.HasItem)
+                {
+                    return true;
+                }
+                ItemEnchantment fact = itemSlot.Item.Enchantments.GetFact(contextActionEnchantWornItem.Enchantment);
+                if (fact == null)
+                    return true;
+                else if (fact.IsTemporary)
+                    if (fact.EndTime - Game.Instance.TimeController.GameTime <= SettingsWrapper.RefreshTime.Seconds())
+                    {
+                        return false;
+                    }
+            }
+
             ContextActionApplyBuff contextActionApplyBuff = FindApplyBuffActionAll(actionList);
             ContextActionApplyBuff contextActionApplyBuffFalse = FindApplyBuffActionAll(actionList,true);
             BlueprintBuff blueprintBuff1 = (contextActionApplyBuff != null) ? contextActionApplyBuff.Buff : null;
@@ -121,12 +145,11 @@ namespace PathfinderAutoBuff.Utility
             {
                 return false;
             }
-            TimeSpan settingsDuration = TimeSpan.FromSeconds(RefreshTime);
             using (IEnumerator<Buff> enumerator = target.Buffs.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
-                    if ((enumerator.Current.Blueprint == blueprintBuff1 || enumerator.Current.Blueprint == blueprintBuff2) && enumerator.Current.TimeLeft > settingsDuration)
+                    if ((enumerator.Current.Blueprint == blueprintBuff1 || enumerator.Current.Blueprint == blueprintBuff2) && enumerator.Current.TimeLeft > RefreshTime.Seconds())
                     {
                         return false;
                     }

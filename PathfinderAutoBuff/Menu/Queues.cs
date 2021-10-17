@@ -47,6 +47,7 @@ namespace PathfinderAutoBuff.Menu
         private List<string> partyNamesOrdered;
         private float uiScale = 1f;
         private List<ActionItemView> actionItemsViews = new List<ActionItemView>();
+        bool init;
         QueueMetadataSettings queueMetadataSettings;
 
 
@@ -62,6 +63,11 @@ namespace PathfinderAutoBuff.Menu
             {
                 GUILayout.Label(Local["Menu_All_Label_NotInGame"].Color(RGBA.red));
                 return;
+            }
+            if (!init)
+            {
+                EventBus.Subscribe(this);
+                init = true;
             }
             bool queueDeletionFlag = true;
             string activeScene = SceneManager.GetActiveScene().name;
@@ -253,7 +259,9 @@ namespace PathfinderAutoBuff.Menu
 
         public void OnAreaDidLoad()
         {
+            Logger.Debug("OnAreaDidLoad");
             this.ReloadData();
+            Main.QueuesController.queueController.actionsInit = false;
         }
     }
 }
