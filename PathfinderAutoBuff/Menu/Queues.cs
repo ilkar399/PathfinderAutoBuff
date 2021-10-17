@@ -100,6 +100,8 @@ namespace PathfinderAutoBuff.Menu
                         uiQueueName = "New queue";
                         Main.QueuesController.CurrentQueueName = "New queue";
                         Main.QueuesController.CurrentQueueIndex = -1;
+                        Main.QueuesController.queueController.LoadMetadata("");
+                        Main.QueuesController.queueController.CurrentMetadata().QueueName = uiQueueName;
                     }
                     GUILayout.Label(Local["Menu_Queues_QueueList"], DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(true));
                     //Queue list UI
@@ -155,10 +157,17 @@ namespace PathfinderAutoBuff.Menu
                     //Favorite queue saving
                     if (GUILayout.Button(Local["Menu_Queues_SaveQueue"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
+                        Logger.Debug("S0");
                         bool saveResult = Main.QueuesController.queueController.CurrentQueue().SaveToFile(uiQueueName);
+                        Logger.Debug("S1");
+                        Main.QueuesController.queueController.CurrentMetadata().QueueName = uiQueueName;
+                        Logger.Debug("S2");
+                        saveResult = saveResult && Main.QueuesController.queueController.CurrentMetadata().Save();
+                        Logger.Debug("S3");
                         if (saveResult)
                         {
                             ReloadData();
+                            Logger.Debug("S4");
                             return;
                         }
                         else

@@ -66,7 +66,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             //Metamagic priority
             if (!metamagicInit)
             {
-                metamagicPrioritySelector = new MetamagicPrioritySelector(SettingsWrapper.MetamagicPriority);
+                metamagicPrioritySelector = new MetamagicPrioritySelector(this.queueMetadata.MetamagicPriority);
                 metamagicInit = true;
             }
             metamagicPrioritySelector.OnGUI();

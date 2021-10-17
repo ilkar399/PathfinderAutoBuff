@@ -43,7 +43,7 @@ namespace PathfinderAutoBuff.QueueOperations
             this.MetadataIgnoreMetamagic = SettingsWrapper.MetadataIgnoreMetamagic;
             this.MetadataLowestSlotFirst = SettingsWrapper.MetadataLowestSlotFirst;
             //Metamagic priorities
-            this.MetamagicPriority = new List<Metamagic>() { Metamagic.Extend, Metamagic.Quicken, 0 };
+            this.MetamagicPriority = new List<Metamagic>();
 
             this.QueueName = null;
         }
@@ -57,6 +57,7 @@ namespace PathfinderAutoBuff.QueueOperations
             QueueMetadata fileData = null;
             if (!File.Exists(filePath))
             {
+                this.MetamagicPriority = new List<Metamagic>(SettingsWrapper.MetamagicPriority);
                 return;
             }
             try
@@ -64,13 +65,14 @@ namespace PathfinderAutoBuff.QueueOperations
                 using (StreamReader file = File.OpenText(filePath))
                 {
                     JsonSerializer serializer = new JsonSerializer();
-                    fileData = (QueueMetadata)serializer.Deserialize(file, typeof(List<CommandQueueItem>));
+                    fileData = (QueueMetadata)serializer.Deserialize(file, typeof(QueueMetadata));
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log($"Error deserializing the queue {queueName}");
                 Logger.Log(ex.StackTrace);
+                this.MetamagicPriority = new List<Metamagic>(SettingsWrapper.MetamagicPriority);
                 return;
             }
             if (fileData != null)
@@ -81,6 +83,8 @@ namespace PathfinderAutoBuff.QueueOperations
                 this.MetadataInverseCasterLevelPriority = fileData.MetadataInverseCasterLevelPriority;
                 this.MetadataLowestSlotFirst = fileData.MetadataLowestSlotFirst;
                 this.MetadataIgnoreMetamagic = fileData.MetadataIgnoreMetamagic;
+                Logger.Debug(fileData.MetamagicPriority.Count);
+                Logger.Debug(String.Join(",",fileData.MetamagicPriority));
                 this.MetamagicPriority = fileData.MetamagicPriority;
             }
         }
@@ -89,12 +93,14 @@ namespace PathfinderAutoBuff.QueueOperations
         public bool Save()
         {
             string savepath;
+            Logger.Debug($"Saving {this.QueueName} Metadata");
             savepath = Path.Combine(SettingsWrapper.ModPath, "scripts") + $"/{this.QueueName}.metadata";
             try
             {
                 if (!Directory.Exists(Path.Combine(SettingsWrapper.ModPath, "scripts")))
                 {
                     Directory.CreateDirectory(Path.Combine(SettingsWrapper.ModPath, "scripts"));
+                }
                 var JsonSettings = new JsonSerializerSettings
                 {
                     Formatting = Formatting.Indented,
@@ -107,7 +113,6 @@ namespace PathfinderAutoBuff.QueueOperations
                     JsonSerializer serializer = JsonSerializer.Create(JsonSettings);
                     serializer.Serialize(file, this);
                     return true;
-                }
                 }
             }
             catch (Exception e)

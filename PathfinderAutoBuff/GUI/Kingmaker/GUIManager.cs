@@ -219,6 +219,7 @@ namespace PathfinderAutoBuff.GUI
                     Logger.Log(string.Format(Local["Menu_Queues_ErrorDeleting"], Main.QueuesController.CurrentQueueName));
                 else
                 {
+                    Main.QueuesController.ReloadQueues();
                     RefreshView();
                     return;
                 }

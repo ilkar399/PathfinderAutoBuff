@@ -519,6 +519,20 @@ namespace PathfinderAutoBuff.QueueOperations
                 {
                     Directory.CreateDirectory(Path.Combine(ModPath, "scripts"));
                 }
+                var JsonSettings = new JsonSerializerSettings
+                {
+                    Formatting = Formatting.Indented,
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                };
+                DefaultJsonSettings.Initialize();
+                using (StreamWriter file = File.CreateText(savepath))
+                {
+                    Logger.Debug(this.m_List.Count);
+                    JsonSerializer serializer = JsonSerializer.Create(JsonSettings);
+                    serializer.Serialize(file, this.m_List);
+                    return true;
+                }
             }
             catch (Exception e)
             {
@@ -526,20 +540,7 @@ namespace PathfinderAutoBuff.QueueOperations
                 Logger.Log(e.StackTrace);
                 return false;
             }
-            var JsonSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                TypeNameHandling = TypeNameHandling.Auto,
-                ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-            };
-            DefaultJsonSettings.Initialize();
-            using (StreamWriter file = File.CreateText(savepath))
-            {
-                Logger.Debug(this.m_List.Count);
-                JsonSerializer serializer = JsonSerializer.Create(JsonSettings);
-                serializer.Serialize(file, this.m_List);
-                return true;
-            }
+
         }
 
         //TODO: Destructor
