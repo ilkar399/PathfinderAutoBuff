@@ -42,12 +42,15 @@ namespace PathfinderAutoBuff.Utility
         public static bool DeleteQueue(string queueName)
         {
             string filePath = "";
+            string filePath2 = "";
             filePath = Path.Combine(ModPath, "scripts") + $"/{queueName}.json";
+            filePath2 = Path.Combine(ModPath, "scripts") + $"/{queueName}.metadata";
             if (!Directory.Exists(Path.Combine(ModPath, "scripts")))
                 return false;
             try
             {
                 File.Delete(filePath);
+                File.Delete(filePath2);
             }
             catch (Exception ex)
             {
