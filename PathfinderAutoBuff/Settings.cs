@@ -20,6 +20,8 @@ namespace PathfinderAutoBuff
         public bool refreshShort = true;
         //remaining time to refresh in seconds. Don't forget to use TimeSpan.FromSeconds()
         public int refreshTime = 60;
+        //Continue casting queue on encountering error
+        public bool continueCastOnFail = false;
         //Favorite queues
         public SerializableDictionary<int, string> favoriteQueues = new SerializableDictionary<int, string> { 
             { 1, "" }, { 2, "" }, { 3, "" }, { 4, "" }, { 5, "" }, 

@@ -36,6 +36,13 @@ namespace PathfinderAutoBuff.Utility
             set => Main.Settings.refreshTime = value;
         }
 
+        //Check if queue casting should continue on action failure
+        public static bool ContinueCastOnFail
+        {
+            get => Main.Settings.continueCastOnFail;
+            set => Main.Settings.continueCastOnFail = value;
+        }
+
         public static bool UIEnabled
         {
             get => Main.Settings.uIEnabled;

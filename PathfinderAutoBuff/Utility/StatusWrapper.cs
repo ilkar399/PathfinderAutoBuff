@@ -37,6 +37,6 @@ namespace PathfinderAutoBuff.Utility
         {
             return Game.Instance.UI.Canvas?.HUDController.CurrentState == UISectionHUDController.HUDState.AllVisible;
         }
-
+        
     }
 }

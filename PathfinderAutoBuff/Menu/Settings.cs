@@ -48,12 +48,15 @@ namespace PathfinderAutoBuff.Menu
             }
             using (new GUILayout.VerticalScope())
             {
-                //TODO Styling
                 UI.Label(Local["Menu_Settings_MechanicsLabel"]);
+                //Ignore Modifiers
                 IgnoreModifiiers = UI.ToggleButton(IgnoreModifiiers, Local["Menu_Settings_IgnoreModifiiers"], labelDefault, UI.AutoWidth());
+                //Refresh short buffs
                 RefreshShort = UI.ToggleButton(RefreshShort, Local["Menu_Settings_RefreshShort"], labelDefault, UI.AutoWidth());
                 UI.Label(string.Format(Local["Menu_Settings_RefreshLabel"], RefreshTime));
                 RefreshTime = (int)Utility.UI.RoundedHorizontalSlider(RefreshTime, 1, 30f, 90f, GUILayout.Width(200f), UI.AutoWidth());
+                //Continue 
+                ContinueCastOnFail = UI.ToggleButton(ContinueCastOnFail, Local["Menu_Settings_ContinueCastOnFail"], labelDefault, UI.AutoWidth());
                 /*string activeScene = SceneManager.GetActiveScene().name;
                 if (Game.Instance?.Player == null || activeScene == "MainMenu" || activeScene == "Start")
                 {
@@ -62,43 +65,33 @@ namespace PathfinderAutoBuff.Menu
                 }*/
                 UI.Splitter(Color.grey);
                 //Default Metadata Settings
-                UI.Label("Default queue execution settings");
+                UI.Label(Local["Menu_Settings_MetadataLabel"]);
 #if (WOTR)
                 MetadataMythicSpellbookPriority = UI.ToggleButton(
                     MetadataMythicSpellbookPriority,
-                    "Use Mythic Spellbook first",
+                    Local["Menu_Settings_MythicFirst"],
                     labelDefault,
                     UI.AutoWidth()
                     );
 #endif
                 MetadataInverseCasterLevelPriority = UI.ToggleButton(
                     MetadataInverseCasterLevelPriority,
-                    "Lower caster level spellbook first",
+                    Local["Menu_Settings_LowCLFirst"],
                     labelDefault,
                     UI.AutoWidth()
                     );
                 MetadataIgnoreMetamagic = UI.ToggleButton(
                     MetadataIgnoreMetamagic,
-                    "Ignore metamagic priority settings",
+                    Local["Menu_Settings_IgnoreMMPriority"],
                     labelDefault,
                     UI.AutoWidth()
                     );
                 MetadataLowestSlotFirst = UI.ToggleButton(
                     MetadataLowestSlotFirst,
-                    "Lower level spellslot first",
+                    Local["Menu_Settings_LowSpelslotFirst"],
                     labelDefault,
                     UI.AutoWidth()
                     );
-                /*
-                //Spellbook priorities
-                this.MetadataMythicSpellbookPriority = SettingsWrapper.MetadataMythicSpellbookPriority;
-                this.MetadataInverseCasterLevelPriority = SettingsWrapper.MetadataInverseCasterLevelPriority;
-                //Spellslot priorities
-                this.MetadataIgnoreMetamagic = SettingsWrapper.MetadataIgnoreMetamagic;
-                this.MetadataLowestSlotFirst = SettingsWrapper.MetadataLowestSlotFirst;
-                //Metamagic priorities
-                this.MetamagicPriority = new List<Metamagic>() { Metamagic.Extend, Metamagic.Quicken, 0 };
-                */
                 //Metamagic priority
                 if (!metamagicInit)
                 {

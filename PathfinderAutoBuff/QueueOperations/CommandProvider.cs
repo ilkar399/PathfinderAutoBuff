@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Commands;
 using Kingmaker.UnitLogic.Commands.Base;
+using Kingmaker.UnitLogic.Mechanics.Actions;
 using PathfinderAutoBuff.UnitLogic;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using static PathfinderAutoBuff.Utility.Extensions.LogicExtensions;
@@ -414,9 +416,27 @@ namespace PathfinderAutoBuff.QueueOperations
                 return;
             }
             if (!executor.Commands.Empty)
+            {
+                IEnumerable<UnitCommand> unitCommands = executor.GetAllCommands();
+                foreach (UnitCommand unitCommand in unitCommands)
+                {
+                    UnitUseAbility unitUseAbility1 = unitCommand as UnitUseAbility;
+                    if (unitUseAbility1 == null)
+                        continue;
+                    if (unitUseAbility1.Type == UnitCommand.CommandType.Free
+                        || unitUseAbility1.Type == UnitCommand.CommandType.Swift
+                        //                        && unitCommand.IsActing()
+                        )
+                    {
+                        unitUseAbility1.ExecutionProcess?.Tick();
+                    }
+                }
                 executor.Commands.InterruptAll();
+            }
             if (currentCommand != null)
+            {
                 executor.Commands.AddToQueue(currentCommand);
+            }
         }
 
         public bool HandleUnitCommandDidEnd(UnitCommand command)
@@ -446,45 +466,32 @@ namespace PathfinderAutoBuff.QueueOperations
                 Logger.Debug($"{command.Result} Ability {commandAbility.Ability.Name} " +
                     $"Target {commandAbility.Target.Unit.CharacterName} " +
                     $"IsAvailable {commandAbility.Ability.IsAvailableForCast} " +
-                    $"Spellbook {commandAbility.Ability.Spellbook}" +
-                    $"ShareTransmutation {commandAbility.Ability.ArcanistShareTransmutation}");
+                    $"CanTarget {commandAbility.Ability.CanTarget(commandAbility.Target)} "
+                    );
             }
 #elif (KINGMAKER)
-            Logger.Debug($"Command {command} {command.Type} {commandAbility?.Spell.Name} {command.Result.ToString()}");
-            if (commandAbility.Spell.MetamagicData != null)
-                Logger.Debug($"{commandAbility.Spell.MetamagicData.MetamagicMask}");
+            if (commandAbility != null)
+            {
+                Logger.Debug($"{command.Result} Ability {commandAbility.Spell.Name} " +
+                    $"Target {commandAbility.Target.Unit.CharacterName} " +
+                    $"IsAvailable {commandAbility.Spell.IsAvailableForCast} " +
+                    $"CanTarget {commandAbility.Spell.CanTarget(commandAbility.Target)} "
+                    );
+            }
 #endif
             if (command.Result != UnitCommand.ResultType.Success && !(command is UnitMoveTo || command is UnitInteractWithUnit))
             {
                 if (commandAbility != null)
                 {
 #if (WOTR)
- //                   if (!commandAbility.Ability.CanTarget(commandAbility.Target))
+                    Logger.Log($"Unable to use {commandAbility.Ability.Name} on {commandAbility.Target.Unit.CharacterName}");
 #elif (KINGMAKER)
- //                   if (!commandAbility.Spell.CanTarget(commandAbility.Target))
+                    Logger.Log($"Unable to use {commandAbility.Spell.Name} on target");
 #endif
+                    if (Utility.SettingsWrapper.ContinueCastOnFail)
                     {
-#if (WOTR)
-                        Logger.Log($"Unable to use {commandAbility.Ability.Name} on {commandAbility.Target.Unit.CharacterName}");
-#elif (KINGMAKER)
-                        Logger.Log($"Unable to use {commandAbility.Spell.Name} on target");
-#endif
                         TryNextCommand();
                         return true;
-                    }
-                    {
-                        /*
-                        UnitUseAbility unitUseAbility = (UnitUseAbility)command;
-                        if (unitUseAbility != null)
-                        {
-                            Logger.Debug($"Failed Ability {unitUseAbility.Ability.Name} " +
-                                $"Target {commandAbility.Target.Unit.CharacterName} " +
-                                $"IsAvailable {commandAbility.Ability.IsAvailable} " +
-                                $"ForceCastOnBadTarget {commandAbility.ForceCastOnBadTarget}");
-                        }
-                        TryNextCommand();
-                        return true;
-                        */
                     }
                 }
                 return false;
@@ -621,6 +628,7 @@ namespace PathfinderAutoBuff.QueueOperations
                 return;
 #endif
                 UnitUseAbility unitUseAbility = (__instance as UnitUseAbility);
+                
                 /*
                 if (unitUseAbility != null)
                     Logger.Debug($"{__instance.Executor} - {__instance.Target} - {unitUseAbility.Ability.Blueprint.name}/{unitUseAbility.Ability.Blueprint.AssetGuid}");
