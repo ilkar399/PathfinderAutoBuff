@@ -525,7 +525,7 @@ namespace PathfinderAutoBuff.QueueOperations
                     TypeNameHandling = TypeNameHandling.Auto,
                     ReferenceLoopHandling = ReferenceLoopHandling.Serialize
                 };
-                DefaultJsonSettings.Initialize();
+//                DefaultJsonSettings.Initialize();
                 using (StreamWriter file = File.CreateText(savepath))
                 {
                     Logger.Debug(this.m_List.Count);

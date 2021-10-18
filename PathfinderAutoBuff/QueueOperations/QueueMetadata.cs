@@ -83,8 +83,6 @@ namespace PathfinderAutoBuff.QueueOperations
                 this.MetadataInverseCasterLevelPriority = fileData.MetadataInverseCasterLevelPriority;
                 this.MetadataLowestSlotFirst = fileData.MetadataLowestSlotFirst;
                 this.MetadataIgnoreMetamagic = fileData.MetadataIgnoreMetamagic;
-                Logger.Debug(fileData.MetamagicPriority.Count);
-                Logger.Debug(String.Join(",",fileData.MetamagicPriority));
                 this.MetamagicPriority = fileData.MetamagicPriority;
             }
         }
@@ -107,7 +105,7 @@ namespace PathfinderAutoBuff.QueueOperations
                     TypeNameHandling = TypeNameHandling.Auto,
                     ReferenceLoopHandling = ReferenceLoopHandling.Serialize
                 };
-                DefaultJsonSettings.Initialize();
+//                DefaultJsonSettings.Initialize();
                 using (StreamWriter file = File.CreateText(savepath))
                 {
                     JsonSerializer serializer = JsonSerializer.Create(JsonSettings);

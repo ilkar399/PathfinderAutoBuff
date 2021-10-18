@@ -157,17 +157,12 @@ namespace PathfinderAutoBuff.Menu
                     //Favorite queue saving
                     if (GUILayout.Button(Local["Menu_Queues_SaveQueue"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
-                        Logger.Debug("S0");
                         bool saveResult = Main.QueuesController.queueController.CurrentQueue().SaveToFile(uiQueueName);
-                        Logger.Debug("S1");
                         Main.QueuesController.queueController.CurrentMetadata().QueueName = uiQueueName;
-                        Logger.Debug("S2");
                         saveResult = saveResult && Main.QueuesController.queueController.CurrentMetadata().Save();
-                        Logger.Debug("S3");
                         if (saveResult)
                         {
                             ReloadData();
-                            Logger.Debug("S4");
                             return;
                         }
                         else

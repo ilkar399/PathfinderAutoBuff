@@ -134,7 +134,7 @@ namespace PathfinderAutoBuff.Utility
                 if (fact == null)
                     return true;
                 else if (fact.IsTemporary)
-                    if (fact.EndTime - Game.Instance.TimeController.GameTime <= SettingsWrapper.RefreshTime.Seconds())
+                    if (fact.EndTime - Game.Instance.TimeController.GameTime > SettingsWrapper.RefreshTime.Seconds())
                     {
                         return false;
                     }

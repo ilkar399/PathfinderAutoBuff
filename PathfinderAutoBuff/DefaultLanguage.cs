@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using PathfinderAutoBuff.Controllers;
+using PathfinderAutoBuff.Utility;
 using Kingmaker.EntitySystem.Persistence.JsonUtility;
 
 namespace PathfinderAutoBuff
@@ -125,14 +126,16 @@ namespace PathfinderAutoBuff
 
         public T Deserialize<T>(TextReader reader)
         {
-            DefaultJsonSettings.Initialize();
-            return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+            JsonSerializerSettings jsonSerializerSettings = JsonSerializationSetup.SerializerSettings;
+//            DefaultJsonSettings.Initialize();
+            return JsonConvert.DeserializeObject<T>(reader.ReadToEnd(), jsonSerializerSettings);
         }
 
         public void Serialize<T>(TextWriter writer, T obj)
         {
-            DefaultJsonSettings.Initialize();
-            writer.Write(JsonConvert.SerializeObject(obj, Formatting.Indented));
+//           DefaultJsonSettings.Initialize();
+            JsonSerializerSettings jsonSerializerSettings = JsonSerializationSetup.SerializerSettings;
+            writer.Write(JsonConvert.SerializeObject(obj, jsonSerializerSettings));
         }
     }
 }

@@ -334,6 +334,7 @@
     <Compile Include="Utility\Extensions\UnityExtensions.cs" />
     <Compile Include="Utility\Helpers.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Utility\JsonSerialization.cs" />
     <Compile Include="Utility\VersionCompatibility.cs" />
     <Compile Include="Utility\SettingsWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
