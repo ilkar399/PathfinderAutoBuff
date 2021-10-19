@@ -39,7 +39,7 @@ namespace PathfinderAutoBuff
             { "Menu_Settings_FavoriteQueuesLabel", "Favorite queues:"},
             { "Menu_Settings_MechanicsLabel", "Mechanics settings:"},
             { "Menu_Settings_GUILabel", "GUI settings:"},
-            { "Menu_Settings_MetadataLabel","Default queue execution settings"},
+            { "Menu_Settings_MetadataLabel","Default queue execution settings:"},
             { "Menu_Settings_MythicFirst","Use Mythic Spellbook first"},
             { "Menu_Settings_LowCLFirst","Lower caster level spellbook first" },
             { "Menu_Settings_IgnoreMMPriority","Ignore metamagic priority settings"},
@@ -127,13 +127,11 @@ namespace PathfinderAutoBuff
         public T Deserialize<T>(TextReader reader)
         {
             JsonSerializerSettings jsonSerializerSettings = JsonSerializationSetup.SerializerSettings;
-//            DefaultJsonSettings.Initialize();
             return JsonConvert.DeserializeObject<T>(reader.ReadToEnd(), jsonSerializerSettings);
         }
 
         public void Serialize<T>(TextWriter writer, T obj)
         {
-//           DefaultJsonSettings.Initialize();
             JsonSerializerSettings jsonSerializerSettings = JsonSerializationSetup.SerializerSettings;
             writer.Write(JsonConvert.SerializeObject(obj, jsonSerializerSettings));
         }

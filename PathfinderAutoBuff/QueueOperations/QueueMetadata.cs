@@ -105,7 +105,6 @@ namespace PathfinderAutoBuff.QueueOperations
                     TypeNameHandling = TypeNameHandling.Auto,
                     ReferenceLoopHandling = ReferenceLoopHandling.Serialize
                 };
-//                DefaultJsonSettings.Initialize();
                 using (StreamWriter file = File.CreateText(savepath))
                 {
                     JsonSerializer serializer = JsonSerializer.Create(JsonSettings);

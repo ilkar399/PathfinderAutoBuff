@@ -35,7 +35,7 @@ namespace PathfinderAutoBuff.GUI
         private Button m_Execute;
 
         [SerializeField]
-        private Button m_Remove;
+        private Button m_Stop;
 
         [Header("Toggles")]
         [SerializeField]
@@ -101,9 +101,9 @@ namespace PathfinderAutoBuff.GUI
             this.m_RecordToggle = this.transform.Find("Container/Buttons/RecordToggle")?.gameObject.GetComponent<Toggle>();
             m_RecordToggle.gameObject.AddComponent<ToggleImageSwap>();
             m_RecordToggle.onValueChanged.AddListener(HandleRecordingToggleChange);
-            this.m_Remove = this.transform.Find("Container/Buttons/Remove")?.gameObject.GetComponent<Button>();
-            m_Remove.onClick = new Button.ButtonClickedEvent();
-            m_Remove.onClick.AddListener(new UnityAction(HandleRemoveQueueClick));
+            this.m_Stop = this.transform.Find("Container/Buttons/Stop")?.gameObject.GetComponent<Button>();
+            m_Stop.onClick = new Button.ButtonClickedEvent();
+            m_Stop.onClick.AddListener(new UnityAction(HandleStopQueueClick));
             this.m_Favorite = this.transform.Find("Container/Buttons/Favorite")?.gameObject.GetComponent<Toggle>();
             m_Favorite.gameObject.AddComponent<ToggleImageSwap>();
             m_Favorite.onValueChanged.AddListener(HandleFavoriteClick);
@@ -155,6 +155,7 @@ namespace PathfinderAutoBuff.GUI
                     Main.QueuesController.CurrentQueueIndex = queueIndex;
                     Main.QueuesController.queueController = new QueueController(selectedQueue);
                     m_Favorite.isOn = SettingsWrapper.FavoriteQueues2.Contains(Main.QueuesController.CurrentQueueName);
+                    Main.QueuesController.queueController.LoadMetadata(queueName);
                 }
                 else
                 {
@@ -206,22 +207,11 @@ namespace PathfinderAutoBuff.GUI
             }
         }
 
-        //Remove selected queue
-        private void HandleRemoveQueueClick()
+        //Stop queue execution
+        private void HandleStopQueueClick()
         {
-            if (selectedQueue != null)
-            {
-                bool queueDeletionFlag = IOHelpers.DeleteQueue(Main.QueuesController.CurrentQueueName);
-                if (!queueDeletionFlag)
-                    Logger.Log(string.Format(Local["Menu_Queues_ErrorDeleting"], Main.QueuesController.CurrentQueueName));
-                else
-                {
-                    Main.QueuesController.ReloadQueues();
-                    RefreshView();
-                    return;
-                }
-            }
-            Logger.Debug("RemoveQueue");
+            ScriptController.Reset();
+            Logger.Debug("Stop Execution");
         }
 
         //Add/remove from Favorites
@@ -263,6 +253,8 @@ namespace PathfinderAutoBuff.GUI
                         list.Add(queueName);
             }
             this.m_Dropdown.AddOptions(list);
+            this.m_Dropdown.value = -1;
+            HandleSelectItem(0);
             Logger.Debug($"RefreshView {list.Count} queues");
             //Rescale
             rectTransform.localScale = new Vector3(SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale);

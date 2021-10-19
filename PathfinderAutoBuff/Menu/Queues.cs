@@ -88,52 +88,54 @@ namespace PathfinderAutoBuff.Menu
                     ReloadData();
                     return;
                 }
-                if (Main.QueuesController.queueController == null)
+                /*
+                if (Main.QueuesController.CurrentQueueName != uiQueueName && 
+                        Main.QueuesController.CurrentQueueName != null)
+                    uiQueueName = Main.QueuesController.CurrentQueueName;
+                */
+                //New queue
+                if (GUILayout.Button(Local["Menu_Queues_NewQueue"], DefaultStyles.ButtonFixed120()))
                 {
-                    //New queue
-                    if (GUILayout.Button(Local["Menu_Queues_NewQueue"], DefaultStyles.ButtonFixed120()))
+                    List<CommandQueueItem> commandList = new List<CommandQueueItem>();
+                    CommandQueue commandQueue = new CommandQueue();
+                    commandQueue.CommandList = commandList;
+                    Main.QueuesController.queueController = new QueueController(commandQueue);
+                    Main.QueuesController.CurrentQueueName = "New queue";
+                    uiQueueName = Main.QueuesController.CurrentQueueName;
+                    Main.QueuesController.CurrentQueueIndex = -1;
+                    Main.QueuesController.queueController.LoadMetadata("");
+                    Main.QueuesController.queueController.CurrentMetadata().QueueName = Main.QueuesController.CurrentQueueName;
+                }
+                GUILayout.Label(Local["Menu_Queues_QueueList"], DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(true));
+                //Queue list UI
+                using (var ScrollView = new GUILayout.ScrollViewScope(_scrollPosition))
+                {
+                    _scrollPosition = ScrollView.scrollPosition;
+                    Utility.UI.SelectionGrid(ref currentQueueIndex, Main.QueuesController.m_Queues, 5, () =>
                     {
-                        List<CommandQueueItem> commandList = new List<CommandQueueItem>();
-                        CommandQueue commandQueue = new CommandQueue();
-                        commandQueue.CommandList = commandList;
-                        Main.QueuesController.queueController = new QueueController(commandQueue);
-                        uiQueueName = "New queue";
-                        Main.QueuesController.CurrentQueueName = "New queue";
-                        Main.QueuesController.CurrentQueueIndex = -1;
-                        Main.QueuesController.queueController.LoadMetadata("");
-                        Main.QueuesController.queueController.CurrentMetadata().QueueName = uiQueueName;
-                    }
-                    GUILayout.Label(Local["Menu_Queues_QueueList"], DefaultStyles.LabelFixed120(), GUILayout.ExpandWidth(true));
-                    //Queue list UI
-                    using (var ScrollView = new GUILayout.ScrollViewScope(_scrollPosition))
-                    {
-                        _scrollPosition = ScrollView.scrollPosition;
-                        Utility.UI.SelectionGrid(ref currentQueueIndex, Main.QueuesController.m_Queues, 5, () =>
+                        CommandQueue commandQueue;
+                        Main.QueuesController.CurrentQueueIndex = currentQueueIndex;
+                        if (Main.QueuesController.queueController == null)
                         {
-                            CommandQueue commandQueue;
-                            Main.QueuesController.CurrentQueueIndex = currentQueueIndex;
-                            if (Main.QueuesController.queueController == null)
-                            {
-                                commandQueue = new CommandQueue();
-                                commandQueue.LoadFromFile($"{Main.QueuesController.CurrentQueueName}.json");
-                            }
-                            else
-                            {
-                                Main.QueuesController.queueController.Clear();
-                                Main.QueuesController.queueController = null;
-                                commandQueue = new CommandQueue();
-                                commandQueue.LoadFromFile($"{Main.QueuesController.CurrentQueueName}.json");
-                            }
-                            Main.QueuesController.queueController = new QueueController(commandQueue);
-                            uiQueueName = Main.QueuesController.CurrentQueueName;
-                            Main.QueuesController.queueController.LoadMetadata(Main.QueuesController.CurrentQueueName);
-                            queueMetadataSettings = new QueueMetadataSettings(Main.QueuesController);
+                            commandQueue = new CommandQueue();
+                            commandQueue.LoadFromFile($"{Main.QueuesController.CurrentQueueName}.json");
+                        }
+                        else
+                        {
+                            Main.QueuesController.queueController.Clear();
+                            Main.QueuesController.queueController = null;
+                            commandQueue = new CommandQueue();
+                            commandQueue.LoadFromFile($"{Main.QueuesController.CurrentQueueName}.json");
+                        }
+                        Main.QueuesController.queueController = new QueueController(commandQueue);
+                        uiQueueName = Main.QueuesController.CurrentQueueName;
+                        Main.QueuesController.queueController.LoadMetadata(Main.QueuesController.CurrentQueueName);
+                        queueMetadataSettings = new QueueMetadataSettings(Main.QueuesController);
 
-                        }, DefaultStyles.ButtonSelector(), GUILayout.ExpandWidth(false));
-                    }
+                    }, DefaultStyles.ButtonSelector(), GUILayout.ExpandWidth(false));
                 }
             }
-            if (Main.QueuesController.queueController != null)
+            if (Main.QueuesController.queueController != null && uiQueueName != null)
             {
                 //Selected Queue
                 GUILayout.BeginVertical("box", GUILayout.ExpandHeight(true));
@@ -157,6 +159,7 @@ namespace PathfinderAutoBuff.Menu
                     //Favorite queue saving
                     if (GUILayout.Button(Local["Menu_Queues_SaveQueue"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
+                        Logger.Debug(uiQueueName);
                         bool saveResult = Main.QueuesController.queueController.CurrentQueue().SaveToFile(uiQueueName);
                         Main.QueuesController.queueController.CurrentMetadata().QueueName = uiQueueName;
                         saveResult = saveResult && Main.QueuesController.queueController.CurrentMetadata().Save();
@@ -196,7 +199,7 @@ namespace PathfinderAutoBuff.Menu
             }
             //Actions
             //Queue Edit/Info Mode
-            if (Main.QueuesController.queueController != null)
+            if (Main.QueuesController.queueController != null && uiQueueName != null)
             {
                 //New Spell/Ability
                 UI.Horizontal(() => {
@@ -254,9 +257,20 @@ namespace PathfinderAutoBuff.Menu
             if (Main.uiController != null)
                 if (Main.uiController.AutoBuffGUI.isActiveAndEnabled)
                     Main.uiController.AutoBuffGUI.RefreshView();
+//            currentQueueIndex = Array.IndexOf(Main.QueuesController.m_Queues, Main.QueuesController.CurrentQueueName);
             currentQueueIndex = -1;
             targetSelection = null;
             partyNamesOrdered = null;
+            uiQueueName = null;
+        }
+
+        private void OnGUIUpdate()
+        {
+            if (Main.QueuesController.queueController != null)
+            {
+                this.uiQueueName = Main.QueuesController.queueController.CurrentActionName;
+                this.queueMetadataSettings = new QueueMetadataSettings(Main.QueuesController);
+            }
         }
 
         public void OnAreaBeginUnloading() { }
