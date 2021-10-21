@@ -364,10 +364,6 @@
     <Compile Include="Menu\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="AssetBundles\WoTR\AssetBundles" />
-    <None Include="AssetBundles\WoTR\AssetBundles.manifest" />
-    <None Include="AssetBundles\WoTR\pathfinderautobuffpanel" />
-    <None Include="AssetBundles\WoTR\pathfinderautobuffpanel.manifest" />
     <None Include="Doc\CHANGELOG.md" />
     <None Include="Doc\README.md" />
     <None Include="Doc\TODO.md" />
@@ -394,20 +390,20 @@
         </None>
       </ItemGroup>
     </When>
-    <When Condition="'$(TargetGame)' == 'WoTR'">
+    <When Condition="'$(TargetGame)' == 'WoTR'" >
       <ItemGroup>
-        <None Include="AssetBundles\WoTR\AssetBundles">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Include="AssetBundles\WoTR\AssetBundles.manifest">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Include="AssetBundles\WoTR\pathfinderautobuffpanel">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Include="AssetBundles\WoTR\pathfinderautobuffpanel.manifest">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
+	    <None Include="AssetBundles\WoTR\AssetBundles">
+	      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    </None>
+	    <None Include="AssetBundles\WoTR\AssetBundles.manifest">
+	      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    </None>
+	    <None Include="AssetBundles\WoTR\pathfinderautobuffpanel">
+	      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    </None>
+	    <None Include="AssetBundles\WoTR\pathfinderautobuffpanel.manifest">
+	      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    </None>
       </ItemGroup>
     </When>
   </Choose>

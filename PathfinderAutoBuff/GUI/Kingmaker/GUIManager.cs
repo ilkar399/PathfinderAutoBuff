@@ -76,6 +76,7 @@ namespace PathfinderAutoBuff.GUI
             catch (Exception ex)
             {
                 Logger.Error(ex.StackTrace);
+                throw ex;
             }
             return new GUIManager();
         }
