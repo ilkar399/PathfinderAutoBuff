@@ -1,7 +1,0 @@
-ManifestFileVersion: 0
-CRC: 474700269
-AssetBundleManifest:
-  AssetBundleInfos:
-    Info_0:
-      Name: pathfinderautobuffpanel
-      Dependencies: {}
