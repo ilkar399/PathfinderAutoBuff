@@ -156,7 +156,7 @@ namespace PathfinderAutoBuff.Menu
                                                         Main.QueuesController.CurrentQueueName);
                         ScriptController.Run();
                     }
-                    //Favorite queue saving
+                    //Queue saving
                     if (GUILayout.Button(Local["Menu_Queues_SaveQueue"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {
                         Logger.Debug(uiQueueName);
@@ -177,6 +177,20 @@ namespace PathfinderAutoBuff.Menu
                         ReloadData();
                         return;
                     }
+                    //Favorite
+                    Utility.UI.ToggleButton(FavoriteQueues2.Contains(uiQueueName),Local["Menu_Queues_Favorite"],
+                    () =>
+                    {
+                        if (!FavoriteQueues2.Contains(uiQueueName))
+                            FavoriteQueues2.Add(uiQueueName);
+                    },
+                    () =>
+                    {
+                        if (FavoriteQueues2.Contains(uiQueueName))
+                            FavoriteQueues2.Remove(uiQueueName);
+                    },
+                    DefaultStyles.ButtonFixed120()
+                    );
                     //Delete
                     if (GUILayout.Button(Local["Menu_Queues_DeleteQueue"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                     {

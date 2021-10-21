@@ -61,6 +61,7 @@ namespace PathfinderAutoBuff
             { "Menu_Queues_ActionList", "Action List:"},
             { "Menu_Queues_NewSpell", "New Spell"},
             { "Menu_Queues_NewAbility", "New Ability"},
+            { "Menu_Queues_Favorite", "Favorite"},
             { "Menu_Queues_Caster", "Caster"},
             { "Menu_Queues_Spell", "Spell"},
             { "Menu_Queues_Ability", "Ability"},
