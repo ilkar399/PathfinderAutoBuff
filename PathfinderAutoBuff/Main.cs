@@ -57,6 +57,7 @@ namespace PathfinderAutoBuff
                 modEntry.OnUnload = Unload;
 #endif
                 Enabled = modEntry.Enabled;
+                ModPath = modEntry.Path;
                 //Transferring settings from the old version
                 Utility.VersionCompatibility.SettingsCompatibility();
                 //Loading Assets
@@ -90,7 +91,6 @@ namespace PathfinderAutoBuff
                     Assembly assembly = Assembly.GetExecutingAssembly();
                     Local.Enable(modEntry);
                     Menu.Enable(modEntry, assembly);
-                    ModPath = modEntry.Path;
                     uiController = new GUIController();
                     recordQueue = new RecordController();
                     if (uiController != null && recordQueue != null)

@@ -364,6 +364,10 @@
     <Compile Include="Menu\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="AssetBundles\WoTR\AssetBundles" />
+    <None Include="AssetBundles\WoTR\AssetBundles.manifest" />
+    <None Include="AssetBundles\WoTR\pathfinderautobuffpanel" />
+    <None Include="AssetBundles\WoTR\pathfinderautobuffpanel.manifest" />
     <None Include="Doc\CHANGELOG.md" />
     <None Include="Doc\README.md" />
     <None Include="Doc\TODO.md" />

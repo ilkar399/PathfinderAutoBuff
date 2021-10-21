@@ -3,7 +3,6 @@ Mouse Wheel fix for UMM:
 https://discord.com/channels/645948717400064030/791053285657542666/830334240930660373
 
 ## TODO
-Separate UI and GUI queue controllers
 Converted spells and abilities
 * Code cleanup
 * Enhance logging
