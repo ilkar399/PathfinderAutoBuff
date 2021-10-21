@@ -19,10 +19,15 @@ namespace PathfinderAutoBuff.QueueOperations
 {
     class QueuesController
     {    
+        //UI queue
         string m_CurrentQueueName = "";
         int m_CurrentQueueIndex;
-        internal string [] m_Queues;
         public QueueController queueController;
+        //GUI queue
+        string m_GUIQueueName = "";
+        int m_GUIQueueIndex;
+        private QueueController m_GUIQueueController;
+        internal string[] m_Queues;
         public PartySpellList partySpellList;
         public PartyAbilityList partyAbilityList;
         public PartyActivatableList partyActivatableList;
@@ -54,37 +59,36 @@ namespace PathfinderAutoBuff.QueueOperations
                     this.m_CurrentQueueName = m_Queues[value];
                 }
             }
-
         }
 
-        /*
-         * Not used. Try to change to something less resource-intensive
-         * Initially planned as a check for party changes
-         * Maybe chenge into handlers?
-         */
-        public bool TestCriticalChanges()
-        { 
-            PartySpellList partySpellList1 = new PartySpellList();
-            List<string> units1 = new List<string>();
-            List<string> abilities1 = new List<string>();
-            List<string> units2 = new List<string>();
-            List<string> abilities2 = new List<string>();
+        public string GUIQueueName
+        {
+            get => this.m_GUIQueueName;
+            set => this.m_GUIQueueName = value;
+        }
 
-            foreach (PartySpellData partySpellData in partySpellList1.m_AllSpells)
+        public int GUIQueueIndex
+        {
+            get => this.m_GUIQueueIndex;
+            set
             {
-                if (!units1.Contains(partySpellData.Caster.CharacterName))
-                    units1.Add(partySpellData.Caster.CharacterName);
-                if (!abilities1.Contains(partySpellData.Blueprint.Name))
-                    abilities1.Add(partySpellData.Blueprint.Name);
+                if (this.m_Queues.Length < value || value < 0)
+                {
+                    this.m_GUIQueueIndex = -1;
+                    this.m_GUIQueueName = "";
+                }
+                else
+                {
+                    this.m_GUIQueueIndex = value;
+                    this.m_GUIQueueName = m_Queues[value];
+                }
             }
-            foreach (PartySpellData partySpellData in this.partySpellList.m_AllSpells)
-            {
-                if (!units2.Contains(partySpellData.Caster.CharacterName))
-                    units2.Add(partySpellData.Caster.CharacterName);
-                if (!abilities2.Contains(partySpellData.Blueprint.Name))
-                    abilities2.Add(partySpellData.Blueprint.Name);
-            }
-            return (Enumerable.SequenceEqual(units1, units2) && Enumerable.SequenceEqual(abilities1,abilities2));
+        }
+
+        public QueueController GUIQueueController
+        {
+            get => this.m_GUIQueueController;
+            set => this.m_GUIQueueController = value;
         }
 
         //Reload queues from directory
@@ -140,12 +144,20 @@ namespace PathfinderAutoBuff.QueueOperations
                 Logger.Error(ex.StackTrace);
                 throw ex;
             }
+            //Cleaning up selected queues
             this.m_CurrentQueueName = "";
             this.m_CurrentQueueIndex = -1;
             if (this.queueController != null)
             {
                 this.queueController.Clear();
                 this.queueController = null;
+            }
+            this.m_GUIQueueIndex = -1;
+            this.m_GUIQueueName = "";
+            if (this.m_GUIQueueController != null)
+            {
+                this.m_GUIQueueController.Clear();
+                this.m_GUIQueueController = null;
             }
         }
     }

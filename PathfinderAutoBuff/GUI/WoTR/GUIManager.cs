@@ -151,11 +151,11 @@ namespace PathfinderAutoBuff.GUI
                 string queueName = Main.QueuesController.m_Queues[queueIndex];
                 if (selectedQueue.LoadFromFile($"{queueName}.json"))
                 {
-                    Main.QueuesController.CurrentQueueName = queueName;
-                    Main.QueuesController.CurrentQueueIndex = queueIndex;
-                    Main.QueuesController.queueController = new QueueController(selectedQueue);
-                    m_Favorite.isOn = SettingsWrapper.FavoriteQueues2.Contains(Main.QueuesController.CurrentQueueName);
-                    Main.QueuesController.queueController.LoadMetadata(queueName);
+                    Main.QueuesController.GUIQueueName = queueName;
+                    Main.QueuesController.GUIQueueIndex = queueIndex;
+                    Main.QueuesController.GUIQueueController = new QueueController(selectedQueue);
+                    m_Favorite.isOn = SettingsWrapper.FavoriteQueues2.Contains(Main.QueuesController.GUIQueueName);
+                    Main.QueuesController.GUIQueueController.LoadMetadata(Main.QueuesController.GUIQueueName);
                 }
                 else
                 {
@@ -188,8 +188,8 @@ namespace PathfinderAutoBuff.GUI
                 try
                 {
                     ScriptController.Reset();
-                    ScriptController.CreateFromQueue(Main.QueuesController.queueController.CurrentQueue().CommandList,
-                                                    Main.QueuesController.CurrentQueueName);
+                    ScriptController.CreateFromQueue(Main.QueuesController.GUIQueueController.CurrentQueue().CommandList,
+                                                    Main.QueuesController.GUIQueueName);
                     ScriptController.Run();
                 }
                 catch (Exception ex)
@@ -218,13 +218,13 @@ namespace PathfinderAutoBuff.GUI
         private void HandleFavoriteClick(bool state)
         {
             Logger.Debug($"Favorite {Main.QueuesController.CurrentQueueName} {state}");
-            if (!SettingsWrapper.FavoriteQueues2.Contains(Main.QueuesController.CurrentQueueName) && state)
+            if (!SettingsWrapper.FavoriteQueues2.Contains(Main.QueuesController.GUIQueueName) && state)
             {
-                SettingsWrapper.FavoriteQueues2.Add(Main.QueuesController.CurrentQueueName);
+                SettingsWrapper.FavoriteQueues2.Add(Main.QueuesController.GUIQueueName);
             }
             else if (!state)
             {
-                SettingsWrapper.FavoriteQueues2.Remove(Main.QueuesController.CurrentQueueName);
+                SettingsWrapper.FavoriteQueues2.Remove(Main.QueuesController.GUIQueueName);
             }
             this.m_Favorite.isOn = state;
             this.m_Dropdown.RefreshShownValue();

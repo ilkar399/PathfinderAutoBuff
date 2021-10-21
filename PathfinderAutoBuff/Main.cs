@@ -73,6 +73,7 @@ namespace PathfinderAutoBuff
 #if (DEBUG)
         static bool Unload(UnityModManager.ModEntry modEntry)
         {
+            Utility.BundleManger.RemoveBundle("pathfinderautobuffpanel");
             HarmonyInstance.UnpatchAll(modId);
             Menu = null;
             Local = null;
