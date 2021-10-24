@@ -11,9 +11,11 @@ using UnityEngine.SceneManagement;
 using UnityModManagerNet;
 using static PathfinderAutoBuff.Main;
 using Kingmaker;
+using Kingmaker.Enums;
 using Kingmaker.Blueprints;
 using Kingmaker.Controllers;
 using Kingmaker.ElementsSystem;
+using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.Items.Slots;
@@ -24,6 +26,7 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Mechanics.Actions;
+using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
 using static Kingmaker.UnitLogic.Mechanics.Actions.ContextActionSavingThrow;
 using static PathfinderAutoBuff.Utility.Extensions.RichTextExtensions;
@@ -139,7 +142,49 @@ namespace PathfinderAutoBuff.Utility
                         return false;
                     }
             }
-
+            //Checking if action applies buff to the pet
+#if (KINGMAKER)
+            ContextActionsOnPet contextActionsOnPet = Utility.LogicHelpers.FlattenAllActions(blueprintAbility, true).
+                Where(action => (action as ContextActionsOnPet) != null).FirstOrDefault() as ContextActionsOnPet;
+            if (contextActionsOnPet != null)
+            {
+                UnitEntityData pet = target.Descriptor.Pet;
+                if (pet != null)
+                {
+                    target = pet;
+                }
+                else
+                    return false;
+            }
+#elif (WOTR)
+            ContextActionsOnPet contextActionsOnPet = Utility.LogicHelpers.FlattenAllActions(blueprintAbility, true).
+                Where(action => (action as ContextActionsOnPet) != null).FirstOrDefault() as ContextActionsOnPet;
+            if (contextActionsOnPet != null)
+            {
+                UnitEntityData pet = null;
+                foreach (EntityPartRef<UnitEntityData, UnitPartPet> entityPartRef in target.Pets)
+                {
+                    if (entityPartRef.Entity != null)
+                    {
+                        if (!contextActionsOnPet.AllPets)
+                        {
+                            UnitPartPet unitPartPet = entityPartRef.Entity.Get<UnitPartPet>();
+                            PetType? petType = (unitPartPet != null) ? new PetType?(unitPartPet.Type) : null;
+                            PetType petType2 = contextActionsOnPet.PetType;
+                            if (!(petType.GetValueOrDefault() == petType2 & petType != null))
+                            {
+                                continue;
+                            }
+                        }
+                        pet = entityPartRef;
+                    }
+                }
+                if (pet != null)
+                    target = pet;
+                else
+                    return false;
+            }
+#endif
             ContextActionApplyBuff contextActionApplyBuff = FindApplyBuffActionAll(actionList);
             ContextActionApplyBuff contextActionApplyBuffFalse = FindApplyBuffActionAll(actionList,true);
             BlueprintBuff blueprintBuff1 = (contextActionApplyBuff != null) ? contextActionApplyBuff.Buff : null;
@@ -220,6 +265,7 @@ namespace PathfinderAutoBuff.Utility
             foreach (GameAction gameAction in actions.Actions)
             {
                 ContextActionConditionalSaved contextActionConditionalSaved;
+                ContextActionsOnPet contextActionsOnPet;
                 Conditional conditional;
                 ContextActionApplyBuff contextActionApplyBuff;
                 if ((contextActionConditionalSaved = (gameAction as ContextActionConditionalSaved)) != null)
@@ -245,6 +291,12 @@ namespace PathfinderAutoBuff.Utility
                     if (contextActionApplyBuff != null && !enemyCheck && !checkFail)
                         return contextActionApplyBuff;
                     contextActionApplyBuff = FindApplyBuffActionAll(conditional.IfFalse);
+                    if (contextActionApplyBuff != null)
+                        return contextActionApplyBuff;
+                }
+                if ((contextActionsOnPet = (gameAction as ContextActionsOnPet)) != null)
+                {
+                    contextActionApplyBuff = FindApplyBuffActionAll(contextActionsOnPet.Actions);
                     if (contextActionApplyBuff != null)
                         return contextActionApplyBuff;
                 }
