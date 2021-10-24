@@ -273,5 +273,37 @@ namespace PathfinderAutoBuff.Utility
             return unitEntityData.Master();                                                 
 #endif
         }
+
+        //Positions in action for character names
+        public static int ActionOrderPosition(UnitEntityData unit, List<string> characterNames, Dictionary<string,List<int>> petIndex)
+        {
+            int result = -1;
+            int queuePosition = 0;
+            if (unit == null || characterNames == null || petIndex == null)
+                return -1;
+            if (IsPetWrapper(unit) && MasterWrapper(unit) != null)
+            {
+                string petOwnerName = MasterWrapper(unit).CharacterName;
+                queuePosition += characterNames.Count;
+                if (petIndex.Keys.IndexOf(petOwnerName) == -1)
+                    return -1;
+                else
+                {
+#if (WOTR)
+                    queuePosition += petIndex.Keys.IndexOf(petOwnerName) + MasterWrapper(unit).Pets.IndexOf(unit);
+#elif (KINGMAKER)
+                    queuePosition += petIndex.Keys.IndexOf(petOwnerName) + MasterWrapper(unit).Pets().IndexOf(unit);
+#endif
+                    return queuePosition;
+                }
+            }
+            else
+            {
+                queuePosition = characterNames.IndexOf(unit.CharacterName);
+                return queuePosition;
+            }
+            return result;
+        }
+
     }
 }

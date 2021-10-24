@@ -17,7 +17,7 @@ namespace PathfinderAutoBuff.Controllers
         ISceneHandler 
 #endif
     {
-        public GUIManager AutoBuffGUI { get; private set; }
+        internal GUIManager AutoBuffGUI { get; private set; }
         public int Priority => 400;
 
         public void Attach()
@@ -25,7 +25,7 @@ namespace PathfinderAutoBuff.Controllers
 
             if (!AutoBuffGUI)
             {
-                Logger.Log("Attach");
+                Logger.Debug("Attach");
                 if (AutoBuffGUI == null)
                     AutoBuffGUI = GUIManager.CreateObject();
             }
@@ -33,7 +33,7 @@ namespace PathfinderAutoBuff.Controllers
 
         public void Detach()
         {
-            Logger.Log("Detach");
+            Logger.Debug("Detach");
             AutoBuffGUI.SafeDestroy();
             AutoBuffGUI = null;
         }

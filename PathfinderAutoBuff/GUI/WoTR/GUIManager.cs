@@ -18,7 +18,7 @@ using Kingmaker.UI.Selection;
 
 namespace PathfinderAutoBuff.GUI
 {
-    public class GUIManager : MonoBehaviour
+    internal class GUIManager : MonoBehaviour
     {
         public const string Source = "PathfinderAutoBuffActionPanel";
         private RectTransform rectTransform;
@@ -44,19 +44,17 @@ namespace PathfinderAutoBuff.GUI
         [SerializeField]
         private Toggle m_Favorite;
 
-        [SerializeField]
-        private bool m_IsInit = false;
-
-
         public static GUIManager CreateObject()
         {
             //This is the method that get's called when it is time to create the UI.  This happens every time a scene is loaded.
 
             try
             {
-                if (!Game.Instance.UI.Canvas) return null;
+                if (!Game.Instance.UI.Canvas)
+                {
+                    return null;
+                }
                 if (!BundleManger.IsLoaded(Source)) throw new NullReferenceException();
-
                 //
                 //Attempt to get the wrath objects needed to build the UI
                 //
@@ -65,7 +63,6 @@ namespace PathfinderAutoBuff.GUI
                 //Attempt to get the objects loaded from the AssetBundles and build the window.
                 //
                 Transform _transform = BundleManger.LoadedPrefabs[Source].transform;
-                Logger.Debug(_transform);
                 var window = Instantiate(_transform); //We ditch the TutorialCanvas as talked about in the Wiki, we will attach it to a different parent
                 window.SetParent(staticCanvas, false); //Attaches our window to the static canvas
                 window.SetAsFirstSibling(); //Our window will always be under other UI elements as not to interfere with the game. Top of the list has the lowest priority
@@ -90,6 +87,7 @@ namespace PathfinderAutoBuff.GUI
             //
             // Setup the listeners when the script starts
             //
+            Logger.Debug("Awake");
             rectTransform = (RectTransform)this.transform;
             this.m_Dropdown = this.transform.Find("Container/DropDown")?.gameObject.GetComponent<TMP_Dropdown>();
             m_Dropdown.onValueChanged = new TMP_Dropdown.DropdownEvent();
@@ -234,31 +232,39 @@ namespace PathfinderAutoBuff.GUI
         //Force refreshing view if data/scale changed
         public void RefreshView()
         {
-            //Update Dropdown Options
-            this.m_Dropdown.ClearOptions();
-            List<string> list = new List<string>();
-            if (Main.QueuesController == null)
+            try
             {
-                Main.QueuesController = new QueuesController();
-            }
-            int favoriteIndex = 0;
-            foreach (string queueName in Main.QueuesController.m_Queues)
-            {
-                if (SettingsWrapper.FavoriteQueues2.Contains(queueName))
+                //Update Dropdown Options
+                this.m_Dropdown.ClearOptions();
+                List<string> list = new List<string>();
+                if (Main.QueuesController == null)
                 {
-                    list.Insert(favoriteIndex, queueName);
-                    favoriteIndex++;
+                    Main.QueuesController = new QueuesController();
                 }
-                else
-                    if (!SettingsWrapper.GUIFavoriteOnly)
+                int favoriteIndex = 0;
+                foreach (string queueName in Main.QueuesController.m_Queues)
+                {
+                    if (SettingsWrapper.FavoriteQueues2.Contains(queueName))
+                    {
+                        list.Insert(favoriteIndex, queueName);
+                        favoriteIndex++;
+                    }
+                    else
+                        if (!SettingsWrapper.GUIFavoriteOnly)
                         list.Add(queueName);
+                }
+                this.m_Dropdown.AddOptions(list);
+                this.m_Dropdown.value = -1;
+                HandleSelectItem(0);
+                Logger.Debug($"RefreshView {list.Count} queues");
+                //Rescale
+                rectTransform.localScale = new Vector3(SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale);
             }
-            this.m_Dropdown.AddOptions(list);
-            this.m_Dropdown.value = -1;
-            HandleSelectItem(0);
-            Logger.Debug($"RefreshView {list.Count} queues");
-            //Rescale
-            rectTransform.localScale = new Vector3(SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale);
+            catch (Exception ex)
+            {
+                Logger.Error(ex.StackTrace);
+                throw ex;
+            }
         }
 
         //Options count for tests

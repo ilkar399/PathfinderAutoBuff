@@ -33,8 +33,8 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
         private int currentCasterIndex = -1;
         private int currentTargetTypeIndex = -1;
         private string[] targetTypeArray = { "Caster", "Character name", "Formation Position" };
-        private Dictionary<int, bool> targetSelection;
         private List<string> partyNamesOrdered;
+        private List<UnitEntityData> partyOrdered;
 
 
         //Constructor
@@ -87,7 +87,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                         //Target
                         TargetView();
 
-                    }, GUILayout.Width((float)(Math.Max(200, ummWidth * 0.15))), GUILayout.ExpandWidth(false));
+                    }, GUILayout.Width((float)(Math.Max(200f, ummWidth * 0.15))), GUILayout.ExpandWidth(false));
                     UI.Vertical(() =>
                     {
                         //Ability description and duration
@@ -219,9 +219,16 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 //Cancel action changes
                 if (GUILayout.Button(Local["Menu_Queues_Cancel"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                 {
-                    if (this.commandQueueItem.AbilityId == null)
-                        this.selectedQueue.CurrentQueue().CommandList.Remove(this.commandQueueItem);
+                    Logger.Debug("CancelClick");
+                    if (this.commandQueueItem != null)
+                        if (this.commandQueueItem.AbilityId == null && this.selectedQueue.CurrentQueue().CommandList != null)
+                        {
+                            this.selectedQueue.CurrentQueue().CommandList.Remove(this.commandQueueItem);
+                            Logger.Debug("RemoveQueueItem");
+                        }
                     this.selectedQueue.Refresh();
+                    Logger.Debug("RefreshSelectedQueue");
+                    return;
                 }
             }
             UI.Space(10f);
@@ -308,106 +315,128 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             {
                 if (partyNamesOrdered == null)
                 {
+                    partyOrdered = Targets.GetPartyOrder();
                     partyNamesOrdered = Targets.GetPartyNamesOrder();
                 }
-                if (targetSelection == null)
-                {
-                    targetSelection = new Dictionary<int, bool>();
-                    Targets.GetTargetSelectionDict(ref targetSelection);
-                }
+                //Selecting type of targeting
                 GUILayout.Label(DefaultStyles.TextHeader2(Local["Menu_Queues_TargetSelectionType"]), DefaultStyles.LabelDefault());
-                Utility.UI.SelectionGrid(ref currentTargetTypeIndex, targetTypeArray, 3, DefaultStyles.ButtonSelector(), GUILayout.ExpandWidth(false));
-                //Target toggle selector
-                if (currentTargetTypeIndex > 0 && targetSelection.Count == partyNamesOrdered.Count)
-                {
-                    UI.HorizontalScope();
-                    for (int partyOrder = 0; partyOrder < partyNamesOrdered.Count; partyOrder++)
-                    {
-                        bool nameToggle = targetSelection[partyOrder];
-                        Utility.UI.ToggleButton(
-                        ref nameToggle, partyNamesOrdered[partyOrder],
-                        DefaultStyles.ButtonFixed120(),GUILayout.ExpandHeight(true));
-                        targetSelection[partyOrder] = nameToggle;
-
-                    }
-                    UI.EndHorizontal();
-                }
-                UI.HorizontalScope();
-                if (GUILayout.Button(Local["Menu_Queues_ApplyTargetSelection"], DefaultStyles.ButtonFixed120()))
+                Utility.UI.SelectionGrid(ref currentTargetTypeIndex, targetTypeArray, 3,() =>
                 {
                     switch (currentTargetTypeIndex)
                     {
                         case 0:
                             selectedActionController.targetSelf = true;
-                            break;
-                        case 1:
-                            List<int> positions = targetSelection.Where(kvp => (kvp.Value)).Select(kvp => kvp.Key).ToList();
-                            List<UnitEntityData> characters = Targets.GetPartyOrder();
-                            List<string> characterNames = new List<string>();
-                            Dictionary<string, List<int>> petIndex = new Dictionary<string, List<int>>();
-                            for (int i = 0; i < characters.Count; i++)
-                            {
-                                if (positions.Contains(i))
-                                {
-#if (WOTR)
-                                    if (characters[i].IsPet)
-#elif (KINGMAKER)
-                                                    if (characters[i].IsPet())
-#endif
-                                    {
-                                        foreach (UnitEntityData unit in (from u in Kingmaker.Game.Instance?.Player?.Party where u.IsDirectlyControllable select u))
-                                        {
-#if (WOTR)
-                                            foreach (UnitEntityData pet in unit.Pets)
-#elif (KINGMAKER)
-                                                            foreach(UnitEntityData pet in unit.Pets())
-#endif
-                                            {
-                                                if (pet == characters[i])
-                                                {
-                                                    if (!petIndex.ContainsKey(unit.CharacterName))
-#if (WOTR)
-                                                        petIndex[unit.CharacterName] = new List<int> { unit.Pets.IndexOf(pet) };
-                                                    else
-                                                        petIndex[unit.CharacterName].Add(unit.Pets.IndexOf(pet));
-#elif (KINGMAKER)
-                                                                        petIndex[unit.CharacterName] = new List<int> { unit.Pets().IndexOf(pet) };
-                                                                    else
-                                                                        petIndex[unit.CharacterName].Add(unit.Pets().IndexOf(pet));
-#endif
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                        characterNames.Add(characters[i].CharacterName);
-                                }
-                            }
-                            selectedActionController.petIndex = petIndex;
-                            selectedActionController.characterNames = characterNames;
-                            selectedActionController.targetSelf = false;
                             selectedActionController.positions = null;
-                            break;
-                        case 2:
-                            selectedActionController.positions = targetSelection.Where(kvp => (kvp.Value)).Select(kvp => kvp.Key).ToList();
                             selectedActionController.characterNames = null;
                             selectedActionController.petIndex = null;
+                            break;
+                        case 1:
                             selectedActionController.targetSelf = false;
+                            selectedActionController.positions = null;
+                            selectedActionController.petIndex = new Dictionary<string, List<int>>();
+                            selectedActionController.characterNames = new List<string>();
+                            break;
+                        case 2:
+                            selectedActionController.targetSelf = false;
+                            selectedActionController.positions = new List<int>();
+                            selectedActionController.petIndex = null;
+                            selectedActionController.characterNames = null;
                             break;
                     }
                 }
-                if (GUILayout.Button(Local["Menu_Queues_ClearTargetSelection"], DefaultStyles.ButtonFixed120()))
+                , DefaultStyles.ButtonSelector(), GUILayout.ExpandWidth(false));
+                //Target toggle selector
+                //Target names
+                if (currentTargetTypeIndex == 1)
                 {
-                    targetSelection = new Dictionary<int, bool>();
-                    Targets.GetTargetSelectionDict(ref targetSelection);
-                    currentTargetTypeIndex = -1;
-                    selectedActionController.targetSelf = false;
-                    selectedActionController.petIndex = null;
-                    selectedActionController.characterNames = null;
-                    selectedActionController.petIndex = null;
-                    selectedActionController.targetSelf = false;
+                    UI.HorizontalScope();
+                    for (int partyOrder = 0; partyOrder < partyNamesOrdered.Count; partyOrder++)
+                    {
+                        UnitEntityData unit = partyOrdered[partyOrder];
+                        int actionOrderPosition = LogicHelpers.ActionOrderPosition(
+                            unit,
+                            selectedActionController.characterNames,
+                            selectedActionController.petIndex);
+                        bool nameToggle = actionOrderPosition > -1;
+                        string selectionName = "";
+                        if (nameToggle)
+                            selectionName += string.Format("{0} - ", actionOrderPosition).Color(RGBA.lime);
+                        selectionName += $"{partyNamesOrdered[partyOrder]} [{partyOrder}]";
+                        Utility.UI.ToggleButton(
+                            ref nameToggle, selectionName, () =>
+                            {
+                                if (LogicHelpers.IsPetWrapper(unit) && LogicHelpers.MasterWrapper(unit) != null)
+                                {
+                                    UnitEntityData master = LogicHelpers.MasterWrapper(unit);
+                                    if (!selectedActionController.petIndex.ContainsKey(unit.CharacterName))
+#if (WOTR)
+                                        selectedActionController.petIndex[master.CharacterName] = new List<int> { master.Pets.IndexOf(unit) };
+                                    else
+                                        if (!selectedActionController.petIndex[master.CharacterName].Contains(master.Pets.IndexOf(unit)))
+                                            selectedActionController.petIndex[master.CharacterName].Add(master.Pets.IndexOf(unit));
+#elif (KINGMAKER)
+                                        selectedActionController.petIndex[master.CharacterName] = new List<int> { master.Pets().IndexOf(unit) };
+                                    else
+                                        if (!selectedActionController.petIndex[master.CharacterName].Contains(master.Pets().IndexOf(unit)))
+                                            selectedActionController.petIndex[master.CharacterName].Add(master.Pets().IndexOf(unit));
+#endif
+                                }
+                                else
+                                {
+                                    if (!selectedActionController.characterNames.Contains(unit.CharacterName))
+                                        selectedActionController.characterNames.Add(unit.CharacterName);
+                                }
+                            }, () =>
+                            {
+                                if (LogicHelpers.IsPetWrapper(unit) && LogicHelpers.MasterWrapper(unit) != null)
+                                {
+                                    UnitEntityData master = LogicHelpers.MasterWrapper(unit);
+                                    if (selectedActionController.petIndex.ContainsKey(unit.CharacterName))
+                                    {
+#if (WOTR)
+                                        selectedActionController.petIndex[master.CharacterName].Remove(master.Pets.IndexOf(unit));
+#elif (KINGMAKER)
+                                        selectedActionController.petIndex[master.CharacterName].Remove(master.Pets().IndexOf(unit));;
+#endif
+                                        if (selectedActionController.petIndex[master.CharacterName].Count == 0)
+                                            selectedActionController.petIndex[master.CharacterName] = null;
+                                    }
+                                }
+                                else
+                                {
+                                    if (selectedActionController.characterNames.Contains(unit.CharacterName))
+                                        selectedActionController.characterNames.Remove(unit.CharacterName);
+                                }
+                            },
+                            DefaultStyles.ButtonFixed120(), GUILayout.ExpandHeight(true)
+                        );
+                    }
+                    UI.EndHorizontal();
                 }
-                UI.EndHorizontal();
+                //Target positions
+                if (currentTargetTypeIndex == 2)
+                {
+                    UI.HorizontalScope();
+                    for (int partyOrder = 0; partyOrder < partyNamesOrdered.Count; partyOrder++)
+                    {
+                        bool nameToggle = selectedActionController.positions.Contains(partyOrder);
+                        string selectionName = "";
+                        if (nameToggle)
+                            selectionName += string.Format("{0} - ", selectedActionController.positions.IndexOf(partyOrder));
+                        selectionName += $"{partyNamesOrdered[partyOrder]} [{partyOrder}]";
+                        Utility.UI.ToggleButton(
+                            ref nameToggle, selectionName,() => 
+                            {
+                                selectedActionController.positions.Add(partyOrder);
+                            },() => 
+                            {
+                                selectedActionController.positions.Remove(partyOrder);
+                            },
+                            DefaultStyles.ButtonFixed120(), GUILayout.ExpandHeight(true)
+                        );
+                    }
+                    UI.EndHorizontal();
+                }
             }
             //Pre-cast ability
             if (actionEditStage == 3 && selectedActionController.actionType == CommandQueueItem.ActionTypes.Spell)
@@ -646,8 +675,6 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 this.selectedQueue.actionController.abilityIDs.Clear();
                 this.selectedQueue.actionController.abilityIDs.Add(this.selectedQueue.actionController.CurrentAction().AbilityId);
                 this.selectedQueue.actionController.casterName = this.selectedQueue.actionController.CurrentAction().CasterName;
-                this.selectedQueue.actionController.characterNames = this.selectedQueue.actionController.CurrentAction().CharacterNames;
-                this.selectedQueue.actionController.petIndex = this.selectedQueue.actionController.CurrentAction().PetIndex;
                 if (this.selectedQueue.actionController.CurrentAction().AbilityMods == null)
                     this.selectedQueue.actionController.abilityMods = new List<string>();
                 else
@@ -656,23 +683,28 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                     this.selectedQueue.actionController.activatableMods = new List<string>();
                 else
                     this.selectedQueue.actionController.activatableMods = this.selectedQueue.actionController.CurrentAction().ActivatableMods;
-                this.selectedQueue.actionController.positions = this.selectedQueue.actionController.CurrentAction().Positions;
                 this.selectedQueue.actionController.actionType = this.selectedQueue.actionController.CurrentAction().ActionType;
                 this.selectedQueue.actionController.targetSelf = this.selectedQueue.actionController.CurrentAction().TargetType == CommandQueueItem.TargetTypes.Self;
                 ResetActionEdit();
-                if (targetSelection == null)
-                    targetSelection = new Dictionary<int, bool>();
-                Targets.GetTargetSelectionDict(ref targetSelection, this.selectedQueue.actionController.CurrentAction());
                 switch (this.selectedQueue.actionController.CurrentAction().TargetType)
                 {
                     case CommandQueueItem.TargetTypes.Self:
                         currentTargetTypeIndex = 0;
+                        this.selectedQueue.actionController.characterNames = null;
+                        this.selectedQueue.actionController.petIndex = null;
+                        this.selectedQueue.actionController.positions = null;
                         break;
                     case CommandQueueItem.TargetTypes.CharacterNames:
                         currentTargetTypeIndex = 1;
+                        this.selectedQueue.actionController.characterNames = new List<string>(this.selectedQueue.actionController.CurrentAction().CharacterNames);
+                        this.selectedQueue.actionController.petIndex = new Dictionary<string, List<int>>(this.selectedQueue.actionController.CurrentAction().PetIndex);
+                        this.selectedQueue.actionController.positions = null;
                         break;
                     case CommandQueueItem.TargetTypes.Positions:
                         currentTargetTypeIndex = 2;
+                        this.selectedQueue.actionController.characterNames = null;
+                        this.selectedQueue.actionController.petIndex = null;
+                        this.selectedQueue.actionController.positions = new List<int>(this.selectedQueue.actionController.CurrentAction().Positions);
                         break;
                 }
             }
@@ -723,6 +755,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
             currentCasterIndex = -1;
             castersUIArray = null;
             partyNamesOrdered = Targets.GetPartyNamesOrder();
+            partyOrdered = Targets.GetPartyOrder();
         }
     }
 }
