@@ -219,15 +219,12 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 //Cancel action changes
                 if (GUILayout.Button(Local["Menu_Queues_Cancel"], DefaultStyles.ButtonFixed120(), GUILayout.ExpandWidth(false)))
                 {
-                    Logger.Debug("CancelClick");
                     if (this.commandQueueItem != null)
                         if (this.commandQueueItem.AbilityId == null && this.selectedQueue.CurrentQueue().CommandList != null)
                         {
                             this.selectedQueue.CurrentQueue().CommandList.Remove(this.commandQueueItem);
-                            Logger.Debug("RemoveQueueItem");
                         }
                     this.selectedQueue.Refresh();
-                    Logger.Debug("RefreshSelectedQueue");
                     return;
                 }
             }
@@ -349,93 +346,93 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                 //Target names
                 if (currentTargetTypeIndex == 1)
                 {
-                    UI.HorizontalScope();
-                    for (int partyOrder = 0; partyOrder < partyNamesOrdered.Count; partyOrder++)
-                    {
-                        UnitEntityData unit = partyOrdered[partyOrder];
-                        int actionOrderPosition = LogicHelpers.ActionOrderPosition(
-                            unit,
-                            selectedActionController.characterNames,
-                            selectedActionController.petIndex);
-                        bool nameToggle = actionOrderPosition > -1;
-                        string selectionName = "";
-                        if (nameToggle)
-                            selectionName += string.Format("{0} - ", actionOrderPosition).Color(RGBA.lime);
-                        selectionName += $"{partyNamesOrdered[partyOrder]} [{partyOrder}]";
-                        Utility.UI.ToggleButton(
-                            ref nameToggle, selectionName, () =>
-                            {
-                                if (LogicHelpers.IsPetWrapper(unit) && LogicHelpers.MasterWrapper(unit) != null)
+                    UI.Horizontal(() => { 
+                        for (int partyOrder = 0; partyOrder < partyNamesOrdered.Count; partyOrder++)
+                        {
+                            UnitEntityData unit = partyOrdered[partyOrder];
+                            int actionOrderPosition = LogicHelpers.ActionOrderPosition(
+                                unit,
+                                selectedActionController.characterNames,
+                                selectedActionController.petIndex);
+                            bool nameToggle = actionOrderPosition > -1;
+                            string selectionName = "";
+                            if (nameToggle)
+                                selectionName += string.Format("[{0}]", actionOrderPosition).Color(RGBA.lime);
+                            selectionName += $"{partyNamesOrdered[partyOrder]} [{partyOrder}]";
+                            Utility.UI.ToggleButton(
+                                ref nameToggle, selectionName, () =>
                                 {
-                                    UnitEntityData master = LogicHelpers.MasterWrapper(unit);
-                                    if (!selectedActionController.petIndex.ContainsKey(unit.CharacterName))
-#if (WOTR)
-                                        selectedActionController.petIndex[master.CharacterName] = new List<int> { master.Pets.IndexOf(unit) };
-                                    else
-                                        if (!selectedActionController.petIndex[master.CharacterName].Contains(master.Pets.IndexOf(unit)))
-                                            selectedActionController.petIndex[master.CharacterName].Add(master.Pets.IndexOf(unit));
-#elif (KINGMAKER)
-                                        selectedActionController.petIndex[master.CharacterName] = new List<int> { master.Pets().IndexOf(unit) };
-                                    else
-                                        if (!selectedActionController.petIndex[master.CharacterName].Contains(master.Pets().IndexOf(unit)))
-                                            selectedActionController.petIndex[master.CharacterName].Add(master.Pets().IndexOf(unit));
-#endif
-                                }
-                                else
-                                {
-                                    if (!selectedActionController.characterNames.Contains(unit.CharacterName))
-                                        selectedActionController.characterNames.Add(unit.CharacterName);
-                                }
-                            }, () =>
-                            {
-                                if (LogicHelpers.IsPetWrapper(unit) && LogicHelpers.MasterWrapper(unit) != null)
-                                {
-                                    UnitEntityData master = LogicHelpers.MasterWrapper(unit);
-                                    if (selectedActionController.petIndex.ContainsKey(unit.CharacterName))
+                                    if (LogicHelpers.IsPetWrapper(unit) && LogicHelpers.MasterWrapper(unit) != null)
                                     {
-#if (WOTR)
-                                        selectedActionController.petIndex[master.CharacterName].Remove(master.Pets.IndexOf(unit));
-#elif (KINGMAKER)
-                                        selectedActionController.petIndex[master.CharacterName].Remove(master.Pets().IndexOf(unit));;
-#endif
-                                        if (selectedActionController.petIndex[master.CharacterName].Count == 0)
-                                            selectedActionController.petIndex[master.CharacterName] = null;
+                                        UnitEntityData master = LogicHelpers.MasterWrapper(unit);
+                                        if (!selectedActionController.petIndex.ContainsKey(unit.CharacterName))
+    #if (WOTR)
+                                            selectedActionController.petIndex[master.CharacterName] = new List<int> { master.Pets.IndexOf(unit) };
+                                        else
+                                            if (!selectedActionController.petIndex[master.CharacterName].Contains(master.Pets.IndexOf(unit)))
+                                                selectedActionController.petIndex[master.CharacterName].Add(master.Pets.IndexOf(unit));
+    #elif (KINGMAKER)
+                                            selectedActionController.petIndex[master.CharacterName] = new List<int> { master.Pets().IndexOf(unit) };
+                                        else
+                                            if (!selectedActionController.petIndex[master.CharacterName].Contains(master.Pets().IndexOf(unit)))
+                                                selectedActionController.petIndex[master.CharacterName].Add(master.Pets().IndexOf(unit));
+    #endif
                                     }
-                                }
-                                else
+                                    else
+                                    {
+                                        if (!selectedActionController.characterNames.Contains(unit.CharacterName))
+                                            selectedActionController.characterNames.Add(unit.CharacterName);
+                                    }
+                                }, () =>
                                 {
-                                    if (selectedActionController.characterNames.Contains(unit.CharacterName))
-                                        selectedActionController.characterNames.Remove(unit.CharacterName);
-                                }
-                            },
-                            DefaultStyles.ButtonFixed120(), GUILayout.ExpandHeight(true)
-                        );
-                    }
-                    UI.EndHorizontal();
+                                    if (LogicHelpers.IsPetWrapper(unit) && LogicHelpers.MasterWrapper(unit) != null)
+                                    {
+                                        UnitEntityData master = LogicHelpers.MasterWrapper(unit);
+                                        if (selectedActionController.petIndex.ContainsKey(unit.CharacterName))
+                                        {
+    #if (WOTR)
+                                            selectedActionController.petIndex[master.CharacterName].Remove(master.Pets.IndexOf(unit));
+    #elif (KINGMAKER)
+                                            selectedActionController.petIndex[master.CharacterName].Remove(master.Pets().IndexOf(unit));;
+    #endif
+                                            if (selectedActionController.petIndex[master.CharacterName].Count == 0)
+                                                selectedActionController.petIndex[master.CharacterName] = null;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (selectedActionController.characterNames.Contains(unit.CharacterName))
+                                            selectedActionController.characterNames.Remove(unit.CharacterName);
+                                    }
+                                },
+                                DefaultStyles.ButtonFixed120(), GUILayout.ExpandHeight(true)
+                            );
+                        }
+                    });
                 }
                 //Target positions
                 if (currentTargetTypeIndex == 2)
                 {
-                    UI.HorizontalScope();
-                    for (int partyOrder = 0; partyOrder < partyNamesOrdered.Count; partyOrder++)
-                    {
-                        bool nameToggle = selectedActionController.positions.Contains(partyOrder);
-                        string selectionName = "";
-                        if (nameToggle)
-                            selectionName += string.Format("{0} - ", selectedActionController.positions.IndexOf(partyOrder));
-                        selectionName += $"{partyNamesOrdered[partyOrder]} [{partyOrder}]";
-                        Utility.UI.ToggleButton(
-                            ref nameToggle, selectionName,() => 
-                            {
-                                selectedActionController.positions.Add(partyOrder);
-                            },() => 
-                            {
-                                selectedActionController.positions.Remove(partyOrder);
-                            },
-                            DefaultStyles.ButtonFixed120(), GUILayout.ExpandHeight(true)
-                        );
-                    }
-                    UI.EndHorizontal();
+                    UI.Horizontal(() => { 
+                        for (int partyOrder = 0; partyOrder < partyNamesOrdered.Count; partyOrder++)
+                        {
+                            bool nameToggle = selectedActionController.positions.Contains(partyOrder);
+                            string selectionName = "";
+                            if (nameToggle)
+                                selectionName += string.Format("[{0}]", selectedActionController.positions.IndexOf(partyOrder)).Color(RGBA.lime);
+                            selectionName += $"{partyNamesOrdered[partyOrder]} [{partyOrder}]";
+                            Utility.UI.ToggleButton(
+                                ref nameToggle, selectionName,() => 
+                                {
+                                    selectedActionController.positions.Add(partyOrder);
+                                },() => 
+                                {
+                                    selectedActionController.positions.Remove(partyOrder);
+                                },
+                                DefaultStyles.ButtonFixed120(), GUILayout.ExpandHeight(true)
+                            );
+                        }
+                    });
                 }
             }
             //Pre-cast ability

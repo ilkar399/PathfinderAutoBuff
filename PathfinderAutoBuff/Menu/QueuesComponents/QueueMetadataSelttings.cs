@@ -21,7 +21,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
     {
         private readonly QueuesController queuesController;
         private readonly QueueController selectedQueue;
-        private readonly QueueMetadata queueMetadata;
+        private QueueMetadata queueMetadata;
         private MetamagicPrioritySelector metamagicPrioritySelector;
         private bool metamagicInit;
 
@@ -37,6 +37,15 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
         public void OnGUI()
         {
             UI.Label("Queue execution settings:");
+            UI.ActionButton(
+                "Reset to default",
+                () => {
+                    queuesController.queueController.LoadMetadata("");
+                    this.queueMetadata = queuesController.queueController.CurrentMetadata();
+                    metamagicInit = false;
+                },
+                DefaultStyles.ButtonFixed120(),
+                GUILayout.ExpandWidth(false));
 #if (WOTR)
             this.queueMetadata.MetadataMythicSpellbookPriority = UI.ToggleButton(
                 this.queueMetadata.MetadataMythicSpellbookPriority,

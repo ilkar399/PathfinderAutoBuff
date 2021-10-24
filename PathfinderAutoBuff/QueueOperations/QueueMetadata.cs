@@ -55,7 +55,7 @@ namespace PathfinderAutoBuff.QueueOperations
             filePath += $"/{queueName}.metadata";
             this.QueueName = queueName;
             QueueMetadata fileData = null;
-            if (!File.Exists(filePath))
+            if (!File.Exists(filePath) || queueName == "")
             {
                 this.MetamagicPriority = new List<Metamagic>(SettingsWrapper.MetamagicPriority);
                 return;

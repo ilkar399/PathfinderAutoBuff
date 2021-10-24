@@ -29,6 +29,7 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
     {
         private List<Metamagic> metamagicPriority;
         private List<Metamagic> metamagicExcluded;
+        private List<Metamagic> metamagicAll;
         //Constructor
 
         public MetamagicPrioritySelector(List<Metamagic> metamagicPriority)
@@ -41,15 +42,60 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
 
         public void OnGUI()
         {
+            if (metamagicAll == null)
+            {
+                metamagicAll = Enum.GetValues(typeof(Metamagic)).Cast<Metamagic>().ToList();
+                metamagicAll.Add(0);
+            }
+            UI.Label("Metamagic priority:");
+            UI.Label("Metamagic priority is used when selecting which spell slot to cast " +
+                     "during queue execution. If the spell uses selected metamagic, it is " +
+                     "used first (with the priority, i.e. with [0] Extended and [1] Quickened" +
+                     "the spell that has Extended will be used first). 'None' prioritizes " +
+                     "the slot that doesn't have any metamagic applied to.");
+            GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
+            for (int metamagicIndex = 0; metamagicIndex < metamagicAll.Count; metamagicIndex ++)
+                {
+                    bool metamagicButtonToggle = metamagicPriority.Contains(metamagicAll[metamagicIndex]);
+                    string metamagicButtonLabel = "";
+                    if (metamagicButtonToggle)
+                        metamagicButtonLabel += string.Format("[{0}]", metamagicPriority.IndexOf(metamagicAll[metamagicIndex])).Color(RGBA.lime);
+                    metamagicButtonLabel += metamagicAll[metamagicIndex] == 0 ? "None" : metamagicAll[metamagicIndex].ToString();
+                    Utility.UI.ToggleButton(
+                        ref metamagicButtonToggle,
+                        metamagicButtonLabel,
+                        () => {
+                            metamagicPriority.Add(metamagicAll[metamagicIndex]);
+                        }, () =>
+                        {
+                            metamagicPriority.Remove(metamagicAll[metamagicIndex]);
+                        },
+                        DefaultStyles.ButtonFixed120(), GUILayout.ExpandHeight(true)
+                    );
+                if ((metamagicIndex % 6) == 5)
+                {
+                    GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                }
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+            /*
+            UI.BeginHorizontal();
             UI.Vertical(() =>
             {
                 //Accept priority
-                UI.Label("Metamagics priority");
+                UI.Label("Prioritize metamagic:");
                 for (int index = 0; index < metamagicPriority.Count; index++)
                 {
+                    string metamagicButtonLabel = metamagicPriority[index] == 0 ? "None" : metamagicPriority[index].ToString();
                     UI.Horizontal(() =>
                     {
-                        GUILayout.Label(metamagicPriority[index].ToString(),DefaultStyles.LabelFixed120());
+                        GUILayout.Label(
+                            metamagicButtonLabel,
+                            DefaultStyles.LabelFixed120()
+                            );
                         UI.ActionButton(Local["Menu_Queues_Up"], () => {
                             metamagicPriority.MoveUpList(metamagicPriority[index]);
                             return;
@@ -70,12 +116,15 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                     });
                 }
                 //Ignore metamagics
-                UI.Label("Ignore metamagics");
+                UI.Label("Ignore metamagics:");
                 for (int index = 0; index < metamagicExcluded.Count; index++)
                 {
+                    string metamagicButtonLabel = metamagicExcluded[index] == 0 ? "None" : metamagicExcluded[index].ToString();
                     UI.Horizontal(() =>
                     {
-                        GUILayout.Label(metamagicExcluded[index].ToString(), DefaultStyles.LabelFixed120());
+                        GUILayout.Label(
+                            metamagicButtonLabel,
+                            DefaultStyles.LabelFixed120());
                         UI.ActionButton(Local["Menu_Queues_Up"], () => {
                             if (metamagicExcluded.IndexOf(metamagicExcluded[index]) == 0)
                             {
@@ -96,6 +145,12 @@ namespace PathfinderAutoBuff.Menu.QueuesComponents
                     });
                 }
             });
+            UI.Vertical(() =>
+            {
+                UI.Label("Some metamagic priority help text");
+            });
+            UI.EndHorizontal();
+            */
         }
 
     }
