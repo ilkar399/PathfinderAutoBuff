@@ -4,7 +4,7 @@ using System.Reflection;
 using Kingmaker;
 using UnityModManagerNet;
 using PathfinderAutoBuff.Controllers;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using PathfinderAutoBuff.Utility;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using HarmonyLib;
@@ -57,6 +57,7 @@ namespace PathfinderAutoBuff
                 modEntry.OnUnload = Unload;
 #endif
                 Enabled = modEntry.Enabled;
+                ModPath = modEntry.Path;
                 //Transferring settings from the old version
                 Utility.VersionCompatibility.SettingsCompatibility();
                 //Loading Assets
@@ -73,6 +74,7 @@ namespace PathfinderAutoBuff
 #if (DEBUG)
         static bool Unload(UnityModManager.ModEntry modEntry)
         {
+            Utility.BundleManger.RemoveBundle("pathfinderautobuffpanel");
             HarmonyInstance.UnpatchAll(modId);
             Menu = null;
             Local = null;
@@ -89,11 +91,17 @@ namespace PathfinderAutoBuff
                     Assembly assembly = Assembly.GetExecutingAssembly();
                     Local.Enable(modEntry);
                     Menu.Enable(modEntry, assembly);
-                    ModPath = modEntry.Path;
                     uiController = new GUIController();
+                    Logger.Debug("uiController created");
                     recordQueue = new RecordController();
-                    uiController.Enable();
-                    recordQueue.ModEnable();
+                    Logger.Debug("RecordController created");
+                    if (uiController != null && recordQueue != null)
+                    {
+                        uiController.Enable();
+                        Logger.Debug("uiController Enabled");
+                        recordQueue.ModEnable();
+                        Logger.Debug("RecordController ModEnabled");
+                    }
                 }
                 else
                 {

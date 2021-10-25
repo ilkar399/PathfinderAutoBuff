@@ -94,6 +94,7 @@ namespace PathfinderAutoBuff.UnitLogic
         //Refresher
         public void RefreshData()
         {
+            Logger.Debug("partyActivatableList.RefreshData");
             this.m_Activatables.Clear();
             this.m_Activatables = null;
             this.m_Activatables = GetPartyActivatables();

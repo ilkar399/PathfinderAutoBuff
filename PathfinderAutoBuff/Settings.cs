@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Kingmaker.UnitLogic.Abilities;
+using PathfinderAutoBuff.QueueOperations;
 using PathfinderAutoBuff.Utility;
 using UnityModManagerNet;
 
@@ -18,6 +20,8 @@ namespace PathfinderAutoBuff
         public bool refreshShort = true;
         //remaining time to refresh in seconds. Don't forget to use TimeSpan.FromSeconds()
         public int refreshTime = 60;
+        //Continue casting queue on encountering error
+        public bool continueCastOnFail = false;
         //Favorite queues
         public SerializableDictionary<int, string> favoriteQueues = new SerializableDictionary<int, string> { 
             { 1, "" }, { 2, "" }, { 3, "" }, { 4, "" }, { 5, "" }, 
@@ -39,6 +43,16 @@ namespace PathfinderAutoBuff
         public float gUIPosX = 0f;
         //GUI pos Y
         public float gUIPosY = 0f;
+
+        //Default Queue Metadata
+        //Spellbook priorities
+        public bool metadataMythicSpellbookPriority = false;
+        public bool metadataInverseCasterLevelPriority = false;
+        //Spellslot priorities
+        public bool metadataIgnoreMetamagic = false;
+        public bool metadataLowestSlotFirst = true;
+        //Metamagic priorities
+        public List<Metamagic> metamagicPriority = new List<Metamagic>();
 
         public override void Save(UnityModManager.ModEntry modEntry)
         {

@@ -20,7 +20,7 @@ using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using static KingmakerAutoBuff.Extensions.WoTRExtensions;
 #endif
 
-namespace PathfinderAutoBuff.QueueOperattions
+namespace PathfinderAutoBuff.QueueOperations
 {
     [Serializable]
     public class CommandQueueItem
@@ -136,7 +136,11 @@ namespace PathfinderAutoBuff.QueueOperattions
         //Get Command Caster
         public UnitEntityData GetCaster(PartySpellList partySpellList)
         {
-            var party = Kingmaker.Game.Instance?.Player?.Party;
+#if (WOTR)
+            var party = Kingmaker.Game.Instance?.Player?.PartyAndPets;
+#elif (KINGMAKER)
+            var party = Kingmaker.Game.Instance?.Player?.PartyAndPets();
+#endif
             if (party == null || party.Count < 1)
             {
                 return null;
@@ -339,7 +343,11 @@ namespace PathfinderAutoBuff.QueueOperattions
         public IEnumerable<string> GetStatus(PartySpellList partySpellList)
         {
             List<string> Result = new List<string>();
-            var party = Kingmaker.Game.Instance?.Player?.Party;
+#if (WOTR)
+            var party = Kingmaker.Game.Instance?.Player?.PartyAndPets;
+#elif (KINGMAKER)
+            var party = Kingmaker.Game.Instance?.Player?.PartyAndPets();
+#endif
             BlueprintAbility blueprintAbility = ResourcesLibrary.TryGetBlueprint<BlueprintAbility>(this.AbilityId);
             if (party == null || party.Count < 1 || blueprintAbility == null )
             {
@@ -448,6 +456,16 @@ namespace PathfinderAutoBuff.QueueOperattions
     {
         List<CommandQueueItem> m_List;
 
+        public CommandQueue()
+        {
+
+        }
+
+        public CommandQueue(List<CommandQueueItem> commandQueueItems)
+        {
+            this.m_List = commandQueueItems;
+        }
+
         public List<CommandQueueItem> CommandList
         {
             get
@@ -501,6 +519,19 @@ namespace PathfinderAutoBuff.QueueOperattions
                 {
                     Directory.CreateDirectory(Path.Combine(ModPath, "scripts"));
                 }
+                var JsonSettings = new JsonSerializerSettings
+                {
+                    Formatting = Formatting.Indented,
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                };
+                using (StreamWriter file = File.CreateText(savepath))
+                {
+                    Logger.Debug(this.m_List.Count);
+                    JsonSerializer serializer = JsonSerializer.Create(JsonSettings);
+                    serializer.Serialize(file, this.m_List);
+                    return true;
+                }
             }
             catch (Exception e)
             {
@@ -508,20 +539,7 @@ namespace PathfinderAutoBuff.QueueOperattions
                 Logger.Log(e.StackTrace);
                 return false;
             }
-            var JsonSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                TypeNameHandling = TypeNameHandling.Auto,
-                ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-            };
-            DefaultJsonSettings.Initialize();
-            using (StreamWriter file = File.CreateText(savepath))
-            {
-                Logger.Debug(this.m_List.Count);
-                JsonSerializer serializer = JsonSerializer.Create(JsonSettings);
-                serializer.Serialize(file, this.m_List);
-                return true;
-            }
+
         }
 
         //TODO: Destructor

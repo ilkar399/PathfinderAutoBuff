@@ -10,32 +10,29 @@ using static PathfinderAutoBuff.Utility.SettingsWrapper;
 namespace PathfinderAutoBuff.Controllers
 {
     //Controller for the in-game UI mod parts
-    public class GUIController :
+    public class GUIController : 
 #if (WOTR)
         IAreaHandler
 #elif (KINGMAKER)
         ISceneHandler 
 #endif
     {
-        public GUIManager AutoBuffGUI { get; private set; }
-        public ABQueuesToolbar ABQueuesToolbar { get; private set; }
+        internal GUIManager AutoBuffGUI { get; private set; }
         public int Priority => 400;
 
         public void Attach()
         {
-
             if (!AutoBuffGUI)
             {
-                Logger.Log("Attach");
+                Logger.Debug("Attach");
                 if (AutoBuffGUI == null)
                     AutoBuffGUI = GUIManager.CreateObject();
- //               AutoBuffGUI.RefreshView();
             }
         }
 
         public void Detach()
         {
-            Logger.Log("Detach");
+            Logger.Debug("Detach");
             AutoBuffGUI.SafeDestroy();
             AutoBuffGUI = null;
         }
@@ -49,12 +46,6 @@ namespace PathfinderAutoBuff.Controllers
                 transform.SafeDestroy();
             }
             transform = null;
-            /*
-            Transform abQueuesToolbar;
-            while (abQueuesToolbar = Game.Instance.UI.Common.transform.Find("Formations/ToggleGroup/"))
-                abQueuesToolbar.SafeDestroy();
-            ABQueuesToolbar = null;
-            */
         }
 
 #endif
@@ -63,17 +54,16 @@ namespace PathfinderAutoBuff.Controllers
         {
             Detach();
             Attach();
-            AutoBuffGUI.RefreshView();
+            if (AutoBuffGUI != null)
+                AutoBuffGUI.RefreshView();
         }
 
         //Event handlers
-
         public void Enable()
         {
             if (UIEnabled)
             {
                 Logger.Debug(MethodBase.GetCurrentMethod());
-                Main.uiController = this;
                 Attach();
                 if (AutoBuffGUI != null)
                     AutoBuffGUI.RefreshView();
@@ -95,7 +85,8 @@ namespace PathfinderAutoBuff.Controllers
         {
             Logger.Debug(MethodBase.GetCurrentMethod());
             Attach();
-            AutoBuffGUI.RefreshView();
+            if (AutoBuffGUI != null)
+                AutoBuffGUI.RefreshView();
         }
     }
 }

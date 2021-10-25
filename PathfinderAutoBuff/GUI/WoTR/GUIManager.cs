@@ -10,7 +10,7 @@ using Owlcat.Runtime.UI.Controls.Other;
 using Owlcat.Runtime.UI.MVVM;
 using TMPro;
 using PathfinderAutoBuff.Utility;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using static PathfinderAutoBuff.Main;
 using static PathfinderAutoBuff.Utility.StatusWrapper;
 
@@ -18,7 +18,7 @@ using Kingmaker.UI.Selection;
 
 namespace PathfinderAutoBuff.GUI
 {
-    public class GUIManager : MonoBehaviour
+    internal class GUIManager : MonoBehaviour
     {
         public const string Source = "PathfinderAutoBuffActionPanel";
         private RectTransform rectTransform;
@@ -35,17 +35,14 @@ namespace PathfinderAutoBuff.GUI
         private Button m_Execute;
 
         [SerializeField]
+        private Button m_Stop;
+
+        [Header("Toggles")]
+        [SerializeField]
         private Toggle m_RecordToggle;
 
         [SerializeField]
-        private Button m_Remove;
-
-        [SerializeField]
         private Toggle m_Favorite;
-
-        [SerializeField]
-        private bool m_IsInit = false;
-
 
         public static GUIManager CreateObject()
         {
@@ -53,9 +50,11 @@ namespace PathfinderAutoBuff.GUI
 
             try
             {
-                if (!Game.Instance.UI.Canvas) return null;
+                if (!Game.Instance.UI.Canvas)
+                {
+                    return null;
+                }
                 if (!BundleManger.IsLoaded(Source)) throw new NullReferenceException();
-
                 //
                 //Attempt to get the wrath objects needed to build the UI
                 //
@@ -64,20 +63,25 @@ namespace PathfinderAutoBuff.GUI
                 //Attempt to get the objects loaded from the AssetBundles and build the window.
                 //
                 Transform _transform = BundleManger.LoadedPrefabs[Source].transform;
-                Logger.Debug(_transform);
                 var window = Instantiate(_transform); //We ditch the TutorialCanvas as talked about in the Wiki, we will attach it to a different parent
                 window.SetParent(staticCanvas, false); //Attaches our window to the static canvas
                 window.SetAsFirstSibling(); //Our window will always be under other UI elements as not to interfere with the game. Top of the list has the lowest priority
                 RectTransform rectTransform = (RectTransform)window;
+                if (rectTransform == null)
+                {
+                    throw new Exception("Unable to create PathfinderAutoBuff panel transform.");
+                }
                 //Scaling according to settings
                 rectTransform.localScale = new Vector3(SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale);
                 rectTransform.anchoredPosition = new Vector2(SettingsWrapper.GUIPosX, SettingsWrapper.GUIPosY);
                 window.gameObject.SetActive(true);
+                Logger.Debug("GUIManager created");
                 return window.gameObject.AddComponent<GUIManager>(); //This adds this class as a component so it can handle events, button clicks, awake, update, etc.
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.StackTrace);
+                return null;
             }
             return new GUIManager();
         }
@@ -85,10 +89,10 @@ namespace PathfinderAutoBuff.GUI
         private void Awake()
         {
             //This is a unity message that runs once when the script activates (Check Unity documenation for the differences between Start() and Awake()
-            //gameObject.GetComponent<CanvasGroup>().alpha = 0f;
             //
             // Setup the listeners when the script starts
             //
+            Logger.Debug("Awake");
             rectTransform = (RectTransform)this.transform;
             this.m_Dropdown = this.transform.Find("Container/DropDown")?.gameObject.GetComponent<TMP_Dropdown>();
             m_Dropdown.onValueChanged = new TMP_Dropdown.DropdownEvent();
@@ -101,9 +105,9 @@ namespace PathfinderAutoBuff.GUI
             this.m_RecordToggle = this.transform.Find("Container/Buttons/RecordToggle")?.gameObject.GetComponent<Toggle>();
             m_RecordToggle.gameObject.AddComponent<ToggleImageSwap>();
             m_RecordToggle.onValueChanged.AddListener(HandleRecordingToggleChange);
-            this.m_Remove = this.transform.Find("Container/Buttons/Remove")?.gameObject.GetComponent<Button>();
-            m_Remove.onClick = new Button.ButtonClickedEvent();
-            m_Remove.onClick.AddListener(new UnityAction(HandleRemoveQueueClick));
+            this.m_Stop = this.transform.Find("Container/Buttons/Stop")?.gameObject.GetComponent<Button>();
+            m_Stop.onClick = new Button.ButtonClickedEvent();
+            m_Stop.onClick.AddListener(new UnityAction(HandleStopQueueClick));
             this.m_Favorite = this.transform.Find("Container/Buttons/Favorite")?.gameObject.GetComponent<Toggle>();
             m_Favorite.gameObject.AddComponent<ToggleImageSwap>();
             m_Favorite.onValueChanged.AddListener(HandleFavoriteClick);
@@ -111,20 +115,8 @@ namespace PathfinderAutoBuff.GUI
             GameObject dragLeft = this.transform.Find("Container/Buttons/DragHandleLeft")?.gameObject;
             GameObject dragRight = this.transform.Find("Container/Buttons/DragHandleRight")?.gameObject;
             GameObject scrollbar = this.transform.Find("Container/DropDown/Template/Scrollbar")?.gameObject;
-            if (scrollbar != null)
-            {
-                scrollbar.GetComponent<Scrollbar>().value = 1;
-            }
             dragLeft.AddComponent<DraggableWindow>();
             dragRight.AddComponent<DraggableWindow>();
-            /*
-            var button = this.transform.Find("Foreground/Button").GetComponent<Button>();
-            button.onClick = new Button.ButtonClickedEvent();
-            button.onClick.AddListener(new UnityAction(HandleButtonClick));
-            button.gameObject.AddComponent<DraggableWindow>(); //Add draggable windows component allowing the window to be dragged when the button is pressed down
-
-            _text = this.transform.Find("Foreground/Text").GetComponent<Text>(); //Find the text component so we can update later.
-            */
         }
 
         private void Update()
@@ -138,7 +130,6 @@ namespace PathfinderAutoBuff.GUI
                 {
                     m_enabled = true;
                     canvasGroup.DOFade(1f, 0.5f).SetUpdate(true);
- //                   body.DOAnchorPosY(0f, 0.5f, false).SetUpdate(true);
                 }
             }
             else
@@ -147,7 +138,6 @@ namespace PathfinderAutoBuff.GUI
                 {
                     m_enabled = false;
                     canvasGroup.DOFade(0f, 0.5f).SetUpdate(true);
- //                   body.DOAnchorPosY(body.rect.height, 0.5f, false).SetUpdate(true);
                 }
             }
         }
@@ -165,10 +155,11 @@ namespace PathfinderAutoBuff.GUI
                 string queueName = Main.QueuesController.m_Queues[queueIndex];
                 if (selectedQueue.LoadFromFile($"{queueName}.json"))
                 {
-                    Main.QueuesController.CurrentQueueName = queueName;
-                    Main.QueuesController.CurrentQueueIndex = queueIndex;
-                    Main.QueuesController.queueController = new QueueController(selectedQueue);
-                    m_Favorite.isOn = SettingsWrapper.FavoriteQueues2.Contains(Main.QueuesController.CurrentQueueName);
+                    Main.QueuesController.GUIQueueName = queueName;
+                    Main.QueuesController.GUIQueueIndex = queueIndex;
+                    Main.QueuesController.GUIQueueController = new QueueController(selectedQueue);
+                    m_Favorite.isOn = SettingsWrapper.FavoriteQueues2.Contains(Main.QueuesController.GUIQueueName);
+                    Main.QueuesController.GUIQueueController.LoadMetadata(Main.QueuesController.GUIQueueName);
                 }
                 else
                 {
@@ -177,7 +168,7 @@ namespace PathfinderAutoBuff.GUI
             }
         }
 
-        //Starting/stop recording
+        //Start/stop recording
         private void HandleRecordingToggleChange(bool state)
         {
             Logger.Debug("HandleRecordingToggleClick");
@@ -190,7 +181,7 @@ namespace PathfinderAutoBuff.GUI
             m_RecordToggle.isOn = state;
         }
 
-        //Execuute selected queue
+        //Execute selected queue
         private void HandleExecuteQueueClick()
         {
             Logger.Debug("ExecuteQueue");
@@ -201,8 +192,8 @@ namespace PathfinderAutoBuff.GUI
                 try
                 {
                     ScriptController.Reset();
-                    ScriptController.CreateFromQueue(Main.QueuesController.queueController.CurrentQueue().CommandList,
-                                                    Main.QueuesController.CurrentQueueName);
+                    ScriptController.CreateFromQueue(Main.QueuesController.GUIQueueController.CurrentQueue().CommandList,
+                                                    Main.QueuesController.GUIQueueName);
                     ScriptController.Run();
                 }
                 catch (Exception ex)
@@ -220,64 +211,74 @@ namespace PathfinderAutoBuff.GUI
             }
         }
 
-        //Remove selected queue
-        private void HandleRemoveQueueClick()
+        //Stop queue execution
+        private void HandleStopQueueClick()
         {
-            if (selectedQueue != null)
-            {
-                bool queueDeletionFlag = IOHelpers.DeleteQueue(Main.QueuesController.CurrentQueueName);
-                if (!queueDeletionFlag)
-                    Logger.Log(string.Format(Local["Menu_Queues_ErrorDeleting"], Main.QueuesController.CurrentQueueName));
-                else
-                {
-                    RefreshView();
-                    return;
-                }
-            }
-            Logger.Debug("RemoveQueue");
+            ScriptController.Reset();
+            Logger.Debug("Stop Execution");
         }
 
-        //Open mod settings window
+        //Add/remove from Favorites
         private void HandleFavoriteClick(bool state)
         {
             Logger.Debug($"Favorite {Main.QueuesController.CurrentQueueName} {state}");
-            if (!SettingsWrapper.FavoriteQueues2.Contains(Main.QueuesController.CurrentQueueName) && state)
+            if (!SettingsWrapper.FavoriteQueues2.Contains(Main.QueuesController.GUIQueueName) && state)
             {
-                SettingsWrapper.FavoriteQueues2.Add(Main.QueuesController.CurrentQueueName);
+                SettingsWrapper.FavoriteQueues2.Add(Main.QueuesController.GUIQueueName);
             }
             else if (!state)
             {
-                SettingsWrapper.FavoriteQueues2.Remove(Main.QueuesController.CurrentQueueName);
+                SettingsWrapper.FavoriteQueues2.Remove(Main.QueuesController.GUIQueueName);
             }
             this.m_Favorite.isOn = state;
             this.m_Dropdown.RefreshShownValue();
         }
 
+        //Force refreshing view if data/scale changed
         public void RefreshView()
         {
-            //Update Dropdown Options
-            this.m_Dropdown.ClearOptions();
-            List<string> list = new List<string>();
-            if (Main.QueuesController == null)
+            try
             {
-                Main.QueuesController = new QueuesController();
-            }
-            int favoriteIndex = 0;
-            foreach (string queueName in Main.QueuesController.m_Queues)
-            {
-                if (SettingsWrapper.FavoriteQueues2.Contains(queueName))
+                //Update Dropdown Options
+                this.m_Dropdown.ClearOptions();
+                List<string> list = new List<string>();
+                if (Main.QueuesController == null)
                 {
-                    list.Insert(favoriteIndex, queueName);
-                    favoriteIndex++;
+                    Main.QueuesController = new QueuesController();
                 }
-                else
-                    if (!SettingsWrapper.GUIFavoriteOnly)
+                int favoriteIndex = 0;
+                foreach (string queueName in Main.QueuesController.m_Queues)
+                {
+                    if (SettingsWrapper.FavoriteQueues2.Contains(queueName))
+                    {
+                        list.Insert(favoriteIndex, queueName);
+                        favoriteIndex++;
+                    }
+                    else
+                        if (!SettingsWrapper.GUIFavoriteOnly)
                         list.Add(queueName);
+                }
+                this.m_Dropdown.AddOptions(list);
+                this.m_Dropdown.value = -1;
+                HandleSelectItem(0);
+                Logger.Debug($"RefreshView {list.Count} queues");
+                //Rescale
+                rectTransform.localScale = new Vector3(SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale);
             }
-            this.m_Dropdown.AddOptions(list);
-            Logger.Debug($"RefreshView {list.Count} queues");
-            //Rescale
-            rectTransform.localScale = new Vector3(SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale);
+            catch (Exception ex)
+            {
+                Logger.Error(ex.StackTrace);
+                throw ex;
+            }
+        }
+
+        //Options count for tests
+        public int DropdownOptionsCount()
+        {
+            if (this.m_Dropdown != null)
+                return this.m_Dropdown.options.Count;
+            else
+                return -1;
         }
 
         public bool Enabled

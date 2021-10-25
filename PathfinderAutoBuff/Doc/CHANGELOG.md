@@ -1,4 +1,19 @@
-﻿## [0.1.6] - 2021-09-15
+﻿## [0.2.0]
+## Fixed
+- Some possible crash issues
+- Some mod conflict crashes caused by json serializer conflict
+- Fixed some abilities that weren't casted 
+- Fixed free actions being sometimes applied too fast and causing queue execution interruption
+## Reworked
+- Reworked GUI to the prefab one. Should also fix some inconsistencies and crashes
+- Reworked targeting UI (you can also prioretize targets now)
+- Reworked favorite queues
+## Added
+- Per-queue settings
+- Metamagic priority settings
+- Pets are now available as casters as well
+
+## [0.1.6] - 2021-09-15
 ## Fixed
 - Fixed some ability context not applied on queue execution.
 - Fixed Extend metamagic not being used for spellcasting 

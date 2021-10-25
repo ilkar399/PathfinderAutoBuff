@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Kingmaker.UnitLogic.Abilities;
 using UnityEngine;
 using static PathfinderAutoBuff.Main;
 
@@ -35,6 +36,13 @@ namespace PathfinderAutoBuff.Utility
             set => Main.Settings.refreshTime = value;
         }
 
+        //Check if queue casting should continue on action failure
+        public static bool ContinueCastOnFail
+        {
+            get => Main.Settings.continueCastOnFail;
+            set => Main.Settings.continueCastOnFail = value;
+        }
+
         public static bool UIEnabled
         {
             get => Main.Settings.uIEnabled;
@@ -59,7 +67,10 @@ namespace PathfinderAutoBuff.Utility
 
         public static float ABToolbarScale
         {
-            get => Main.Settings.aBToolbarScale;
+            get
+            {
+                return Main.Settings.aBToolbarScale;
+            }
             set => Main.Settings.aBToolbarScale = value;
         }
 
@@ -93,6 +104,41 @@ namespace PathfinderAutoBuff.Utility
         {
             get => Main.Settings.gUIPosY;
             set => Main.Settings.gUIPosY = value;
+        }
+
+
+        //Spellbook priorities
+#if (WOTR)
+        public static bool MetadataMythicSpellbookPriority
+        {
+            get => Main.Settings.metadataMythicSpellbookPriority;
+            set => Main.Settings.metadataMythicSpellbookPriority = value;
+        }
+#endif
+        public static bool MetadataInverseCasterLevelPriority
+        {
+            get => Main.Settings.metadataInverseCasterLevelPriority;
+            set => Main.Settings.metadataInverseCasterLevelPriority = value;
+        }
+
+        //Spellslot priorities
+        public static bool MetadataIgnoreMetamagic
+        {
+            get => Main.Settings.metadataIgnoreMetamagic;
+            set => Main.Settings.metadataIgnoreMetamagic = value;
+        }
+
+        public static bool MetadataLowestSlotFirst
+        {
+            get => Main.Settings.metadataLowestSlotFirst;
+            set => Main.Settings.metadataLowestSlotFirst = value;
+        }
+
+        //Metamagic priorities
+        public static List<Metamagic> MetamagicPriority
+        {
+            get => Main.Settings.metamagicPriority;
+            set => Main.Settings.metamagicPriority = value;
         }
 
     }

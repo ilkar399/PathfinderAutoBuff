@@ -8,7 +8,7 @@ using System.Reflection;
 using static KingmakerAutoBuff.Extensions.WoTRExtensions;
 #endif
 
-namespace PathfinderAutoBuff.QueueOperattions
+namespace PathfinderAutoBuff.QueueOperations
 {
     /*
      * Target detection for scripts

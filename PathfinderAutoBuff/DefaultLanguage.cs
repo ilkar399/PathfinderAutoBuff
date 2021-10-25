@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using PathfinderAutoBuff.Controllers;
+using PathfinderAutoBuff.Utility;
 using Kingmaker.EntitySystem.Persistence.JsonUtility;
 
 namespace PathfinderAutoBuff
@@ -31,16 +32,22 @@ namespace PathfinderAutoBuff
             { "Menu_Tab_Recording", "Queue recording" },
 
             { "Menu_Settings_IgnoreModifiiers", "Ignore Ability/Activatable ability modifiers while processing"},
-            { "Menu_Settings_RefreshShort", "Refresh buffs when they have a short duration"},
+            { "Menu_Settings_RefreshShort", "Refresh buffs only when they have a short duration"},
             { "Menu_Settings_UIEnabled", "Enable in-game UI"},
             { "Menu_Settings_ReloadQueues", "Reload Queues"},
             { "Menu_Settings_RefreshLabel", "Refresh in seconds: {0}"},
             { "Menu_Settings_FavoriteQueuesLabel", "Favorite queues:"},
             { "Menu_Settings_MechanicsLabel", "Mechanics settings:"},
             { "Menu_Settings_GUILabel", "GUI settings:"},
+            { "Menu_Settings_MetadataLabel","Default queue execution settings:"},
+            { "Menu_Settings_MythicFirst","Use Mythic Spellbook first"},
+            { "Menu_Settings_LowCLFirst","Lower caster level spellbook first" },
+            { "Menu_Settings_IgnoreMMPriority","Ignore metamagic priority settings"},
+            { "Menu_Settings_LowSpelslotFirst","Lower level spellslot first"},
             { "Menu_Settings_FavoriteQueuesOnly", "Show only Favorite queues in GUI"},
             { "Menu_Settings_RefreshGUI", "Refresh GUI"},
             { "Menu_Settings_ResetGUI", "Reset GUI to Default"},
+            { "Menu_Settings_ContinueCastOnFail", "Continue queue casting on action failure"},
             { "Menu_Queues_ReloadData", "Reload data"},
             { "Menu_Queues_NewQueue", "New Queue"},
             { "Menu_Queues_QueueList", "Queue List:"},
@@ -54,6 +61,7 @@ namespace PathfinderAutoBuff
             { "Menu_Queues_ActionList", "Action List:"},
             { "Menu_Queues_NewSpell", "New Spell"},
             { "Menu_Queues_NewAbility", "New Ability"},
+            { "Menu_Queues_Favorite", "Favorite"},
             { "Menu_Queues_Caster", "Caster"},
             { "Menu_Queues_Spell", "Spell"},
             { "Menu_Queues_Ability", "Ability"},
@@ -119,14 +127,14 @@ namespace PathfinderAutoBuff
 
         public T Deserialize<T>(TextReader reader)
         {
-            DefaultJsonSettings.Initialize();
-            return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+            JsonSerializerSettings jsonSerializerSettings = JsonSerializationSetup.SerializerSettings;
+            return JsonConvert.DeserializeObject<T>(reader.ReadToEnd(), jsonSerializerSettings);
         }
 
         public void Serialize<T>(TextWriter writer, T obj)
         {
-            DefaultJsonSettings.Initialize();
-            writer.Write(JsonConvert.SerializeObject(obj, Formatting.Indented));
+            JsonSerializerSettings jsonSerializerSettings = JsonSerializationSetup.SerializerSettings;
+            writer.Write(JsonConvert.SerializeObject(obj, jsonSerializerSettings));
         }
     }
 }

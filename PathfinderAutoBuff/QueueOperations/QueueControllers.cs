@@ -9,20 +9,25 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using static PathfinderAutoBuff.Main;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using PathfinderAutoBuff.UnitLogic;
 
-namespace PathfinderAutoBuff.QueueOperattions
+namespace PathfinderAutoBuff.QueueOperations
     /*
      * Queue controller for UI/GUI. In the future might be used as a base for the menu viewmodel 
      */
 {
     class QueuesController
     {    
+        //UI queue
         string m_CurrentQueueName = "";
         int m_CurrentQueueIndex;
-        internal string [] m_Queues;
         public QueueController queueController;
+        //GUI queue
+        string m_GUIQueueName = "";
+        int m_GUIQueueIndex;
+        private QueueController m_GUIQueueController;
+        internal string[] m_Queues;
         public PartySpellList partySpellList;
         public PartyAbilityList partyAbilityList;
         public PartyActivatableList partyActivatableList;
@@ -54,37 +59,36 @@ namespace PathfinderAutoBuff.QueueOperattions
                     this.m_CurrentQueueName = m_Queues[value];
                 }
             }
-
         }
 
-        /*
-         * Not used. Try to change to something less resource-intensive
-         * Initially planned as a check for party changes
-         * Maybe chenge into handlers?
-         */
-        public bool TestCriticalChanges()
-        { 
-            PartySpellList partySpellList1 = new PartySpellList();
-            List<string> units1 = new List<string>();
-            List<string> abilities1 = new List<string>();
-            List<string> units2 = new List<string>();
-            List<string> abilities2 = new List<string>();
+        public string GUIQueueName
+        {
+            get => this.m_GUIQueueName;
+            set => this.m_GUIQueueName = value;
+        }
 
-            foreach (PartySpellData partySpellData in partySpellList1.m_AllSpells)
+        public int GUIQueueIndex
+        {
+            get => this.m_GUIQueueIndex;
+            set
             {
-                if (!units1.Contains(partySpellData.Caster.CharacterName))
-                    units1.Add(partySpellData.Caster.CharacterName);
-                if (!abilities1.Contains(partySpellData.Blueprint.Name))
-                    abilities1.Add(partySpellData.Blueprint.Name);
+                if (this.m_Queues.Length < value || value < 0)
+                {
+                    this.m_GUIQueueIndex = -1;
+                    this.m_GUIQueueName = "";
+                }
+                else
+                {
+                    this.m_GUIQueueIndex = value;
+                    this.m_GUIQueueName = m_Queues[value];
+                }
             }
-            foreach (PartySpellData partySpellData in this.partySpellList.m_AllSpells)
-            {
-                if (!units2.Contains(partySpellData.Caster.CharacterName))
-                    units2.Add(partySpellData.Caster.CharacterName);
-                if (!abilities2.Contains(partySpellData.Blueprint.Name))
-                    abilities2.Add(partySpellData.Blueprint.Name);
-            }
-            return (Enumerable.SequenceEqual(units1, units2) && Enumerable.SequenceEqual(abilities1,abilities2));
+        }
+
+        public QueueController GUIQueueController
+        {
+            get => this.m_GUIQueueController;
+            set => this.m_GUIQueueController = value;
         }
 
         //Reload queues from directory
@@ -120,18 +124,27 @@ namespace PathfinderAutoBuff.QueueOperattions
             }
             this.m_Queues = queuesList.ToArray();
             Logger.Debug("Queues: " + String.Join("; ", m_Queues));
-            if ((this.partySpellList == null) || (this.partyAbilityList == null) || (this.partyActivatableList == null))
+            try
             {
-                this.partySpellList = new PartySpellList();
-                this.partyAbilityList = new PartyAbilityList();
-                this.partyActivatableList = new PartyActivatableList();
+                if ((this.partySpellList == null) || (this.partyAbilityList == null) || (this.partyActivatableList == null))
+                {
+                    this.partySpellList = new PartySpellList();
+                    this.partyAbilityList = new PartyAbilityList();
+                    this.partyActivatableList = new PartyActivatableList();
+                }
+                else
+                {
+                    this.partySpellList.RefreshData();
+                    this.partyAbilityList.RefreshData();
+                    this.partyActivatableList.RefreshData();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                this.partySpellList.RefreshData();
-                this.partyAbilityList.RefreshData();
-                this.partyActivatableList.RefreshData();
+                Logger.Error(ex.StackTrace);
+                throw ex;
             }
+            //Cleaning up selected queues
             this.m_CurrentQueueName = "";
             this.m_CurrentQueueIndex = -1;
             if (this.queueController != null)
@@ -139,11 +152,13 @@ namespace PathfinderAutoBuff.QueueOperattions
                 this.queueController.Clear();
                 this.queueController = null;
             }
-            /*
-            if (Main.uiController != null)
-                if (Main.uiController.AutoBuffGUI.isActiveAndEnabled)
-                    Main.uiController.AutoBuffGUI.RefreshView();
-            */
+            this.m_GUIQueueIndex = -1;
+            this.m_GUIQueueName = "";
+            if (this.m_GUIQueueController != null)
+            {
+                this.m_GUIQueueController.Clear();
+                this.m_GUIQueueController = null;
+            }
         }
     }
 
@@ -154,15 +169,20 @@ namespace PathfinderAutoBuff.QueueOperattions
         string m_CurrentActionName;
         int m_CurrentActionIndex;
         CommandQueue m_CurrentQueue;
+        internal QueueMetadata m_CurrentMetadata;
         public bool actionsInit;
         public ActionController actionController;
- //       public Dictionary<int, string> favoriteQueues;
 
         //Constructor
         public QueueController(CommandQueue commandQueue)
         {
             this.m_CurrentQueue = commandQueue;
             this.Refresh();
+        }
+
+        public void LoadMetadata(string queueName)
+        {
+            this.m_CurrentMetadata = new QueueMetadata(queueName);
         }
 
         //TODO: Refresh content
@@ -176,7 +196,6 @@ namespace PathfinderAutoBuff.QueueOperattions
                 this.actionController.Clear();
                 this.actionController = null;
             }
- //           favoriteQueues = new Dictionary<int, string>(FavoriteQueues);
             this.actionsInit = false;
         }
 
@@ -228,6 +247,11 @@ namespace PathfinderAutoBuff.QueueOperattions
         public CommandQueue CurrentQueue()
         {
             return m_CurrentQueue;
+        }
+
+        public QueueMetadata CurrentMetadata()
+        {
+            return m_CurrentMetadata;
         }
     }
 

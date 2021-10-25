@@ -100,6 +100,7 @@ namespace PathfinderAutoBuff.UnitLogic
         //Refresher
         public void RefreshData()
         {
+            Logger.Debug("partyAbilityList.RefreshData");
             this.m_Abilities.Clear();
             this.m_Abilities = null;
             this.m_Abilities = GetPartyAbilities();

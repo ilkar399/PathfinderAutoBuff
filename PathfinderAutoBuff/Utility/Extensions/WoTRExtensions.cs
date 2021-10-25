@@ -115,5 +115,21 @@ namespace KingmakerAutoBuff.Extensions
         {
 			return (unitEntityData.Descriptor.Master != null);
 		}
-	}
+
+        public static T MinBy<T>(this IEnumerable<T> enumerable, Func<T, float> selector)
+        {
+            float num = float.MaxValue;
+            T result = default(T);
+            foreach (T t in enumerable)
+            {
+                float num2 = selector(t);
+                if (num2 < num)
+                {
+                    num = num2;
+                    result = t;
+                }
+            }
+            return result;
+        }
+    }
 }

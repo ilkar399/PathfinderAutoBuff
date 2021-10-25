@@ -13,7 +13,7 @@ using PathfinderAutoBuff.Utility;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using static PathfinderAutoBuff.Utility.Extensions.RichTextExtensions;
 using static PathfinderAutoBuff.Utility.Extensions.CommonExtensions;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using PathfinderAutoBuff.UnitLogic;
 
 namespace PathfinderAutoBuff.Menu.QueuesComponents

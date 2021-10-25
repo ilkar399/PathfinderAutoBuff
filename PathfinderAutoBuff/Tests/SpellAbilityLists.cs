@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityModManagerNet;
 using static PathfinderAutoBuff.Main;
-using PathfinderAutoBuff.QueueOperattions;
+using PathfinderAutoBuff.QueueOperations;
 using PathfinderAutoBuff.UnitLogic;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using Kingmaker;
@@ -41,7 +41,7 @@ namespace PathfinderAutoBuff.Tests
                         string durationString = PartySpellList.GetSpellDuration(longestPartySpellData).Seconds.ToString("c");
                         foreach (PartySpellData partySpellData in output[blueprintAbility])
                         {
-                            if (partySpellData.Caster.CharacterName != "test1")
+                            if (partySpellData.Caster.CharacterName != "TestCleric")
                                 continue;
                             TestHelpers.DetailedLog("Name: " + blueprintAbility.Name + "; Duration: " + durationString +
                                 " CastSelf " + longestPartySpellData.CanTargetSelf + "; CastAllies " + longestPartySpellData.CanTargetFriends);

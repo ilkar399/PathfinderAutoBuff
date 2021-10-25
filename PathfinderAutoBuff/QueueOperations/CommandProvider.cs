@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,11 +16,15 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Commands;
 using Kingmaker.UnitLogic.Commands.Base;
+using Kingmaker.UnitLogic.Mechanics.Actions;
 using PathfinderAutoBuff.UnitLogic;
 using static PathfinderAutoBuff.Utility.SettingsWrapper;
 using static PathfinderAutoBuff.Utility.Extensions.LogicExtensions;
+#if (KINGMAKER)
+using static KingmakerAutoBuff.Extensions.WoTRExtensions;
+#endif
 
-namespace PathfinderAutoBuff.QueueOperattions
+namespace PathfinderAutoBuff.QueueOperations
 {
     /*
      * Unit command handlers and action queue=>command converters.
@@ -119,6 +124,7 @@ namespace PathfinderAutoBuff.QueueOperattions
             }
             else
             {
+ //               aa.IsOn = false;
                 return new UnitDeactivateAbility(aa);
             }
         }
@@ -229,9 +235,39 @@ namespace PathfinderAutoBuff.QueueOperattions
 
         private Spellbook getSpellbookForUse(UnitDescriptor unit)
         {
-            //            return unit.Spellbooks.FirstOrDefault<Spellbook>((Func<Spellbook, bool>)(spellbook => spellbook.CanSpend(ability)))?.Blueprint;
+            //TODO - replace with metamagic data
+            bool metadataMythicSpellbookPriority = false;
+            bool metadataInverseCasterLevelPriority = false;
+            if (Main.QueuesController?.queueController?.CurrentMetadata() != null)
+            {
+#if (WOTR)
+                metadataMythicSpellbookPriority = Main.QueuesController.queueController.CurrentMetadata().MetadataMythicSpellbookPriority;
+#endif
+                metadataInverseCasterLevelPriority = Main.QueuesController.queueController.CurrentMetadata().MetadataInverseCasterLevelPriority;
+            }
+            else
+            {
+#if (WOTR)
+                metadataMythicSpellbookPriority = Utility.SettingsWrapper.MetadataMythicSpellbookPriority;
+#endif
+                metadataInverseCasterLevelPriority = Utility.SettingsWrapper.MetadataInverseCasterLevelPriority;
+            }
+            Spellbook result = null;
             IEnumerable<Kingmaker.UnitLogic.Spellbook> spellbooks = unit.Spellbooks.Where(spellbook => spellbook.PACanSpendSpell(ability)).ToList();
-            return spellbooks.Count() > 0 ? spellbooks.MaxBy(spellbook => spellbook.CasterLevel) : null;
+            if (spellbooks.Count() < 1)
+                return null;
+#if (WOTR)
+            if (metadataMythicSpellbookPriority)
+                result = spellbooks.Where(spellbook => spellbook.IsMythic).FirstOrDefault();
+#endif
+            if (result == null)
+            {
+                if (metadataInverseCasterLevelPriority)
+                    result = spellbooks.MinBy(spellbook => spellbook.CasterLevel);
+                else
+                    result = spellbooks.MaxBy(spellbook => spellbook.CasterLevel);
+            }
+            return result;
         }
 
         private AbilityData getAbilityForUse(UnitDescriptor unit)
@@ -377,10 +413,30 @@ namespace PathfinderAutoBuff.QueueOperattions
             if (currentCommand == null)
             {
                 TryNextCommand();
+                return;
             }
-            executor.Commands.InterruptAll();
+            if (!executor.Commands.Empty)
+            {
+                IEnumerable<UnitCommand> unitCommands = executor.GetAllCommands();
+                foreach (UnitCommand unitCommand in unitCommands)
+                {
+                    UnitUseAbility unitUseAbility1 = unitCommand as UnitUseAbility;
+                    if (unitUseAbility1 == null)
+                        continue;
+                    if (unitUseAbility1.Type == UnitCommand.CommandType.Free
+                        || unitUseAbility1.Type == UnitCommand.CommandType.Swift
+                        //                        && unitCommand.IsActing()
+                        )
+                    {
+                        unitUseAbility1.ExecutionProcess?.Tick();
+                    }
+                }
+                executor.Commands.InterruptAll();
+            }
             if (currentCommand != null)
+            {
                 executor.Commands.AddToQueue(currentCommand);
+            }
         }
 
         public bool HandleUnitCommandDidEnd(UnitCommand command)
@@ -405,27 +461,35 @@ namespace PathfinderAutoBuff.QueueOperattions
                 return false;
             }
 #if (WOTR)
-            Logger.Debug($"Command {commandAbility?.Ability.Name} {command.Result.ToString()}");
+            if (commandAbility != null)
+            {
+                Logger.Debug($"{command.Result} Ability {commandAbility.Ability.Name} " +
+                    $"Target {commandAbility.Target.Unit.CharacterName} " +
+                    $"IsAvailable {commandAbility.Ability.IsAvailableForCast} " +
+                    $"CanTarget {commandAbility.Ability.CanTarget(commandAbility.Target)} "
+                    );
+            }
 #elif (KINGMAKER)
-            Logger.Debug($"Command {command} {command.Type} {commandAbility?.Spell.Name} {command.Result.ToString()}");
-            if (commandAbility.Spell.MetamagicData != null)
-                Logger.Debug($"{commandAbility.Spell.MetamagicData.MetamagicMask}");
+            if (commandAbility != null)
+            {
+                Logger.Debug($"{command.Result} Ability {commandAbility.Spell.Name} " +
+                    $"Target {commandAbility.Target.Unit.CharacterName} " +
+                    $"IsAvailable {commandAbility.Spell.IsAvailableForCast} " +
+                    $"CanTarget {commandAbility.Spell.CanTarget(commandAbility.Target)} "
+                    );
+            }
 #endif
             if (command.Result != UnitCommand.ResultType.Success && !(command is UnitMoveTo || command is UnitInteractWithUnit))
             {
                 if (commandAbility != null)
                 {
 #if (WOTR)
-                    if (!commandAbility.Ability.CanTarget(commandAbility.Target))
+                    Logger.Log($"Unable to use {commandAbility.Ability.Name} on {commandAbility.Target.Unit.CharacterName}");
 #elif (KINGMAKER)
-                    if (!commandAbility.Spell.CanTarget(commandAbility.Target))
+                    Logger.Log($"Unable to use {commandAbility.Spell.Name} on target");
 #endif
+                    if (Utility.SettingsWrapper.ContinueCastOnFail)
                     {
-#if (WOTR)
-                        Logger.Log($"Unable to use {commandAbility.Ability.Name} on target");
-#elif (KINGMAKER)
-                        Logger.Log($"Unable to use {commandAbility.Spell.Name} on target");
-#endif
                         TryNextCommand();
                         return true;
                     }
@@ -564,6 +628,7 @@ namespace PathfinderAutoBuff.QueueOperattions
                 return;
 #endif
                 UnitUseAbility unitUseAbility = (__instance as UnitUseAbility);
+                
                 /*
                 if (unitUseAbility != null)
                     Logger.Debug($"{__instance.Executor} - {__instance.Target} - {unitUseAbility.Ability.Blueprint.name}/{unitUseAbility.Ability.Blueprint.AssetGuid}");

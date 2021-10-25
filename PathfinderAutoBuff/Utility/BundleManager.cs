@@ -32,7 +32,7 @@ namespace PathfinderAutoBuff.Utility
                 AssetBundle bundle;
                 GameObject prefab;
                 Sprite sprite;
-
+                
                 RemoveBundle(loadAss, true);
 #if (KINGMAKER)
                 string assetPath = "AssetBundles\\Kingmaker";

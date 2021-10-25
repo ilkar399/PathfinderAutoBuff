@@ -71,7 +71,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>$(WoTRInstallPath)\Mods\PathfinderAutoBuff\</OutputPath>
     <DefineConstants>DEBUG;TRACE;WOTR</DefineConstants>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
@@ -298,6 +298,8 @@
     <Compile Include="Menu\QueuesComponents\AbilityFilteredList.cs" />
     <Compile Include="Menu\QueuesComponents\AbilityList.cs" />
     <Compile Include="Menu\QueuesComponents\ActionItemView.cs" />
+    <Compile Include="Menu\QueuesComponents\MetamagicPrioritySelector.cs" />
+    <Compile Include="Menu\QueuesComponents\QueueMetadataSelttings.cs" />
     <Compile Include="Menu\Recording.cs" />
     <Compile Include="Menu\Tests.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -307,8 +309,11 @@
     </Compile>
     <Compile Include="QueueOperations\CommandQueue.cs" />
     <Compile Include="QueueOperations\QueueControllers.cs" />
+    <Compile Include="QueueOperations\QueueMetadata.cs" />
     <Compile Include="QueueOperations\RecordController.cs" />
     <Compile Include="QueueOperations\CommandProvider.cs" />
+    <Compile Include="Tests\GUITests.cs" />
+    <Compile Include="Tests\QueueMetadataTests.cs" />
     <Compile Include="UnitLogic\Targets.cs" />
     <Compile Include="Tests\QueueBase.cs" />
     <Compile Include="Tests\QueueUI.cs" />
@@ -329,6 +334,7 @@
     <Compile Include="Utility\Extensions\UnityExtensions.cs" />
     <Compile Include="Utility\Helpers.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Utility\JsonSerialization.cs" />
     <Compile Include="Utility\VersionCompatibility.cs" />
     <Compile Include="Utility\SettingsWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -345,11 +351,9 @@
   Compiler different target groups
   -->
   <ItemGroup Condition="'$(TargetGame)' == 'WoTR'">
-    <Compile Include="GUI\WoTR\QueuesToolbar.cs" />
     <Compile Include="GUI\WoTR\GUIManager.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetGame)' == 'Kingmaker'">
-    <Compile Include="GUI\Kingmaker\QueuesToolbar.cs" />
     <Compile Include="GUI\Kingmaker\GUIManager.cs" />
     <Compile Include="Utility\Extensions\WoTRExtensions.cs" />
   </ItemGroup>
