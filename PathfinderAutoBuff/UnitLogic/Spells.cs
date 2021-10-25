@@ -265,11 +265,20 @@ namespace PathfinderAutoBuff.UnitLogic
             PartySpellData spellData;
             BlueprintAbility referencedAbility = null;
             BlueprintAbility blueprintAbility;
+            //Getting Sticky Touch
             AbilityEffectStickyTouch abilityEffectStickyTouch = blueprintAbilityIn.GetComponent<AbilityEffectStickyTouch>();
+            //Getting ContextActionCastSpell
+            ContextActionCastSpell contextActionCastSpell = (Utility.LogicHelpers.FlattenAllActions(blueprintAbilityIn, true).
+                Where(action => (action as ContextActionCastSpell) != null).
+                FirstOrDefault() as ContextActionCastSpell);
             if (abilityEffectStickyTouch != null)
             {
                 referencedAbility = abilityEffectStickyTouch.TouchDeliveryAbility;
                 blueprintAbility = referencedAbility;
+            }
+            else if (contextActionCastSpell != null)
+            {
+                blueprintAbility = contextActionCastSpell.Spell;
             }
             else
                 blueprintAbility = blueprintAbilityIn;

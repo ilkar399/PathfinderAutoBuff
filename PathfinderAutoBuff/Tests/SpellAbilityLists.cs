@@ -41,7 +41,7 @@ namespace PathfinderAutoBuff.Tests
                         string durationString = PartySpellList.GetSpellDuration(longestPartySpellData).Seconds.ToString("c");
                         foreach (PartySpellData partySpellData in output[blueprintAbility])
                         {
-                            if (partySpellData.Caster.CharacterName != "Airmed")
+                            if (partySpellData.Caster.CharacterName != "TestCleric")
                                 continue;
                             TestHelpers.DetailedLog("Name: " + blueprintAbility.Name + "; Duration: " + durationString +
                                 " CastSelf " + longestPartySpellData.CanTargetSelf + "; CastAllies " + longestPartySpellData.CanTargetFriends);

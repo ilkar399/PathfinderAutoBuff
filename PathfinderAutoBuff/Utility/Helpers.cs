@@ -108,9 +108,21 @@ namespace PathfinderAutoBuff.Utility
             {
                 return false;
             }
+            //Checking Sticky touch
+            AbilityEffectStickyTouch abilityEffectStickyTouch = blueprintAbility.GetComponent<AbilityEffectStickyTouch>();
+            /*
             blueprintAbility = blueprintAbility.StickyTouch?.TouchDeliveryAbility == null 
                 ? blueprintAbility
                 : blueprintAbility.StickyTouch?.TouchDeliveryAbility;
+            */
+            //Checking ContextActionCastSpell
+            ContextActionCastSpell contextActionCastSpell = (Utility.LogicHelpers.FlattenAllActions(blueprintAbility, true).
+                Where(action => (action as ContextActionCastSpell) != null).
+                FirstOrDefault() as ContextActionCastSpell);
+            if (abilityEffectStickyTouch != null)
+                blueprintAbility = abilityEffectStickyTouch.TouchDeliveryAbility;
+            else if (contextActionCastSpell != null)
+                blueprintAbility = contextActionCastSpell.Spell;
             AbilityEffectRunAction component = blueprintAbility.GetComponent<AbilityEffectRunAction>();
             ActionList actionList = (component != null) ? component.Actions : null;
             if (actionList == null)

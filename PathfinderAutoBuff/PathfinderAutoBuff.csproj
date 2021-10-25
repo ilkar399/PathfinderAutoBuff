@@ -71,7 +71,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>$(WoTRInstallPath)\Mods\PathfinderAutoBuff\</OutputPath>
     <DefineConstants>DEBUG;TRACE;WOTR</DefineConstants>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
@@ -390,20 +390,20 @@
         </None>
       </ItemGroup>
     </When>
-    <When Condition="'$(TargetGame)' == 'WoTR'" >
+    <When Condition="'$(TargetGame)' == 'WoTR'">
       <ItemGroup>
-	    <None Include="AssetBundles\WoTR\AssetBundles">
-	      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	    </None>
-	    <None Include="AssetBundles\WoTR\AssetBundles.manifest">
-	      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	    </None>
-	    <None Include="AssetBundles\WoTR\pathfinderautobuffpanel">
-	      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	    </None>
-	    <None Include="AssetBundles\WoTR\pathfinderautobuffpanel.manifest">
-	      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	    </None>
+        <None Include="AssetBundles\WoTR\AssetBundles">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\WoTR\AssetBundles.manifest">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\WoTR\pathfinderautobuffpanel">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\WoTR\pathfinderautobuffpanel.manifest">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
       </ItemGroup>
     </When>
   </Choose>

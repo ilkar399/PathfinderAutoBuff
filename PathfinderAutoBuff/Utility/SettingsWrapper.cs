@@ -67,7 +67,10 @@ namespace PathfinderAutoBuff.Utility
 
         public static float ABToolbarScale
         {
-            get => Main.Settings.aBToolbarScale;
+            get
+            {
+                return Main.Settings.aBToolbarScale;
+            }
             set => Main.Settings.aBToolbarScale = value;
         }
 

@@ -1,7 +1,8 @@
 ﻿# Pathfinder Auto Buff
 This is a mod project for Pathfinder: Kingmaker and Pathfinder Wrath of the Righteous.
 
-It's an alternative to [BuffBot](https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/4). It provides a way to create (or record)
+It's an alternative to [BuffBot](https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/4)
+and [Bubbles Ultimate Buff Bot](https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/195). It provides a way to create (or record)
  a queue of actions (either the buff spells or ability usage) and execute it later.
 
 ## Installation
@@ -17,8 +18,8 @@ spell/ability, caster and the list of targets.
 * You can also select to pre-activate an activatable ability/item (like Extend Metamagic
 Rod) before casting spells
 * You can record your own actions into the action queue
-* There is small UI panel that allows a quick execution of one of your favorite action
-queues (*Note: it's not very pretty and wasn't tested on different screen resolutions*)
+* There is small UI panel that allows a quick execution of one of your queues
+* You can set up different per-queue or global settings, including spellbook and metamagic priority
 
 There are issues with certain buffs that I'm not sure how to process yet
 (like Acid Maw/Bless weapon that have some non-trivial targeting conditions)
@@ -27,8 +28,7 @@ There are issues with certain buffs that I'm not sure how to process yet
 Also, it might conflict with mods patching UnitCommand.OnEnded* 
 
 ## Known issues
-* There are some issues with Magus metamagic and similar abilities not applying before the
- next queued spell is casted
+* There is some rare crash issue that can be fixed by reinstalling the mod
 
 *Keep in mind using mods disables achievements if you don't use workarounds like ToyBox*
 
@@ -40,8 +40,10 @@ before you'll be able to finish creating new action. Don't forget to apply targe
 selection!
 * Spell/Abilities are not refreshed automatically for the mod UI, use "Refresh data"
  button. Only memorized and available for casting spells are shown in the UI.
-* Metamagic/multiple spellbooks spell selection - The highest level spell from the highest 
-Caster Level spellbook is selected.
+* Metamagic priority is used when selecting which spell slot to cast during queue execution. 
+If the spell uses selected metamagic, it is used first (with the priority, i.e. with [0] 
+Extended and [1] Quickened the spell that has Extended will be used first). 'None' prioritizes 
+the slot that doesn't have any metamagic applied to.
 * The in-game UI should show itself if there's any queue selected as Favorite in the mod settings.
 
 ## Project compilation notes

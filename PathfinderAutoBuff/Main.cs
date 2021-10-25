@@ -92,11 +92,15 @@ namespace PathfinderAutoBuff
                     Local.Enable(modEntry);
                     Menu.Enable(modEntry, assembly);
                     uiController = new GUIController();
+                    Logger.Debug("uiController created");
                     recordQueue = new RecordController();
+                    Logger.Debug("RecordController created");
                     if (uiController != null && recordQueue != null)
                     {
                         uiController.Enable();
+                        Logger.Debug("uiController Enabled");
                         recordQueue.ModEnable();
+                        Logger.Debug("RecordController ModEnabled");
                     }
                 }
                 else

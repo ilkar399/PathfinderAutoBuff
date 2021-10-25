@@ -67,16 +67,21 @@ namespace PathfinderAutoBuff.GUI
                 window.SetParent(staticCanvas, false); //Attaches our window to the static canvas
                 window.SetAsFirstSibling(); //Our window will always be under other UI elements as not to interfere with the game. Top of the list has the lowest priority
                 RectTransform rectTransform = (RectTransform)window;
+                if (rectTransform == null)
+                {
+                    throw new Exception("Unable to create PathfinderAutoBuff panel transform.");
+                }
                 //Scaling according to settings
                 rectTransform.localScale = new Vector3(SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale, SettingsWrapper.ABToolbarScale);
                 rectTransform.anchoredPosition = new Vector2(SettingsWrapper.GUIPosX, SettingsWrapper.GUIPosY);
                 window.gameObject.SetActive(true);
+                Logger.Debug("GUIManager created");
                 return window.gameObject.AddComponent<GUIManager>(); //This adds this class as a component so it can handle events, button clicks, awake, update, etc.
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.StackTrace);
-                throw ex;
+                return null;
             }
             return new GUIManager();
         }

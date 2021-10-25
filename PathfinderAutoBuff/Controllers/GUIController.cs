@@ -10,7 +10,7 @@ using static PathfinderAutoBuff.Utility.SettingsWrapper;
 namespace PathfinderAutoBuff.Controllers
 {
     //Controller for the in-game UI mod parts
-    public class GUIController :
+    public class GUIController : 
 #if (WOTR)
         IAreaHandler
 #elif (KINGMAKER)
@@ -22,7 +22,6 @@ namespace PathfinderAutoBuff.Controllers
 
         public void Attach()
         {
-
             if (!AutoBuffGUI)
             {
                 Logger.Debug("Attach");
