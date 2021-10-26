@@ -58,7 +58,12 @@ namespace PathfinderAutoBuff.Utility.Extensions
             }
             else
             {
+#if (WOTR)
+                //Taking CompletelyNormal metamagic in account
+                for (int k = Math.Min(0,blueprintLevel - 1); k <= num; k++)
+#elif (KINGMAKER)
                 for (int k = blueprintLevel; k <= num; k++)
+#endif
                 {
                     List<SpellSlot> list = spellbook.GetMemorizedSpellSlots(k).ToList();
                     for (int i = list.Count - 1; i >= 0; i--)
@@ -119,7 +124,7 @@ namespace PathfinderAutoBuff.Utility.Extensions
             if (spellbook.Blueprint.Spontaneous)
             {
 #if (WOTR)
-                for (int spellLevel = maxSpellLevel; spellLevel >= spellbook.GetMinSpellLevel(blueprint); spellLevel--)
+                for (int spellLevel = maxSpellLevel; spellLevel >= Math.Max(0,spellbook.GetMinSpellLevel(blueprint) -1); spellLevel--)
 #else
                 for (int spellLevel = maxSpellLevel; spellLevel >= spellbook.GetSpellLevel(blueprint); spellLevel--)
 #endif

@@ -390,22 +390,7 @@
         </None>
       </ItemGroup>
     </When>
-    <When Condition="'$(TargetGame)' == 'WoTR'">
-      <ItemGroup>
-        <None Include="AssetBundles\WoTR\AssetBundles">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Include="AssetBundles\WoTR\AssetBundles.manifest">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Include="AssetBundles\WoTR\pathfinderautobuffpanel">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Include="AssetBundles\WoTR\pathfinderautobuffpanel.manifest">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-      </ItemGroup>
-    </When>
+    <When Condition="'$(TargetGame)' == 'WoTR'" />
   </Choose>
   <ItemGroup />
   <ItemGroup>
