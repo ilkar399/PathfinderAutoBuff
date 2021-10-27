@@ -1,4 +1,8 @@
-﻿## [0.2.0]
+﻿## [0.2.1]
+## Fixed
+- CompletelyNormal metamagic
+- Recompiled for 1.1.0i
+## [0.2.0]
 ## Fixed
 - Some possible crash issues
 - Some mod conflict crashes caused by json serializer conflict

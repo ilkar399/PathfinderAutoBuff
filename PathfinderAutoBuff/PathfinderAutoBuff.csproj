@@ -358,14 +358,18 @@
     <Compile Include="Utility\Extensions\WoTRExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Info.json">
+    <None Include="Info.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </None>
     <Compile Include="Menu\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Doc\CHANGELOG.md" />
-    <None Include="Doc\README.md" />
+    <None Include="Doc\CHANGELOG.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Doc\README.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Doc\TODO.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -390,11 +394,47 @@
         </None>
       </ItemGroup>
     </When>
-    <When Condition="'$(TargetGame)' == 'WoTR'" />
+    <When Condition="'$(TargetGame)' == 'WoTR'">
+      <ItemGroup>
+        <None Include="AssetBundles\WoTR\AssetBundles">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\WoTR\AssetBundles.manifest">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\WoTR\pathfinderautobuffpanel">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="AssetBundles\WoTR\pathfinderautobuffpanel.manifest">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+      </ItemGroup>
+    </When>
   </Choose>
   <ItemGroup />
   <ItemGroup>
     <Content Include="Doc\LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == KingmakerRelease (
+  mkdir $(TargetName)
+  del $(TargetName).zip /Q
+  copy $(TargetName)$(TargetExt) .\$(TargetName)\$(TargetName)$(TargetExt) /Y
+  copy Info.json .\$(TargetName)\Info.json /Y
+  copy Doc\README.md .\$(TargetName)\README.md /Y
+  copy Doc\CHANGELOG.md .\$(TargetName)\CHANGELOG.md /Y
+  xcopy AssetBundles .\$(TargetName)\AssetBundles /Y /I /E
+  "C:\Program Files\7-Zip\7z.exe" u -tzip $(TargetName).zip $(TargetName)
+) else if $(ConfigurationName) == Release (
+  mkdir $(TargetName)
+  del $(TargetName).zip /Q
+  copy $(TargetName)$(TargetExt) .\$(TargetName)\$(TargetName)$(TargetExt) /Y
+  copy Info.json .\$(TargetName)\Info.json /Y
+  copy Doc\README.md .\$(TargetName)\README.md /Y
+  copy Doc\CHANGELOG.md .\$(TargetName)\CHANGELOG.md /Y
+  xcopy AssetBundles .\$(TargetName)\AssetBundles /Y /I /E
+  "C:\Program Files\7-Zip\7z.exe" u -tzip $(TargetName).zip $(TargetName)
+)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
